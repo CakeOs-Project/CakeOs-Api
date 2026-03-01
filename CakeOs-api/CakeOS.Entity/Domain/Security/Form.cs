@@ -1,0 +1,12 @@
+using CakeOS.Entity.Domain.Base;
+
+namespace CakeOS.Entity.Domain.security;
+
+public class Form : BaseEntity
+{
+    public string Name { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
+
+    public ICollection<FormModule> FormModules { get; set; } = new List<FormModule>();
+    public ICollection<RolFormPermission> RolFormPermissions { get; set; } = new List<RolFormPermission>();
+}
