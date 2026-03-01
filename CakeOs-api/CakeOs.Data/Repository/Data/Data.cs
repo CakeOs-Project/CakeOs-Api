@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace CakeOs.Data.Repository.Data
 {
-    internal class BaseData : IData <BaseData>
+    internal class Data : IData <Data>
     {
-        public Task<BaseData> CreateAsync(BaseData entity)
+        public Task<Data> CreateAsync(Data entity)
         {
             throw new NotImplementedException();
         }
@@ -17,15 +17,15 @@ namespace CakeOs.Data.Repository.Data
         {
             throw new NotImplementedException();
         }
-        public Task<IEnumerable<BaseData>> GetAllAsync()
+        public Task<IEnumerable<Data>> GetAllAsync()
         {
             throw new NotImplementedException();
         }
-        public Task<BaseData?> GetByIdAsync(int id)
+        public Task<Data?> GetByIdAsync(int id)
         {
             throw new NotImplementedException();
         }
-        public Task<BaseData> UpdateAsync(BaseData entity)
+        public Task<Data> UpdateAsync(Data entity)
         {
             throw new NotImplementedException();
         }
