@@ -1,1 +1,7 @@
-<Solution />
+<Solution>
+  <Project Path="Business/CakeOs.Business.csproj" />
+  <Project Path="CakeOs.Data/CakeOs.Data.csproj" />
+  <Project Path="CakeOS.Utilities/CakeOS.Utilities.csproj" />
+  <Project Path="CakeOs.Web/CakeOs.Web.csproj" />
+  <Project Path="Entity/CakeOs.Entity.csproj" />
+</Solution>
