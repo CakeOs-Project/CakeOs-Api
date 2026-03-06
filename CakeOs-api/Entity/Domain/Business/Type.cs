@@ -1,6 +1,6 @@
 using CakeOS.Entity.Domain.Base;
 
-namespace CakeOS.Entity.Domain.CakeEntity;
+namespace CakeOs.Entity.Domain.Business;
 
 public class Type : BaseEntity
 {
