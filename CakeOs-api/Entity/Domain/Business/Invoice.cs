@@ -3,7 +3,7 @@ using CakeOS.Entity.Domain.security;
 
 namespace CakeOS.Entity.Domain.CakeEntity;
 
-public class Invoice : BaseEntity
+public class Invoice : BaseDomain
 {
     public string Code { get; set; } = string.Empty;
     public int ClientId { get; set; }
@@ -14,6 +14,9 @@ public class Invoice : BaseEntity
     public DateTime CreatedAt { get; set; }
     public DateTime DeliveryDate { get; set; }
 
+    ///
+    /// Relaciones
+    ///
     public Client? Client { get; set; }
     public User? User { get; set; }
     public ICollection<InvoiceItem> InvoiceItems { get; set; } = new List<InvoiceItem>();

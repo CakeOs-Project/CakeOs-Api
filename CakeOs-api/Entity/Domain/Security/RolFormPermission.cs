@@ -1,8 +1,9 @@
+using CakeOs.Entity.Domain.Base;
 using CakeOS.Entity.Domain.Base;
 
 namespace CakeOS.Entity.Domain.security;
 
-public class RolFormPermission : BaseEntity
+public class RolFormPermission : BaseAuditory
 {
     public int RolId { get; set; }
     public int FormId { get; set; }

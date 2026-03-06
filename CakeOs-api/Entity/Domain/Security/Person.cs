@@ -3,11 +3,11 @@ using CakeOS.Entity.Domain.CakeEntity;
 
 namespace CakeOS.Entity.Domain.security;
 
-public class Person : BaseEntity
+public class Person : BaseDomain
 {
-    public string Name { get; set; } = string.Empty;
-    public string LastName { get; set; } = string.Empty;
-    public string Phone { get; set; } = string.Empty;
+    public string Name { get; set; }
+    public string LastName { get; set; }
+    public string Phone { get; set; }
     public string? Address { get; set; }
     public DateTime CreateAt { get; set; }
 
