@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace CakeOs.Data.Repository.Data
 {
-    internal class Data : IData <Data>
+    internal class Data : IData<Data>
     {
-        public Task<Data> CreateAsync(Data entity)
+        public Task<Data> AddAsync(Data entity)
         {
             throw new NotImplementedException();
         }
@@ -29,4 +29,25 @@ namespace CakeOs.Data.Repository.Data
         {
             throw new NotImplementedException();
         }
+        public Task<bool> ActivateAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+        public Task<bool> DeactivateAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+        public Task<bool> ExistsAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+        public Task<(IEnumerable<Data> Items, int TotalCount)> GetPagedAsync(int pageNumber, int pageSize, string? filter = null)
+        {
+            throw new NotImplementedException();
+        }
+        public Task<int> SaveChangesAsync()
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

@@ -1,4 +1,6 @@
-﻿namespace CakeOs.Data.Interfaz.IData;
+﻿using System.Linq.Expressions;
+
+namespace CakeOs.Data.Interfaz.IData;
 
 /// <summary>
 /// Interfaz genérica para el acceso a datos que define las operaciones CRUD básicas
@@ -21,20 +23,6 @@ public interface IData<T> where T : class
     /// <param name="id">Identificador único de la entidad</param>
     /// <returns>La entidad encontrada o null si no existe</returns>
     Task<T?> GetByIdAsync(int id);
-
-    /// <summary>
-    /// Busca y obtiene todas las entidades que cumplan con el predicado especificado.
-    /// </summary>
-    /// <param name="predicate">Expresión lambda que define los criterios de búsqueda</param>
-    /// <returns>Colección de entidades que cumplen con los criterios</returns>
-    Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate);
-
-    /// <summary>
-    /// Obtiene la primera entidad que cumpla con el predicado o null si no se encuentra ninguna.
-    /// </summary>
-    /// <param name="predicate">Expresión lambda que define los criterios de búsqueda</param>
-    /// <returns>La primera entidad que cumple con los criterios o null</returns>
-    Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate);
 
     // ==================== Métodos de Escritura ====================
 
@@ -60,12 +48,6 @@ public interface IData<T> where T : class
     /// <returns>True si se eliminó correctamente, False en caso contrario</returns>
     Task<bool> DeleteAsync(int id);
 
-    /// <summary>
-    /// Elimina una entidad específica de la base de datos.
-    /// </summary>
-    /// <param name="entity">Entidad a eliminar</param>
-    /// <returns>True si se eliminó correctamente, False en caso contrario</returns>
-    Task<bool> DeleteAsync(T entity);
 
     // ==================== Métodos de Activación/Desactivación ====================
 
@@ -85,21 +67,7 @@ public interface IData<T> where T : class
     /// <returns>True si se desactivó correctamente, False en caso contrario</returns>
     Task<bool> DeactivateAsync(int id);
 
-    // ==================== Métodos de Conteo y Existencia ====================
-
-    /// <summary>
-    /// Obtiene el número total de entidades en la base de datos.
-    /// </summary>
-    /// <returns>Cantidad total de entidades</returns>
-    Task<int> CountAsync();
-
-    /// <summary>
-    /// Obtiene el número de entidades que cumplen con el predicado especificado.
-    /// </summary>
-    /// <param name="predicate">Expresión lambda que define los criterios de conteo</param>
-    /// <returns>Cantidad de entidades que cumplen con los criterios</returns>
-    Task<int> CountAsync(Expression<Func<T, bool>> predicate);
-
+    // ==================== Métodos de Conteo y Existencia ==================
     /// <summary>
     /// Verifica si existe una entidad con el identificador especificado.
     /// </summary>
@@ -107,12 +75,6 @@ public interface IData<T> where T : class
     /// <returns>True si existe, False en caso contrario</returns>
     Task<bool> ExistsAsync(int id);
 
-    /// <summary>
-    /// Verifica si existe al menos una entidad que cumpla con el predicado especificado.
-    /// </summary>
-    /// <param name="predicate">Expresión lambda que define los criterios de existencia</param>
-    /// <returns>True si existe al menos una entidad, False en caso contrario</returns>
-    Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate);
 
     // ==================== Paginación ====================
 
@@ -126,8 +88,8 @@ public interface IData<T> where T : class
     /// <returns>Tupla con los elementos de la página y el total de registros</returns>
     Task<(IEnumerable<T> Items, int TotalCount)> GetPagedAsync(
         int pageNumber, 
-        int pageSize, 
-        Expression<Func<T, bool>>? filter = null);
+        int pageSize,                                                                      
+        string? filter = null);
 
     // ==================== Guardado de cambios ====================
 
