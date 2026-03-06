@@ -22,20 +22,6 @@ public interface IData<T> where T : class
     /// <returns>La entidad encontrada o null si no existe</returns>
     Task<T?> GetByIdAsync(int id);
 
-    /// <summary>
-    /// Busca y obtiene todas las entidades que cumplan con el predicado especificado.
-    /// </summary>
-    /// <param name="predicate">Expresión lambda que define los criterios de búsqueda</param>
-    /// <returns>Colección de entidades que cumplen con los criterios</returns>
-    Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate);
-
-    /// <summary>
-    /// Obtiene la primera entidad que cumpla con el predicado o null si no se encuentra ninguna.
-    /// </summary>
-    /// <param name="predicate">Expresión lambda que define los criterios de búsqueda</param>
-    /// <returns>La primera entidad que cumple con los criterios o null</returns>
-    Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate);
-
     // ==================== Métodos de Escritura ====================
 
     /// <summary>
@@ -87,18 +73,6 @@ public interface IData<T> where T : class
 
     // ==================== Métodos de Conteo y Existencia ====================
 
-    /// <summary>
-    /// Obtiene el número total de entidades en la base de datos.
-    /// </summary>
-    /// <returns>Cantidad total de entidades</returns>
-    Task<int> CountAsync();
-
-    /// <summary>
-    /// Obtiene el número de entidades que cumplen con el predicado especificado.
-    /// </summary>
-    /// <param name="predicate">Expresión lambda que define los criterios de conteo</param>
-    /// <returns>Cantidad de entidades que cumplen con los criterios</returns>
-    Task<int> CountAsync(Expression<Func<T, bool>> predicate);
 
     /// <summary>
     /// Verifica si existe una entidad con el identificador especificado.
@@ -106,13 +80,6 @@ public interface IData<T> where T : class
     /// <param name="id">Identificador de la entidad a verificar</param>
     /// <returns>True si existe, False en caso contrario</returns>
     Task<bool> ExistsAsync(int id);
-
-    /// <summary>
-    /// Verifica si existe al menos una entidad que cumpla con el predicado especificado.
-    /// </summary>
-    /// <param name="predicate">Expresión lambda que define los criterios de existencia</param>
-    /// <returns>True si existe al menos una entidad, False en caso contrario</returns>
-    Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate);
 
     // ==================== Paginación ====================
 
@@ -127,7 +94,7 @@ public interface IData<T> where T : class
     Task<(IEnumerable<T> Items, int TotalCount)> GetPagedAsync(
         int pageNumber, 
         int pageSize, 
-        Expression<Func<T, bool>>? filter = null);
+        string filter);
 
     // ==================== Guardado de cambios ====================
 

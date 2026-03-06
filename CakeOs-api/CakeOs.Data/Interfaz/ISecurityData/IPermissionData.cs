@@ -1,5 +1,5 @@
 using CakeOs.Data.Interfaz.IData;
-using CakeOS.Entity.Domain.Security;
+using CakeOS.Entity.Domain.security;
 
 namespace CakeOs.Data.Interfaz.ISecurityData;
 

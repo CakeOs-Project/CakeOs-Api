@@ -3,7 +3,7 @@ using CakeOS.Entity.Domain.CakeEntity;
 
 namespace CakeOs.Entity.Domain.Parameter;
 
-public class Type : BaseDomain
+public class Types : BaseDomain
 {
     public string Name { get; set; } = string.Empty;
     public bool DefaultFill { get; set; }

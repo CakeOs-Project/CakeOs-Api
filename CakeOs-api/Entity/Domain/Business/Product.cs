@@ -14,7 +14,7 @@ public class Product : BaseDomain
     ///
     /// Relaciones
     ///
-    public Type? Type { get; set; }
+    public Types? Type { get; set; }    
     public Size? Size { get; set; }
     public Shape? Shape { get; set; }
     public ICollection<InvoiceItem> InvoiceItems { get; set; } = new List<InvoiceItem>();
