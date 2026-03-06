@@ -1,9 +1,9 @@
-using CakeOs.Entity.Domain.Business;
+using CakeOs.Entity.Domain.Parameter;
 using CakeOS.Entity.Domain.Base;
 
 namespace CakeOS.Entity.Domain.CakeEntity;
 
-public class InvoiceItem : BaseEntity
+public class InvoiceItem : BaseDomain
 {
     public int InvoiceId { get; set; }
     public int ProductId { get; set; }
@@ -13,11 +13,15 @@ public class InvoiceItem : BaseEntity
     public bool HasFilling { get; set; }
     public int? FilledId { get; set; }
     public bool HasDecoration { get; set; }
-    public string? DecorationImage { get; set; }
+    public int? ImagenId { get; set; }
     public string? DecorationDescription { get; set; }
     public bool HasMessage { get; set; }
     public string? Message { get; set; }
 
+    ///
+    /// Relaciones
+    ///
+    public Image? Image { get; set; }
     public Invoice? Invoice { get; set; }
     public Product? Product { get; set; }
     public Filled? Filled { get; set; }

@@ -1,12 +1,13 @@
+using CakeOs.Entity.Domain.Base;
 using CakeOS.Entity.Domain.Base;
 using CakeOS.Entity.Domain.CakeEntity;
 
 namespace CakeOS.Entity.Domain.security;
 
-public class User : BaseEntity
+public class User : BaseAuditory
 {
-    public string Email { get; set; } = string.Empty;
-    public string Password { get; set; } = string.Empty;
+    public string Email { get; set; } 
+    public string Password { get; set; } 
     public int PersonaId { get; set; }
     public int RolId { get; set; }
 
