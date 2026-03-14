@@ -9,5 +9,5 @@ namespace CakeOs.Data.Interfaz.IBusinessData;
 /// </summary>
 public interface ISizeData : IData<Size>
 {
-    // Aquí se pueden agregar métodos específicos para Tamaño si es necesario
+   
 }

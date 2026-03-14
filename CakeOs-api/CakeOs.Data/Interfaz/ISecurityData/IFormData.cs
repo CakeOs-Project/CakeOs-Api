@@ -9,6 +9,16 @@ namespace CakeOs.Data.Interfaz.ISecurityData;
 /// </summary>
 public interface IFormData : IData<Form>
 {
-    // Aquí se pueden agregar métodos específicos para Formulario si es necesario
-    // Por ejemplo: Task<IEnumerable<Form>> GetByModuleIdAsync(int moduleId);
+    /// <summary>
+    /// Obtiene todos los formularios de un módulo específico.
+    /// </summary>
+    /// <param name="moduleId">Identificador del módulo</param>
+    /// <returns>Lista de formularios del módulo</returns>
+    Task<IEnumerable<Form>> GetByModuleIdAsync(int moduleId);
+
+    /// <summary>
+    /// Obtiene formularios activos para mostrar en el menú.
+    /// </summary>
+    /// <returns>Lista de formularios activos</returns>
+    Task<IEnumerable<Form>> GetActiveFormsAsync();
 }

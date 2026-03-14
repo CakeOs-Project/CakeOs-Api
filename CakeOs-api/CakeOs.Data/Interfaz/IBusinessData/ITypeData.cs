@@ -9,5 +9,5 @@ namespace CakeOs.Data.Interfaz.IBusinessData;
 /// </summary>
 public interface ITypeData : IData<Type>
 {
-    // Aquí se pueden agregar métodos específicos para Tipo si es necesario
+   
 }

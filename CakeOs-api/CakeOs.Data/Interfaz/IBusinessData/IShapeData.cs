@@ -9,5 +9,5 @@ namespace CakeOs.Data.Interfaz.IBusinessData;
 /// </summary>
 public interface IShapeData : IData<Shape>
 {
-    // Aquí se pueden agregar métodos específicos para Forma si es necesario
+    
 }

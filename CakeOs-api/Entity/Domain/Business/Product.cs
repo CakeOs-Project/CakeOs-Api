@@ -1,7 +1,8 @@
 using CakeOs.Entity.Domain.Parameter;
 using CakeOS.Entity.Domain.Base;
+using CakeOS.Entity.Domain.CakeEntity;
 
-namespace CakeOS.Entity.Domain.CakeEntity;
+namespace CakeOs.Entity.Domain.Business;
 
 public class Product : BaseDomain
 {

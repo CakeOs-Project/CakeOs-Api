@@ -1,4 +1,6 @@
-﻿namespace CakeOs.Data.Interfaz.IData;
+﻿using System.Linq.Expressions;
+
+namespace CakeOs.Data.Interfaz.IData;
 
 /// <summary>
 /// Interfaz genérica para el acceso a datos que define las operaciones CRUD básicas
@@ -46,12 +48,6 @@ public interface IData<T> where T : class
     /// <returns>True si se eliminó correctamente, False en caso contrario</returns>
     Task<bool> DeleteAsync(int id);
 
-    /// <summary>
-    /// Elimina una entidad específica de la base de datos.
-    /// </summary>
-    /// <param name="entity">Entidad a eliminar</param>
-    /// <returns>True si se eliminó correctamente, False en caso contrario</returns>
-    Task<bool> DeleteAsync(T entity);
 
     // ==================== Métodos de Activación/Desactivación ====================
 

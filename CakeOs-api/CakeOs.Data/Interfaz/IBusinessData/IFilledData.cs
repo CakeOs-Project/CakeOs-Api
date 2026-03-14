@@ -9,5 +9,5 @@ namespace CakeOs.Data.Interfaz.IBusinessData;
 /// </summary>
 public interface IFilledData : IData<Filled>
 {
-    // Aquí se pueden agregar métodos específicos para Relleno si es necesario
+    
 }
