@@ -1,3 +1,5 @@
+using CakeOS.Entity.DTOs.BusinessDtos.FacturaDtos;
+
 namespace CakeOS.Entity.DTOs.BusinessDtos.ReportesDtos;
 
 public class ReporteFacturasPorRangoDTO

@@ -1,5 +1,6 @@
 using CakeOS.Entity.Domain.Base;
 using CakeOS.Entity.Domain.CakeEntity;
+using CakeOs.Entity.Domain.Business;
 
 namespace CakeOs.Entity.Domain.Parameter;
 
