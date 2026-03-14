@@ -1,3 +1,4 @@
+using CakeOs.Entity.Domain.Business;
 using CakeOs.Entity.Domain.Parameter;
 using CakeOS.Entity.Domain.Base;
 

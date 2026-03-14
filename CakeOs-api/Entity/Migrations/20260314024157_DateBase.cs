@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CakeOs.Entity.Migrations
 {
     /// <inheritdoc />
-    public partial class InitDataBase : Migration
+    public partial class DateBase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

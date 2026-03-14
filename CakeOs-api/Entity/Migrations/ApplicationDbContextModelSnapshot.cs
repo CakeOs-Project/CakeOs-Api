@@ -206,44 +206,6 @@ namespace CakeOs.Entity.Migrations
                     b.ToTable("Payment");
                 });
 
-            modelBuilder.Entity("CakeOS.Entity.Domain.CakeEntity.Product", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<decimal>("Price")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("ShapeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SizeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TypeId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ShapeId");
-
-                    b.HasIndex("SizeId");
-
-                    b.HasIndex("TypeId");
-
-                    b.ToTable("Product");
-                });
-
             modelBuilder.Entity("CakeOS.Entity.Domain.security.Form", b =>
                 {
                     b.Property<int>("Id")
@@ -490,6 +452,44 @@ namespace CakeOs.Entity.Migrations
                     b.ToTable("User");
                 });
 
+            modelBuilder.Entity("CakeOs.Entity.Domain.Business.Product", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal>("Price")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("ShapeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SizeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TypeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ShapeId");
+
+                    b.HasIndex("SizeId");
+
+                    b.HasIndex("TypeId");
+
+                    b.ToTable("Product");
+                });
+
             modelBuilder.Entity("CakeOs.Entity.Domain.Parameter.Filled", b =>
                 {
                     b.Property<int>("Id")
@@ -656,7 +656,7 @@ namespace CakeOs.Entity.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CakeOS.Entity.Domain.CakeEntity.Product", "Product")
+                    b.HasOne("CakeOs.Entity.Domain.Business.Product", "Product")
                         .WithMany("InvoiceItems")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -692,33 +692,6 @@ namespace CakeOs.Entity.Migrations
                     b.Navigation("Invoice");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("CakeOS.Entity.Domain.CakeEntity.Product", b =>
-                {
-                    b.HasOne("CakeOs.Entity.Domain.Parameter.Shape", "Shape")
-                        .WithMany("Products")
-                        .HasForeignKey("ShapeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CakeOs.Entity.Domain.Parameter.Size", "Size")
-                        .WithMany("Products")
-                        .HasForeignKey("SizeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CakeOs.Entity.Domain.Parameter.Types", "Type")
-                        .WithMany("Products")
-                        .HasForeignKey("TypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Shape");
-
-                    b.Navigation("Size");
-
-                    b.Navigation("Type");
                 });
 
             modelBuilder.Entity("CakeOS.Entity.Domain.security.FormModule", b =>
@@ -786,6 +759,33 @@ namespace CakeOs.Entity.Migrations
                     b.Navigation("Rol");
                 });
 
+            modelBuilder.Entity("CakeOs.Entity.Domain.Business.Product", b =>
+                {
+                    b.HasOne("CakeOs.Entity.Domain.Parameter.Shape", "Shape")
+                        .WithMany("Products")
+                        .HasForeignKey("ShapeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CakeOs.Entity.Domain.Parameter.Size", "Size")
+                        .WithMany("Products")
+                        .HasForeignKey("SizeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CakeOs.Entity.Domain.Parameter.Types", "Type")
+                        .WithMany("Products")
+                        .HasForeignKey("TypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Shape");
+
+                    b.Navigation("Size");
+
+                    b.Navigation("Type");
+                });
+
             modelBuilder.Entity("CakeOS.Entity.Domain.CakeEntity.Client", b =>
                 {
                     b.Navigation("Invoices");
@@ -796,11 +796,6 @@ namespace CakeOs.Entity.Migrations
                     b.Navigation("InvoiceItems");
 
                     b.Navigation("Payments");
-                });
-
-            modelBuilder.Entity("CakeOS.Entity.Domain.CakeEntity.Product", b =>
-                {
-                    b.Navigation("InvoiceItems");
                 });
 
             modelBuilder.Entity("CakeOS.Entity.Domain.security.Form", b =>
@@ -839,6 +834,11 @@ namespace CakeOs.Entity.Migrations
                     b.Navigation("Invoices");
 
                     b.Navigation("Payments");
+                });
+
+            modelBuilder.Entity("CakeOs.Entity.Domain.Business.Product", b =>
+                {
+                    b.Navigation("InvoiceItems");
                 });
 
             modelBuilder.Entity("CakeOs.Entity.Domain.Parameter.Filled", b =>

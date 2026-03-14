@@ -1,4 +1,5 @@
-﻿using CakeOs.Entity.Domain.Parameter;
+﻿using CakeOs.Entity.Domain.Business;
+using CakeOs.Entity.Domain.Parameter;
 using CakeOS.Entity.Domain.CakeEntity;
 using CakeOS.Entity.Domain.security;
 using Microsoft.EntityFrameworkCore;
