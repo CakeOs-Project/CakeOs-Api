@@ -1,5 +1,5 @@
 using CakeOs.Data.Interfaz.IData;
-using CakeOS.Entity.Domain.Business;
+using CakeOS.Entity.Domain.CakeEntity;
 
 namespace CakeOs.Data.Interfaz.IBusinessData;
 
@@ -9,5 +9,5 @@ namespace CakeOs.Data.Interfaz.IBusinessData;
 /// </summary>
 public interface ITypeData : IData<Type>
 {
-    // Aquí se pueden agregar métodos específicos para Tipo si es necesario
+   
 }

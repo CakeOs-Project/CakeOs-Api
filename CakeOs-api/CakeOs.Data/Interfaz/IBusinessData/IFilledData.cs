@@ -1,5 +1,5 @@
 using CakeOs.Data.Interfaz.IData;
-using CakeOS.Entity.Domain.Business;
+using CakeOs.Entity.Domain.Parameter;
 
 namespace CakeOs.Data.Interfaz.IBusinessData;
 
@@ -9,5 +9,5 @@ namespace CakeOs.Data.Interfaz.IBusinessData;
 /// </summary>
 public interface IFilledData : IData<Filled>
 {
-    // Aquí se pueden agregar métodos específicos para Relleno si es necesario
+    
 }

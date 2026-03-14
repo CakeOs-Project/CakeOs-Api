@@ -1,5 +1,6 @@
 using CakeOs.Data.Interfaz.IData;
-using CakeOS.Entity.Domain.Business;
+using CakeOs.Entity.Domain.Business;
+using CakeOS.Entity.Domain.CakeEntity;
 
 namespace CakeOs.Data.Interfaz.IBusinessData;
 
@@ -9,6 +10,18 @@ namespace CakeOs.Data.Interfaz.IBusinessData;
 /// </summary>
 public interface IProductData : IData<Product>
 {
-    // Aquí se pueden agregar métodos específicos para Producto si es necesario
-    // Por ejemplo: Task<IEnumerable<Product>> GetActiveProductsAsync();
+    /// <summary>
+    /// CU-19: Obtiene todos los productos activos del sistema.
+    /// </summary>
+    /// <returns>Lista de productos activos</returns>
+    Task<IEnumerable<Product>> GetActiveProductsAsync();
+
+    /// <summary>
+    /// Busca productos por nombre.
+    /// </summary>
+    /// <param name="name">Nombre del producto a buscar</param>
+    /// <returns>Lista de productos que coinciden</returns>
+    Task<IEnumerable<Product>> SearchByNameAsync(string name);
 }
+
+    

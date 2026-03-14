@@ -1,5 +1,5 @@
 using CakeOs.Data.Interfaz.IData;
-using CakeOS.Entity.Domain.Security;
+using CakeOS.Entity.Domain.security;
 
 namespace CakeOs.Data.Interfaz.ISecurityData;
 
@@ -9,6 +9,17 @@ namespace CakeOs.Data.Interfaz.ISecurityData;
 /// </summary>
 public interface IRolData : IData<Rol>
 {
-    // Aquí se pueden agregar métodos específicos para Rol si es necesario
-    // Por ejemplo: Task<Rol?> GetByNameAsync(string rolName);
+    /// <summary>
+    /// Obtiene un rol por su nombre.
+    /// </summary>
+    /// <param name="rolName">Nombre del rol</param>
+    /// <returns>Rol encontrado o null</returns>
+    Task<Rol?> GetByNameAsync(string rolName);
+
+    /// <summary>
+    /// CU-07: Obtiene un rol con todos sus permisos asignados.
+    /// </summary>
+    /// <param name="rolId">Identificador del rol</param>
+    /// <returns>Rol con sus permisos</returns>
+    Task<Rol?> GetWithPermissionsAsync(int rolId);
 }
