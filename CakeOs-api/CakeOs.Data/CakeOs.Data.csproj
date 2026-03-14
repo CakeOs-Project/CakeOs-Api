@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <Folder Include="Repository\BusinessData\" />
-    <Folder Include="Services\" />
+    <Folder Include="Repository\Security\" />
   </ItemGroup>
 
   <ItemGroup>
