@@ -1,5 +1,5 @@
 using CakeOs.Data.Interfaz.IData;
-using CakeOs.Entity.Domain.Business;
+using CakeOs.Entity.Domain.Parameter;
 
 namespace CakeOs.Data.Interfaz.IBusinessData;
 

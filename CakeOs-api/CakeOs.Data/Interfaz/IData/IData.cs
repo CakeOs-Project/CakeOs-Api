@@ -67,14 +67,15 @@ public interface IData<T> where T : class
     /// <returns>True si se desactivó correctamente, False en caso contrario</returns>
     Task<bool> DeactivateAsync(int id);
 
-    // ==================== Métodos de Conteo y Existencia ==================
+    // ==================== Métodos de Conteo y Existencia ====================
+
+
     /// <summary>
     /// Verifica si existe una entidad con el identificador especificado.
     /// </summary>
     /// <param name="id">Identificador de la entidad a verificar</param>
     /// <returns>True si existe, False en caso contrario</returns>
     Task<bool> ExistsAsync(int id);
-
 
     // ==================== Paginación ====================
 
@@ -88,8 +89,8 @@ public interface IData<T> where T : class
     /// <returns>Tupla con los elementos de la página y el total de registros</returns>
     Task<(IEnumerable<T> Items, int TotalCount)> GetPagedAsync(
         int pageNumber, 
-        int pageSize,                                                                      
-        string? filter = null);
+        int pageSize, 
+        string filter);
 
     // ==================== Guardado de cambios ====================
 
