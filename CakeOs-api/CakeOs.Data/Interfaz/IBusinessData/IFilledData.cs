@@ -10,5 +10,6 @@ namespace CakeOs.Data.Interfaz.IBusinessData;
 /// </summary>
 public interface IFilledData : IData<Filled>
 {
-    
+  
+ 
 }

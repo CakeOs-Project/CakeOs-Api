@@ -17,16 +17,13 @@ public interface IClientData : IData<Client>
     /// <returns>Lista de clientes que coinciden con la búsqueda</returns>
     Task<IEnumerable<Client>> SearchByNameOrPhoneAsync(string searchTerm);
 
-    /// <summary>
-    /// CU-14: Obtiene todos los clientes activos del sistema.
-    /// </summary>
-    /// <returns>Lista de clientes activos</returns>
-    Task<IEnumerable<Client>> GetActiveClientsAsync();
-
+    
     /// <summary>
     /// Busca un cliente por su número de documento.
     /// </summary>
     /// <param name="documentNumber">Número de documento del cliente</param>
     /// <returns>Cliente encontrado o null</returns>
     Task<Client?> GetByDocumentNumberAsync(string documentNumber);
+
+    
 }

@@ -10,5 +10,11 @@ namespace CakeOs.Data.Interfaz.IBusinessData;
 /// </summary>
 public interface IShapeData : IData<Shape>
 {
+    /// <summary>
+    /// CU-23: Obtiene todas las formas activas del sistema.
+    /// </summary>
+    /// <returns>Lista de formas activas</returns>
+    Task<IEnumerable<Shape>> GetActiveShapesAsync();
+
     
 }
