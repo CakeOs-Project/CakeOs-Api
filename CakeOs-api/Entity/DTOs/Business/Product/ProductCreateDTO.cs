@@ -1,6 +1,6 @@
 namespace CakeOS.Entity.DTOs.BusinessDtos.ProductoDtos;
 
-public class ProductCreateDTO
+public class ProductCreateDto
 {
     public int TypeId { get; set; }
     public int SizeId { get; set; }

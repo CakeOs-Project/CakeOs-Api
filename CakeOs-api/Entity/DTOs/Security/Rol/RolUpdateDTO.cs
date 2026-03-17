@@ -1,9 +1,8 @@
-namespace CakeOS.Entity.DTOs.SecurityDtos.RolDtos;
+namespace CakeOS.Entity.DTOs.Security.Rol;
 
-public class RolUpdateDTO
+public class RolUpdateDto
 {
     public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
-    public bool IsActive { get; set; }
+    public string Name { get; set; }
+    public string Description { get; set; }
 }
