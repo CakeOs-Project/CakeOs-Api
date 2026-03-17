@@ -1,7 +1,8 @@
-namespace CakeOS.Entity.DTOs.SecurityDtos.AuthDtos;
-
-public class LoginDTO
+namespace CakeOS.Entity.DTOs.Security.Auth
 {
-    public string Email { get; set; } = string.Empty;
-    public string Password { get; set; } = string.Empty;
+    public class LoginDto
+    {
+        public string Email { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+    }
 }

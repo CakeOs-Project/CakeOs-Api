@@ -1,16 +1,17 @@
 using CakeOS.Entity.Domain.Base;
-using CakeOS.Entity.Domain.CakeEntity;
+using CakeOS.Entity.Domain.Business;
 
-namespace CakeOS.Entity.Domain.security;
-
-public class Person : BaseDomain
+namespace CakeOS.Entity.Domain.security
 {
-    public string Name { get; set; }
-    public string LastName { get; set; }
-    public string Phone { get; set; }
-    public string? Address { get; set; }
-    public DateTime CreateAt { get; set; }
+    public class Person : BaseDomain
+    {
+        public string Name { get; set; }
+        public string LastName { get; set; }
+        public string Phone { get; set; }
+        public string? Address { get; set; }
+        public DateTime CreateAt { get; set; }
 
-    public ICollection<User> Users { get; set; } = new List<User>();
-    public ICollection<Client> Clients { get; set; } = new List<Client>();
+        public ICollection<User> Users { get; set; } = new List<User>();
+        public ICollection<Client> Clients { get; set; } = new List<Client>();
+    }
 }

@@ -1,16 +1,16 @@
 using CakeOs.Entity.Domain.Base;
-using CakeOS.Entity.Domain.Base;
-using CakeOS.Entity.Domain.CakeEntity;
+using CakeOS.Entity.Domain.Business;
 
-namespace CakeOs.Entity.Domain.Parameter;
-
-public class Filled : BaseAuditory
+namespace CakeOs.Entity.Domain.Parameter
 {
-    public string Name { get; set; } = string.Empty;
-    public Boolean DefaultFilled { get; set; }
+    public class Filled : BaseAuditory
+    {
+        public string Name { get; set; } = string.Empty;
+        public Boolean DefaultFilled { get; set; }
 
-    ///
-    /// Relaciones
-    ///
-    public ICollection<InvoiceItem> InvoiceItems { get; set; } = new List<InvoiceItem>();
+        ///
+        /// Relaciones
+        ///
+        public ICollection<InvoiceItem> InvoiceItems { get; set; } = new List<InvoiceItem>();
+    }
 }
