@@ -1,7 +1,9 @@
-namespace CakeOS.Entity.Domain.Base;
-
-public abstract class BaseDomain
+namespace CakeOS.Entity.Domain.Base
 {
-    public int Id { get; set; }
-    public bool IsActive { get; set; }
+    public abstract class BaseDomain
+    {
+        public int Id { get; set; }
+        public bool IsActive { get; set; }
+    }
+
 }

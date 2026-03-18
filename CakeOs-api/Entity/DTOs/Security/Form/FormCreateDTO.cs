@@ -1,7 +1,9 @@
-namespace CakeOS.Entity.DTOs.SecurityDtos.FormularioDtos;
-
-public class FormCreateDTO
+namespace CakeOS.Entity.DTOs.Security.Form
 {
-    public string Name { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
+    public class FormCreateDto
+    {
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string Route { get; set; }
+    }
 }

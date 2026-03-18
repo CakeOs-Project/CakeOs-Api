@@ -1,12 +1,12 @@
 using CakeOs.Entity.Domain.Base;
-using CakeOS.Entity.Domain.Base;
 
-namespace CakeOS.Entity.Domain.security;
-
-public class Permission : BaseAuditory
+namespace CakeOS.Entity.Domain.security
 {
-    public string Name { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
+    public class Permission : BaseAuditory
+    {
+        public string Name { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
 
-    public ICollection<RolFormPermission> RolFormPermissions { get; set; } = new List<RolFormPermission>();
+        public ICollection<RolFormPermission> RolFormPermissions { get; set; } = new List<RolFormPermission>();
+    }
 }

@@ -70,7 +70,9 @@ public interface IData<T> where T : class
     /// <returns>True si se desactivó correctamente, False en caso contrario</returns>
     Task<bool> DeactivateAsync(int id, CancellationToken cancellationToken = default);
 
-    // ==================== Métodos de Conteo y Existencia ==================
+    // ==================== Métodos de Conteo y Existencia ====================
+
+
     /// <summary>
     /// Verifica si existe una entidad con el identificador especificado.
     /// </summary>
@@ -93,8 +95,7 @@ public interface IData<T> where T : class
     Task<(IEnumerable<T> Items, int TotalCount)> GetPagedAsync(
         int pageNumber, 
         int pageSize,                                                                      
-        string? filter = null,
-        CancellationToken cancellationToken = default);
+        string? filter = null);
 
     // ==================== Guardado de cambios ====================
 

@@ -1,9 +1,10 @@
-namespace CakeOS.Entity.DTOs.SecurityDtos.RolDtos;
-
-public class RolListDTO
+namespace CakeOS.Entity.DTOs.Security.Rol
 {
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
-    public bool IsActive { get; set; }
+    public class RolListDto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public bool IsActive { get; set; }
+    }
 }

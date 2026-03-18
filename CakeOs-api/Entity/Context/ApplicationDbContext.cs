@@ -12,6 +12,55 @@ namespace CakeOs.Entity.Context
             : base(options)
         { }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            // Decimales
+            modelBuilder.Entity<Invoice>()
+                .Property(e => e.Total)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Invoice>()
+                .Property(e => e.OutstandingBalance)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<InvoiceItem>()
+                .Property(e => e.UnitPrice)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<InvoiceItem>()
+                .Property(e => e.SubTotal)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Payment>()
+                .Property(e => e.Amount)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Product>()
+                .Property(e => e.Price)
+                .HasPrecision(18, 2);
+
+            // Cascadas
+            modelBuilder.Entity<Invoice>()
+                .HasOne(e => e.Client)
+                .WithMany(c => c.Invoices)
+                .HasForeignKey(e => e.ClientId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Invoice>()
+                .HasOne(e => e.User)
+                .WithMany(u => u.Invoices)
+                .HasForeignKey(e => e.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Payment>()
+                .HasOne(e => e.User)
+                .WithMany()
+                .HasForeignKey(e => e.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
+        }
+
         /// ==================================
         /// Security
         /// ==================================

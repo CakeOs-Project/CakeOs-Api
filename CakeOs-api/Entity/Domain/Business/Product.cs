@@ -1,10 +1,11 @@
+using CakeOs.Entity.Domain.Base;
 using CakeOs.Entity.Domain.Parameter;
 using CakeOS.Entity.Domain.Base;
 using CakeOS.Entity.Domain.CakeEntity;
 
 namespace CakeOs.Entity.Domain.Business;
 
-public class Product : BaseDomain
+public class Product : BaseAuditory
 {
     public int TypeId { get; set; }
     public int SizeId { get; set; }
@@ -15,7 +16,7 @@ public class Product : BaseDomain
     ///
     /// Relaciones
     ///
-    public CakeOs.Entity.Domain.Parameter.Type? Type { get; set; }
+    public Types? Type { get; set; }    
     public Size? Size { get; set; }
     public Shape? Shape { get; set; }
     public ICollection<InvoiceItem> InvoiceItems { get; set; } = new List<InvoiceItem>();
