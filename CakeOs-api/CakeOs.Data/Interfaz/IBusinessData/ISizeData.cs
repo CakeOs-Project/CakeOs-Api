@@ -1,6 +1,6 @@
 using CakeOs.Data.Interfaz.IData;
 
-using CakeOS.Entity.Domain.CakeEntity;
+using CakeOS.Entity.Domain.Business;
 using CakeOs.Entity.Domain.Parameter;
 
 namespace CakeOs.Data.Interfaz.IBusinessData;

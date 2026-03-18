@@ -95,7 +95,8 @@ public interface IData<T> where T : class
     Task<(IEnumerable<T> Items, int TotalCount)> GetPagedAsync(
         int pageNumber, 
         int pageSize,                                                                      
-        string? filter = null);
+        string? filter = null,
+        CancellationToken cancellationToken = default);
 
     // ==================== Guardado de cambios ====================
 
