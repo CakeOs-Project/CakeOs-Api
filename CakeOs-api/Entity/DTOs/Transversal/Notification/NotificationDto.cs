@@ -1,3 +1,5 @@
+using CakeOS.Entity.DTOs.Business.InvoiceItem;
+
 namespace CakeOs.Entity.DTOs.Transversal.Notification
 {
     public class NotificationDto

@@ -1,3 +1,6 @@
+using CakeOS.Entity.DTOs.Business.InvoiceItem;
+using CakeOS.Entity.DTOs.Business.Payment;
+
 namespace CakeOS.Entity.DTOs.Business.Invoice
 {
     public class InvoiceDetailDto

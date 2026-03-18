@@ -1,3 +1,5 @@
+using CakeOS.Entity.DTOs.Business.InvoiceItem;
+
 namespace CakeOS.Entity.DTOs.Business.Invoice
 {
     public class InvoiceCreateDto

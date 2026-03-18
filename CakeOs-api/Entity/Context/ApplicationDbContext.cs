@@ -1,6 +1,6 @@
 ﻿using CakeOs.Entity.Domain.Business;
 using CakeOs.Entity.Domain.Parameter;
-using CakeOS.Entity.Domain.CakeEntity;
+using CakeOS.Entity.Domain.Business;
 using CakeOS.Entity.Domain.security;
 using Microsoft.EntityFrameworkCore;
 
@@ -76,7 +76,7 @@ namespace CakeOs.Entity.Context
         /// ==================================
         /// Parameter
         /// ==================================
-        public DbSet<CakeOs.Entity.Domain.Parameter.Type> Type { get; set; }
+        public DbSet<Type> Type  { get; set; }
         public DbSet<Size> Size { get; set; }
         public DbSet<Shape> Shape { get; set; }
         public DbSet<Image> Image { get; set; }
