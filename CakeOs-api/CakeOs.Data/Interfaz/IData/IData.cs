@@ -18,6 +18,14 @@ public interface IData<T> where T : class
     Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Obtiene todas las entidades activas de tipo T de la base de datos de forma asíncrona.
+    /// Solo retorna aquellas entidades donde IsActive es true.
+    /// </summary>
+    /// <param name="cancellationToken">Token para cancelar la operación asíncrona</param>
+    /// <returns>Colección con todas las entidades activas encontradas</returns>
+    Task<IEnumerable<T>> GetAllActiveAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Obtiene una entidad específica por su identificador único.
     /// </summary>
     /// <param name="id">Identificador único de la entidad</param>

@@ -10,7 +10,7 @@ namespace CakeOs.Data.Repository.Data
     /// operaciones CRUD básicas y funcionalidades comunes para todas las entidades.
     /// </summary>
     /// <typeparam name="T">El tipo de entidad del dominio, debe heredar de BaseDomain.</typeparam>
-    public class Data<T> : IData<T> where T : BaseDomain
+    public class Data<T> :  IData<T> where T : BaseDomain
     {
         private readonly ApplicationDbContext _context;
         protected readonly DbSet<T> _dbSet;
@@ -60,6 +60,16 @@ namespace CakeOs.Data.Repository.Data
         public async Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             return await _dbSet.AsNoTracking().ToListAsync(cancellationToken);
+        }
+
+        /// <summary>
+        /// Obtiene todas las entidades activas de la base de datos.
+        /// </summary>
+        /// <param name="cancellationToken">Token de cancelación.</param>
+        /// <returns>Una colección de todas las entidades activas.</returns>
+        public async Task<IEnumerable<T>> GetAllActiveAsync(CancellationToken cancellationToken = default)
+        {
+            return await _dbSet.AsNoTracking().Where(e => e.IsActive).ToListAsync(cancellationToken);
         }
 
         /// <summary>
