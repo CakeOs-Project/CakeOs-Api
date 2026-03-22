@@ -7,11 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Repository\BusinessData\" />
-    <Folder Include="Repository\Security\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Entity\CakeOs.Entity.csproj" />
   </ItemGroup>
 

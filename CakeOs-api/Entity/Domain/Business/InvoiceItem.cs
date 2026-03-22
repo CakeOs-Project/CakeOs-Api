@@ -7,6 +7,8 @@ namespace CakeOS.Entity.Domain.Business
 {
     public class InvoiceItem : BaseDomain
     {
+        public bool IsReady;
+
         public int InvoiceId { get; set; }
         public int ProductId { get; set; }
         public int Quantity { get; set; }

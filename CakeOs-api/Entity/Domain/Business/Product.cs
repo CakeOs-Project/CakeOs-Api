@@ -8,6 +8,8 @@ namespace CakeOs.Entity.Domain.Business;
 
 public class Product : BaseAuditory
 {
+    public object Name;
+
     public int TypeId { get; set; }
     public int SizeId { get; set; }
     public int ShapeId { get; set; }
