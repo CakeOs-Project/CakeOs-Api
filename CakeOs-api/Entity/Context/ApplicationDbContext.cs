@@ -1,6 +1,6 @@
 ﻿using CakeOs.Entity.Domain.Business;
 using CakeOs.Entity.Domain.Parameter;
-using CakeOS.Entity.Domain.CakeEntity;
+using CakeOS.Entity.Domain.Business;
 using CakeOS.Entity.Domain.security;
 using Microsoft.EntityFrameworkCore;
 
@@ -64,31 +64,31 @@ namespace CakeOs.Entity.Context
         /// ==================================
         /// Security
         /// ==================================
-        DbSet<Person> Person {  get; set; }
-        DbSet<User> User { get; set; }
-        DbSet<Rol> Rol { get; set; }
-        DbSet<Form> Form { get; set; }
-        DbSet<Permission> Permission { get; set; }
-        DbSet<Module> Module { get; set; }
-        DbSet<FormModule> FormModule {  get; set; }
-        DbSet<RolFormPermission> RolFormPermission { get; set; }
+        public DbSet<Person> Person {  get; set; }
+        public DbSet<User> User { get; set; }
+        public DbSet<Rol> Rol { get; set; }
+        public DbSet<Form> Form { get; set; }
+        public DbSet<Permission> Permission { get; set; }
+        public DbSet<Module> Module { get; set; }
+        public DbSet<FormModule> FormModule {  get; set; }
+        public DbSet<RolFormPermission> RolFormPermission { get; set; }
 
         /// ==================================
         /// Parameter
         /// ==================================
-        DbSet<Types> Type { get; set; }
-        DbSet<Size> Size { get; set; }
-        DbSet<Shape> Shape { get; set; }
-        DbSet<Image> Image { get; set; }
-        DbSet<Filled> Filled { get; set; }
+        public DbSet<Type> Type  { get; set; }
+        public DbSet<Size> Size { get; set; }
+        public DbSet<Shape> Shape { get; set; }
+        public DbSet<Image> Image { get; set; }
+        public DbSet<Filled> Filled { get; set; }
 
         /// ==================================
-        /// Parameter
+        /// Billing / Business
         /// ==================================
-        DbSet<Client> Client { get; set; }
-        DbSet<Invoice> Invoice { get; set; }
-        DbSet<Product> Product { get; set; }
-        DbSet<InvoiceItem> InvoiceItem { get; set; }
-        DbSet<Payment> Payment { get; set; }
+        public DbSet<Client> Client { get; set; }
+        public DbSet<Invoice> Invoice { get; set; }
+        public DbSet<Product> Product { get; set; }
+        public DbSet<InvoiceItem> InvoiceItem { get; set; }
+        public DbSet<Payment> Payment { get; set; }
     }
 }

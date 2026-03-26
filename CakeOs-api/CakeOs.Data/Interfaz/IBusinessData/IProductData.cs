@@ -1,6 +1,6 @@
 using CakeOs.Data.Interfaz.IData;
 using CakeOs.Entity.Domain.Business;
-using CakeOS.Entity.Domain.CakeEntity;
+using CakeOS.Entity.Domain.Business;
 
 namespace CakeOs.Data.Interfaz.IBusinessData;
 
@@ -10,11 +10,7 @@ namespace CakeOs.Data.Interfaz.IBusinessData;
 /// </summary>
 public interface IProductData : IData<Product>
 {
-    /// <summary>
-    /// CU-19: Obtiene todos los productos activos del sistema.
-    /// </summary>
-    /// <returns>Lista de productos activos</returns>
-    Task<IEnumerable<Product>> GetActiveProductsAsync();
+    
 
     /// <summary>
     /// Busca productos por nombre.
@@ -22,6 +18,6 @@ public interface IProductData : IData<Product>
     /// <param name="name">Nombre del producto a buscar</param>
     /// <returns>Lista de productos que coinciden</returns>
     Task<IEnumerable<Product>> SearchByNameAsync(string name);
-}
 
-    
+ 
+}

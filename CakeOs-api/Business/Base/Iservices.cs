@@ -8,6 +8,6 @@ namespace CakeOs.Business.Base
 {
     public interface Iservices<TDto> where TDto : class
     {
-        Task<TDto>
+       
     }
 }

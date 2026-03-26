@@ -1,5 +1,4 @@
 using CakeOS.Entity.Domain.Base;
-using CakeOS.Entity.Domain.CakeEntity;
 using CakeOS.Entity.Domain.security;
 
 namespace CakeOS.Entity.Domain.Business

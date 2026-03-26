@@ -1,12 +1,15 @@
 using CakeOs.Entity.Domain.Base;
 using CakeOs.Entity.Domain.Parameter;
 using CakeOS.Entity.Domain.Base;
-using CakeOS.Entity.Domain.CakeEntity;
+using CakeOS.Entity.Domain.Business;
+
 
 namespace CakeOs.Entity.Domain.Business;
 
 public class Product : BaseAuditory
 {
+    public object Name;
+
     public int TypeId { get; set; }
     public int SizeId { get; set; }
     public int ShapeId { get; set; }
