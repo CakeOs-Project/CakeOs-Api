@@ -7,9 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\Parameter\" />
-    <Folder Include="Mapping\" />
     <Folder Include="Services\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Mapster" Version="10.0.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CakeOs.Data\CakeOs.Data.csproj" />
+    <ProjectReference Include="..\Entity\CakeOs.Entity.csproj" />
   </ItemGroup>
 
 </Project>

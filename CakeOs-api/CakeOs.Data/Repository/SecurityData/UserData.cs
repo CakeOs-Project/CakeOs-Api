@@ -53,7 +53,7 @@ public class UserData : Data<User>, IUserData
     public async Task<IEnumerable<User>> GetWithDetailsAsync()
     {
         return await _context.Set<User>()
-            .Include(u => u.Persona)
+            .Include(u => u.Person)
             .Include(u => u.Rol)
             .AsNoTracking()
             .ToListAsync();
