@@ -1,4 +1,5 @@
-﻿using CakeOs.Data.Repository.Data;
+﻿using CakeOs.Data.Interfaz.IData;
+using CakeOs.Data.Repository.Data;
 using CakeOS.Entity.Domain.Base;
 using MapsterMapper;
 
@@ -13,20 +14,20 @@ namespace CakeOs.Business.Base
     /// <typeparam name="TDtoList">DTO utilizado para listar y retornar registros.</typeparam>
     /// <typeparam name="TDtoCreate">DTO utilizado para crear nuevos registros.</typeparam>
     /// <typeparam name="TEntity">Entidad de dominio que hereda de <see cref="BaseDomain"/>.</typeparam>
-    public class Services<TDtoList, TDtoCreate, TEntity> : AServices<TDtoList, TDtoCreate, TEntity>
+    public class ServicesBase<TDtoList, TDtoCreate, TEntity> : AServices<TDtoList, TDtoCreate, TEntity>
         where TDtoList : class
         where TDtoCreate : class
         where TEntity : BaseDomain
     {
-        private readonly Data<TEntity> _repository;
-        private readonly IMapper _mapper;
+        protected readonly IData<TEntity> _repository;
+        protected readonly IMapper _mapper;
 
         /// <summary>
-        /// Inicializa una nueva instancia de <see cref="Services{TDtoList, TDtoCreate, TEntity}"/>.
+        /// Inicializa una nueva instancia de <see cref="ServicesBase{TDtoList, TDtoCreate, TEntity}"/>.
         /// </summary>
         /// <param name="repository">Repositorio genérico para operaciones de persistencia.</param>
         /// <param name="mapper">Instancia de Mapster para mapeo entre entidades y DTOs.</param>
-        public Services(Data<TEntity> repository, IMapper mapper)
+        public ServicesBase(IData<TEntity> repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
