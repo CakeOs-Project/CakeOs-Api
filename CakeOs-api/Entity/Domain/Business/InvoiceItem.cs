@@ -21,6 +21,7 @@ namespace CakeOS.Entity.Domain.Business
         public string? DecorationDescription { get; set; }
         public bool HasMessage { get; set; }
         public string? Message { get; set; }
+        public string Status { get; set; }
 
         ///
         /// Relaciones

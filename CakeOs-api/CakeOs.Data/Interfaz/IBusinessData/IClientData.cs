@@ -23,7 +23,7 @@ public interface IClientData : IData<Client>
     /// </summary>
     /// <param name="documentNumber">Número de documento del cliente</param>
     /// <returns>Cliente encontrado o null</returns>
-    Task<Client?> GetByDocumentNumberAsync(string documentNumber);
+    Task<Client?> GetByDocumentNumberAsync(string document);
 
     
 }

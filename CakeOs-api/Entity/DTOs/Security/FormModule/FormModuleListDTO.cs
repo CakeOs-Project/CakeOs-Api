@@ -4,8 +4,8 @@ public class FormModuleListDTO
 {
     public int Id { get; set; }
     public int FormId { get; set; }
-    public string FormNombre { get; set; } = string.Empty;
+    public string FormName { get; set; } = string.Empty;
     public int ModuleId { get; set; }
-    public string ModuloNombre { get; set; } = string.Empty;
+    public string ModuleName { get; set; } = string.Empty;
     public bool IsActive { get; set; }
 }

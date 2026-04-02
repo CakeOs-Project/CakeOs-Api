@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CakeOS.Entity.Domain.Base;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,8 +7,15 @@ using System.Threading.Tasks;
 
 namespace CakeOs.Business.Base
 {
-    public interface Iservices<TDto> where TDto : class
+    public interface IServices<TDtoList, TDtoCreate, TEntity>
+        where TDtoList : class
+        where TDtoCreate : class
+        where TEntity : BaseDomain
     {
-       
+        Task<IEnumerable<TDtoList>> GetAllAsync(bool includeInactive,CancellationToken cancellationToken = default);
+        Task<TDtoList?> GetByIdAsync(int id, CancellationToken ct = default);
+        Task<TDtoList> CreateAsync(TDtoCreate dto);
+        Task<bool> ToggleActiveAsync(int id, bool isActive);
+        Task<bool> SoftDeleteAsync(int id);
     }
 }
