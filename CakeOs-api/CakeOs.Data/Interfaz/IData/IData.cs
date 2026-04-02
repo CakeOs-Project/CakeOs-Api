@@ -65,18 +65,16 @@ public interface IData<T> where T : class
     /// Útil para el borrado lógico y gestión de estados.
     /// </summary>
     /// <param name="id">Identificador de la entidad a activar</param>
-    /// <param name="cancellationToken">Token para cancelar la operación asíncrona</param>
     /// <returns>True si se activó correctamente, False en caso contrario</returns>
-    Task<bool> ActivateAsync(int id, CancellationToken cancellationToken = default);
+    Task<bool> ActivateAsync(int id);
 
     /// <summary>
     /// Desactiva una entidad estableciendo su propiedad IsActive en false.
     /// Útil para el borrado lógico y gestión de estados.
     /// </summary>
     /// <param name="id">Identificador de la entidad a desactivar</param>
-    /// <param name="cancellationToken">Token para cancelar la operación asíncrona</param>
     /// <returns>True si se desactivó correctamente, False en caso contrario</returns>
-    Task<bool> DeactivateAsync(int id, CancellationToken cancellationToken = default);
+    Task<bool> DeactivateAsync(int id);
 
     // ==================== Métodos de Conteo y Existencia ====================
 
@@ -85,9 +83,8 @@ public interface IData<T> where T : class
     /// Verifica si existe una entidad con el identificador especificado.
     /// </summary>
     /// <param name="id">Identificador de la entidad a verificar</param>
-    /// <param name="cancellationToken">Token para cancelar la operación asíncrona</param>
     /// <returns>True si existe, False en caso contrario</returns>
-    Task<bool> ExistsAsync(int id, CancellationToken cancellationToken = default);
+    Task<bool> ExistsAsync(int id);
 
     // ==================== Paginación ====================
 

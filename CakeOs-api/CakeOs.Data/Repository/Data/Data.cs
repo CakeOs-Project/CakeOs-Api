@@ -98,11 +98,10 @@ namespace CakeOs.Data.Repository.Data
         /// Activa una entidad (establece IsActive = true) de forma lógica.
         /// </summary>
         /// <param name="id">El identificador de la entidad a activar.</param>
-        /// <param name="cancellationToken">Token de cancelación.</param>
         /// <returns>True si la entidad fue activada exitosamente; de lo contrario, false.</returns>
-        public async Task<bool> ActivateAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<bool> ActivateAsync(int id)
         {
-            var entity = await _dbSet.FindAsync(new object[] { id }, cancellationToken);
+            var entity = await _dbSet.FindAsync(new object[] { id });
             if (entity == null) return false;
 
             entity.IsActive = true;
@@ -114,11 +113,10 @@ namespace CakeOs.Data.Repository.Data
         /// Desactiva una entidad (establece IsActive = false) de forma lógica.
         /// </summary>
         /// <param name="id">El identificador de la entidad a desactivar.</param>
-        /// <param name="cancellationToken">Token de cancelación.</param>
         /// <returns>True si la entidad fue desactivada exitosamente; de lo contrario, false.</returns>
-        public async Task<bool> DeactivateAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<bool> DeactivateAsync(int id)
         {
-            var entity = await _dbSet.FindAsync(new object[] { id }, cancellationToken);
+            var entity = await _dbSet.FindAsync(new object[] { id });
             if (entity == null) return false;
 
             entity.IsActive = false;
@@ -130,11 +128,10 @@ namespace CakeOs.Data.Repository.Data
         /// Verifica si una entidad existe en la base de datos.
         /// </summary>
         /// <param name="id">El identificador de la entidad a buscar.</param>
-        /// <param name="cancellationToken">Token de cancelación.</param>
         /// <returns>True si la entidad existe; de lo contrario, false.</returns>
-        public async Task<bool> ExistsAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<bool> ExistsAsync(int id)
         {
-            return await _dbSet.AnyAsync(e => e.Id == id, cancellationToken);
+            return await _dbSet.AnyAsync(e => e.Id == id);
         }
 
         /// <summary>
