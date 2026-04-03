@@ -20,7 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CakeOs.Data\CakeOs.Data.csproj" />
+    <ProjectReference Include="..\Business\CakeOs.Business.csproj" />
+    <ProjectReference Include="..\Entity\CakeOs.Entity.csproj" />
   </ItemGroup>
 
 </Project>

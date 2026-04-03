@@ -17,7 +17,7 @@ namespace CakeOS.Entity.Domain.Business
         public bool HasFilling { get; set; }
         public int? FilledId { get; set; }
         public bool HasDecoration { get; set; }
-        public int? ImagenId { get; set; }
+        public int? ImageId { get; set; }
         public string? DecorationDescription { get; set; }
         public bool HasMessage { get; set; }
         public string? Message { get; set; }
