@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CakeOs.Entity.Migrations
 {
     /// <inheritdoc />
-    public partial class DateBase : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -101,6 +101,8 @@ namespace CakeOs.Entity.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TypeDocument = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Document = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreateAt = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -262,7 +264,7 @@ namespace CakeOs.Entity.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PersonaId = table.Column<int>(type: "int", nullable: false),
+                    PersonId = table.Column<int>(type: "int", nullable: false),
                     RolId = table.Column<int>(type: "int", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
@@ -271,8 +273,8 @@ namespace CakeOs.Entity.Migrations
                 {
                     table.PrimaryKey("PK_User", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_User_Person_PersonaId",
-                        column: x => x.PersonaId,
+                        name: "FK_User_Person_PersonId",
+                        column: x => x.PersonId,
                         principalTable: "Person",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -290,12 +292,14 @@ namespace CakeOs.Entity.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TypeId = table.Column<int>(type: "int", nullable: false),
                     SizeId = table.Column<int>(type: "int", nullable: false),
                     ShapeId = table.Column<int>(type: "int", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -365,11 +369,11 @@ namespace CakeOs.Entity.Migrations
                     HasFilling = table.Column<bool>(type: "bit", nullable: false),
                     FilledId = table.Column<int>(type: "int", nullable: true),
                     HasDecoration = table.Column<bool>(type: "bit", nullable: false),
-                    ImagenId = table.Column<int>(type: "int", nullable: true),
+                    ImageId = table.Column<int>(type: "int", nullable: true),
                     DecorationDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     HasMessage = table.Column<bool>(type: "bit", nullable: false),
                     Message = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ImageId = table.Column<int>(type: "int", nullable: true),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -526,9 +530,9 @@ namespace CakeOs.Entity.Migrations
                 column: "RolId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_User_PersonaId",
+                name: "IX_User_PersonId",
                 table: "User",
-                column: "PersonaId");
+                column: "PersonId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_User_RolId",

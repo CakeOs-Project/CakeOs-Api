@@ -6,6 +6,7 @@ namespace CakeOs.Business.Interfaces.Business
 {
     public interface IClientServices : IServices<ClientListDto,ClientCreateDto,Client>
     {
+        Task<IEnumerable<ClientListDto>> GetClientListAsync(CancellationToken ct = default);
         Task<ClientListDto> SearchByNameOrPhoneAsync(string phone);
         Task<ClientListDto?> GetByDocumentNumberAsync(string document);
     }

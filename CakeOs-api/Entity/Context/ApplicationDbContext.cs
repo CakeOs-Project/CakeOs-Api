@@ -76,7 +76,7 @@ namespace CakeOs.Entity.Context
         /// ==================================
         /// Parameter
         /// ==================================
-        public DbSet<Type> Type  { get; set; }
+        public DbSet<Types> Type  { get; set; }
         public DbSet<Size> Size { get; set; }
         public DbSet<Shape> Shape { get; set; }
         public DbSet<Image> Image { get; set; }

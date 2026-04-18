@@ -7,11 +7,11 @@ namespace CakeOS.Entity.Domain.security
     {
         public string Email { get; set; }
         public string Password { get; set; }
-        public int PersonaId { get; set; }
+        public int PersonId { get; set; }
         public int RolId { get; set; }
 
-        public Person? Person { get; set; }
-        public Rol? Rol { get; set; }
+        public Person Person { get; set; }
+        public Rol Rol { get; set; }
         public ICollection<Invoice> Invoices { get; set; } = new List<Invoice>();
         public ICollection<Payment> Payments { get; set; } = new List<Payment>();
     }

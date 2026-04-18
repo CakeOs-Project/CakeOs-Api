@@ -17,7 +17,7 @@ namespace CakeOS.Entity.Domain.Business
         ///
         /// Relaciones
         ///
-        public Client? Client { get; set; }
+        public Client Client { get; set; }
         public User? User { get; set; }
         public ICollection<InvoiceItem> InvoiceItems { get; set; } = new List<InvoiceItem>();
         public ICollection<Payment> Payments { get; set; } = new List<Payment>();

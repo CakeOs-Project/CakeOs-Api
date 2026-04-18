@@ -26,6 +26,11 @@ namespace CakeOs.Business.Services.Business
             _mapper = mapper;
         }
 
+        public async Task<IEnumerable<ClientListDto>> GetClientListAsync(CancellationToken cancellationToken = default)
+        {
+            return await _data.GetClientListAsync(cancellationToken);
+        }
+
         public async Task<ClientListDto> SearchByNameOrPhoneAsync(string phone)
         {
             if (string.IsNullOrWhiteSpace(phone))
