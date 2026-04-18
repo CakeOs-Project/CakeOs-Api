@@ -10,7 +10,7 @@ namespace CakeOs.Data.Repository.Data
     /// operaciones CRUD básicas y funcionalidades comunes para todas las entidades.
     /// </summary>
     /// <typeparam name="T">El tipo de entidad del dominio, debe heredar de BaseDomain.</typeparam>
-    public class Data<T> :  IData<T> where T : BaseDomain
+    public class Data<T> :  AData<T> where T : BaseDomain
     {
         private readonly ApplicationDbContext _context;
         protected readonly DbSet<T> _dbSet;
@@ -31,7 +31,7 @@ namespace CakeOs.Data.Repository.Data
         /// <param name="entity">La entidad a agregar.</param>
         /// <param name="cancellationToken">Token de cancelación.</param>
         /// <returns>La entidad agregada.</returns>
-        public async Task<T> AddAsync(T entity, CancellationToken cancellationToken = default)
+        public override async Task<T> AddAsync(T entity, CancellationToken cancellationToken = default)
         {
             await _dbSet.AddAsync(entity, cancellationToken);
             return entity;
@@ -43,7 +43,7 @@ namespace CakeOs.Data.Repository.Data
         /// <param name="id">El identificador de la entidad.</param>
         /// <param name="cancellationToken">Token de cancelación.</param>
         /// <returns>True si la entidad fue encontrada y eliminada; de lo contrario, false.</returns>
-        public async Task<bool> DeleteAsync(int id, CancellationToken cancellationToken = default)
+        public override async Task<bool> DeleteAsync(int id, CancellationToken cancellationToken = default)
         {
             var entity = await _dbSet.FindAsync(new object[] { id }, cancellationToken);
             if (entity == null) return false;
@@ -57,7 +57,7 @@ namespace CakeOs.Data.Repository.Data
         /// </summary>
         /// <param name="cancellationToken">Token de cancelación.</param>
         /// <returns>Una colección de todas las entidades.</returns>
-        public async Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default)
+        public override async Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             return await _dbSet.AsNoTracking().ToListAsync(cancellationToken);
         }
@@ -67,7 +67,7 @@ namespace CakeOs.Data.Repository.Data
         /// </summary>
         /// <param name="cancellationToken">Token de cancelación.</param>
         /// <returns>Una colección de todas las entidades activas.</returns>
-        public async Task<IEnumerable<T>> GetAllActiveAsync(CancellationToken cancellationToken = default)
+        public override async Task<IEnumerable<T>> GetAllActiveAsync(CancellationToken cancellationToken = default)
         {
             return await _dbSet.AsNoTracking().Where(e => e.IsActive).ToListAsync(cancellationToken);
         }
@@ -78,7 +78,7 @@ namespace CakeOs.Data.Repository.Data
         /// <param name="id">El identificador de la entidad.</param>
         /// <param name="cancellationToken">Token de cancelación.</param>
         /// <returns>La entidad encontrada o null si no se encuentra.</returns>
-        public async Task<T?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+        public override async Task<T?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             return await _dbSet.FindAsync(new object[] { id }, cancellationToken);
         }
@@ -88,7 +88,7 @@ namespace CakeOs.Data.Repository.Data
         /// </summary>
         /// <param name="entity">La entidad con los datos actualizados.</param>
         /// <returns>La entidad actualizada.</returns>
-        public Task<T> UpdateAsync(T entity)
+        public override Task<T> UpdateAsync(T entity)
         {
             _dbSet.Update(entity);
             return Task.FromResult(entity);
@@ -99,7 +99,7 @@ namespace CakeOs.Data.Repository.Data
         /// </summary>
         /// <param name="id">El identificador de la entidad a activar.</param>
         /// <returns>True si la entidad fue activada exitosamente; de lo contrario, false.</returns>
-        public async Task<bool> ActivateAsync(int id)
+        public override async Task<bool> ActivateAsync(int id)
         {
             var entity = await _dbSet.FindAsync(new object[] { id });
             if (entity == null) return false;
@@ -114,7 +114,7 @@ namespace CakeOs.Data.Repository.Data
         /// </summary>
         /// <param name="id">El identificador de la entidad a desactivar.</param>
         /// <returns>True si la entidad fue desactivada exitosamente; de lo contrario, false.</returns>
-        public async Task<bool> DeactivateAsync(int id)
+        public override async Task<bool> DeactivateAsync(int id)
         {
             var entity = await _dbSet.FindAsync(new object[] { id });
             if (entity == null) return false;
@@ -129,7 +129,7 @@ namespace CakeOs.Data.Repository.Data
         /// </summary>
         /// <param name="id">El identificador de la entidad a buscar.</param>
         /// <returns>True si la entidad existe; de lo contrario, false.</returns>
-        public async Task<bool> ExistsAsync(int id)
+        public override async Task<bool> ExistsAsync(int id)
         {
             return await _dbSet.AnyAsync(e => e.Id == id);
         }
@@ -142,7 +142,7 @@ namespace CakeOs.Data.Repository.Data
         /// <param name="filter">Filtro opcional (no implementado en esta versión genérica).</param>
         /// <param name="cancellationToken">Token de cancelación.</param>
         /// <returns>Una tupla con los elementos paginados y el conteo total de elementos.</returns>
-        public async Task<(IEnumerable<T> Items, int TotalCount)> GetPagedAsync(
+        public override async Task<(IEnumerable<T> Items, int TotalCount)> GetPagedAsync(
             int pageNumber, int pageSize, string? filter = null, CancellationToken cancellationToken = default)
         {
             IQueryable<T> query = _dbSet.AsNoTracking();
@@ -160,7 +160,7 @@ namespace CakeOs.Data.Repository.Data
         /// </summary>
         /// <param name="cancellationToken">Token de cancelación.</param>
         /// <returns>El número de entidades escritas en la base de datos.</returns>
-        public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             return await _context.SaveChangesAsync(cancellationToken);
         }

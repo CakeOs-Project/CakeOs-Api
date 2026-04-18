@@ -10,8 +10,8 @@ namespace CakeOS.Entity.Domain.security
         public int PersonId { get; set; }
         public int RolId { get; set; }
 
-        public Person? Person { get; set; }
-        public Rol? Rol { get; set; }
+        public Person Person { get; set; }
+        public Rol Rol { get; set; }
         public ICollection<Invoice> Invoices { get; set; } = new List<Invoice>();
         public ICollection<Payment> Payments { get; set; } = new List<Payment>();
     }

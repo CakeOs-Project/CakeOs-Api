@@ -10,7 +10,10 @@ namespace CakeOs.Entity.Domain.Parameter
         public string Extension { get; set; }
         public long Size { get; set; }
 
-        public ICollection<InvoiceItem> InvoiceItems { get; set; } = new List<InvoiceItem>();
+        /// 
+        /// Relaciones
+        /// 
+        public ICollection<InvoiceItem?> InvoiceItems { get; set; } = new List<InvoiceItem?>();
 
     }
 }

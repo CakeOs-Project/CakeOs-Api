@@ -1,5 +1,6 @@
 using CakeOs.Data.Interfaz.IData;
 using CakeOS.Entity.Domain.Business;
+using CakeOS.Entity.DTOs.Business.Client;
 
 
 namespace CakeOs.Data.Interfaz.IBusinessData;
@@ -10,6 +11,8 @@ namespace CakeOs.Data.Interfaz.IBusinessData;
 /// </summary>
 public interface IClientData : IData<Client>
 {
+    Task<IEnumerable<ClientListDto>> GetClientListAsync(CancellationToken ct = default);
+
     /// <summary>
     /// CU-13: Busca clientes por nombre o número de teléfono.
     /// </summary>
