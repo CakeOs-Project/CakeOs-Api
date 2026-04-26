@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CakeOs.Web.Controllers.Business
 {
+    /// <summary>
+    /// Controlador para gestionar operaciones relacionadas con facturas.
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     [Produces("application/json")]
@@ -20,7 +23,7 @@ namespace CakeOs.Web.Controllers.Business
 
         [HttpGet("today")]
         public async Task<IActionResult> GetInvoicesForToday()
-        {
+    {
             var result = await _services.GetInvoicesForTodayAsync();
             return Ok(result);
         }
