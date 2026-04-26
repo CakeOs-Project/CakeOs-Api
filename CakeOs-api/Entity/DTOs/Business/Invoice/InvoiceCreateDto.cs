@@ -4,7 +4,21 @@ namespace CakeOS.Entity.DTOs.Business.Invoice
 {
     public class InvoiceCreateDto
     {
-        public int ClientId { get; set; }
+        /// <summary>
+        ///  Datos Personas
+        /// </summary>
+        public string TypeDocument { get; set; }
+        public string Document { get; set; }
+        public string Name { get; set; }
+        public string LastName { get; set; }
+        public string? Phone { get; set; }
+        public string? Address { get; set; }
+        public string? Email { get; set; }
+
+        /// <summary>
+        /// Datos factura
+        /// </summary>
+        /// 
         public DateTime DeliveryDate { get; set; }
         public string? Observations { get; set; }
         public decimal? InitialPayment { get; set; }

@@ -1,3 +1,4 @@
+using CakeOs.Entity.Enum;
 using CakeOS.Entity.Domain.Base;
 using CakeOS.Entity.Domain.security;
 
@@ -10,7 +11,7 @@ namespace CakeOS.Entity.Domain.Business
         public int UserId { get; set; }
         public decimal Total { get; set; }
         public decimal OutstandingBalance { get; set; }
-        public string Status { get; set; } = string.Empty;
+        public InvoiceStatus Status { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime DeliveryDate { get; set; }
 

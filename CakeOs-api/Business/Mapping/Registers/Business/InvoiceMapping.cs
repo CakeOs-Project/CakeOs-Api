@@ -14,7 +14,7 @@ namespace CakeOs.Business.Mapping.Registers.Business
         public void Register(TypeAdapterConfig config)
         {
             config.NewConfig<Invoice, InvoiceListDto>()
-                .Map(dest => dest.ClientFullName, src => src.Client != null && src.Client.Person != null
+                .Map(dest => dest.FullName, src => src.Client != null && src.Client.Person != null
                     ? $"{src.Client.Person.Name} {src.Client.Person.LastName}"
                     : string.Empty);
 

@@ -1,6 +1,7 @@
 using CakeOs.Web.Extensions;
 using CakeOs.Web.Extensions.Infrastructure;
 using CakeOs.Web.Extensions.Module;
+using MapsterMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
