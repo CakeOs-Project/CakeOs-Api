@@ -64,6 +64,6 @@ public class ClientData : Data<Client>, IClientData
     {
         return await _context.Set<Client>()
             .Include(c => c.Person)
-            .FirstOrDefaultAsync(c => c.Person != null && c.Email == documentNumber);
+            .FirstOrDefaultAsync(c => c.Person != null && c.Person.Document == documentNumber);
     }
 }

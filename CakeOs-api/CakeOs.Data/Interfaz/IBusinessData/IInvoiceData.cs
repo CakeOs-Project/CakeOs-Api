@@ -1,5 +1,7 @@
 using CakeOs.Data.Interfaz.IData;
+using CakeOs.Entity.Enum;
 using CakeOS.Entity.Domain.Business;
+using CakeOS.Entity.DTOs.Business.Invoice;
 
 
 namespace CakeOs.Data.Interfaz.IBusinessData;
@@ -14,7 +16,7 @@ public interface IInvoiceData : IData<Invoice>
     /// CU-27: Obtiene todas las facturas creadas el día actual.
     /// </summary>
     /// <returns>Lista de facturas del día</returns>
-    Task<IEnumerable<Invoice>> GetInvoicesForTodayAsync();
+    Task<List<InvoiceListDto>> GetInvoicesForTodayAsync();
 
     /// <summary>
     /// CU-28: Obtiene facturas por fecha de entrega específica.
@@ -58,5 +60,19 @@ public interface IInvoiceData : IData<Invoice>
     /// <param name="invoiceId">Identificador de la factura</param>
     /// <param name="newStatus">Nuevo estado</param>
     /// <returns>True si se actualizó correctamente</returns>
-    Task<bool> UpdateStatusAsync(int invoiceId, string newStatus);
+    Task<bool> UpdateStatusAsync(int invoiceId, InvoiceStatus status);
+
+    /// <summary>
+    /// Necesaria para crear el codigo de factura.
+    /// </summary>
+    /// <param name="date"></param>
+    /// <returns></returns>
+    Task<int?> GetLastInvoiceOfDayAsync(DateTime date);
+
+    /// <summary>
+    /// Me trea la informacion basica de la factura y el cliente
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    Task<InvoiceListDto?> GetByIdWithDetailsAsync(int id);
 }

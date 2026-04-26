@@ -4,6 +4,7 @@ namespace CakeOS.Entity.DTOs.Business.InvoiceItem
     {
         public int ProductId { get; set; }
         public int Quantity { get; set; }
+        public decimal UnitPrice  { get; set; }
         public bool HasFilling { get; set; }
         public int? FilledId { get; set; }
         public bool HasDecoration { get; set; }

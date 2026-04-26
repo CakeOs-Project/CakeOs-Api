@@ -1,8 +1,11 @@
 using CakeOs.Data.Interfaz.IBusinessData;
 using CakeOs.Data.Repository.Data;
 using CakeOs.Entity.Context;
+using CakeOs.Entity.Enum;
 using CakeOS.Entity.Domain.Business;
+using CakeOS.Entity.DTOs.Business.Invoice;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 
 namespace CakeOs.Data.Repository.BusinessData;
 
@@ -23,12 +26,25 @@ public class InvoiceData : Data<Invoice>, IInvoiceData
     /// CU-27: Obtiene todas las facturas creadas el día actual.
     /// </summary>
     /// <returns>Lista de facturas del día</returns>
-    public async Task<IEnumerable<Invoice>> GetInvoicesForTodayAsync()
+    public async Task<List<InvoiceListDto>> GetInvoicesForTodayAsync()
     {
-        var today = DateTime.UtcNow.Date;
+        var start = DateTime.Today;
+        var end = start.AddDays(1);
+
         return await _context.Set<Invoice>()
-            .Where(i => i.CreatedAt.Date == today)
-            .AsNoTracking()
+            .Include(i => i.Client)
+                .ThenInclude(c => c.Person)
+            .Where(i => i.DeliveryDate >= start && i.DeliveryDate < end)
+            .Select(i => new InvoiceListDto
+            {
+                Id = i.Id,
+                Code = i.Code,
+                FullName = i.Client.Person.Name + " " + i.Client.Person.LastName,
+                DeliveryDate = i.DeliveryDate,
+                Status = i.Status,
+                OutstandingBalance = i.OutstandingBalance,
+                Total = i.Total
+            })
             .ToListAsync();
     }
 
@@ -97,7 +113,7 @@ public class InvoiceData : Data<Invoice>, IInvoiceData
         var invoice = await _context.Set<Invoice>().FindAsync(id);
         if (invoice == null) return false;
 
-        invoice.Status = "Cancelled";
+        invoice.Status = InvoiceStatus.Cancelada;
         _context.Set<Invoice>().Update(invoice);
         return true;
     }
@@ -108,7 +124,7 @@ public class InvoiceData : Data<Invoice>, IInvoiceData
     /// <param name="id">Identificador de la factura</param>
     /// <param name="status">Nuevo estado</param>
     /// <returns>True si se actualizó correctamente</returns>
-    public async Task<bool> UpdateStatusAsync(int id, string status)
+    public async Task<bool> UpdateStatusAsync(int id, InvoiceStatus status)
     {
         var invoice = await _context.Set<Invoice>().FindAsync(id);
         if (invoice == null) return false;
@@ -116,5 +132,48 @@ public class InvoiceData : Data<Invoice>, IInvoiceData
         invoice.Status = status;
         _context.Set<Invoice>().Update(invoice);
         return true;
+    }
+
+    /// <summary>
+    /// Me trea la informacion basica de la factura y el cliente
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public async Task<InvoiceListDto?> GetByIdWithDetailsAsync(int id)
+    {
+        return await _context.Set<Invoice>()
+        .Where(i => i.Id == id)
+        .Select(i => new InvoiceListDto
+        {
+            Id = i.Id,
+            Code = i.Code,
+            FullName = i.Client.Person.Name + " " + i.Client.Person.LastName,
+            DeliveryDate = i.DeliveryDate,
+            Status = i.Status,
+            OutstandingBalance = i.OutstandingBalance,
+            Total = i.Total,
+        })
+        .FirstOrDefaultAsync();
+    }
+
+    /// <summary>
+    /// Me trae el ultimo registro creado en la fecha que se le pasa para luego generar un code
+    /// </summary>
+    /// <param name="date"></param>
+    /// <returns></returns>
+    public async Task<int?> GetLastInvoiceOfDayAsync(DateTime date)
+    {
+        var prefix = $"FAC-{date:yyyyMMdd}";
+
+        var last = await _context.Set<Invoice>()
+            .Where(i => i.Code.StartsWith(prefix))
+            .OrderByDescending(i => i.Code)
+            .Select(i => i.Code)
+            .FirstOrDefaultAsync();
+
+        if (last is null) return null;
+
+        var parts = last.Split('-');
+        return int.Parse(parts[^1]);
     }
 }
