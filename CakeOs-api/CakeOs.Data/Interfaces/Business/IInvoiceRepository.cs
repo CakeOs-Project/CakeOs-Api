@@ -1,16 +1,16 @@
-using CakeOs.Data.Interfaz.IData;
-using CakeOs.Entity.Enum;
+using CakeOs.Data.Base;
+using CakeOs.Entity.Enum.Invoice;
 using CakeOS.Entity.Domain.Business;
 using CakeOS.Entity.DTOs.Business.Invoice;
 
 
-namespace CakeOs.Data.Interfaz.IBusinessData;
+namespace CakeOs.Data.Interfaces.Business;
 
 /// <summary>
 /// Interfaz para el acceso a datos de la entidad Factura.
 /// Hereda todas las operaciones CRUD básicas de IData.
 /// </summary>
-public interface IInvoiceData : IData<Invoice>
+public interface IInvoiceRepository : IData<Invoice>
 {
     /// <summary>
     /// CU-27: Obtiene todas las facturas creadas el día actual.
@@ -30,7 +30,7 @@ public interface IInvoiceData : IData<Invoice>
     /// </summary>
     /// <param name="id">Identificador de la factura</param>
     /// <returns>Factura con todos sus detalles o null</returns>
-    Task<Invoice?> GetWithDetailsAsync(int id);
+    Task<InvoiceDetailDto?> GetWithDetailsAsync(int id);
 
     /// <summary>
     /// CU-37: Obtiene facturas en un rango de fechas específico.

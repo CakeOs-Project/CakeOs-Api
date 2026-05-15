@@ -1,9 +1,10 @@
 ﻿using CakeOs.Business.Base;
 using CakeOs.Business.Interfaces.Business;
-using CakeOs.Data.Interfaz.IBusinessData;
-using CakeOs.Data.Interfaz.ISecurityData;
+using CakeOs.Data.Interfaces.Business;
+using CakeOs.Data.Interfaces.Security;
 using CakeOs.Entity.Context;
-using CakeOs.Entity.Enum;
+using CakeOs.Entity.Enum.Invoice;
+using CakeOs.Entity.Enum.Payment;
 using CakeOS.Entity.Domain.Business;
 using CakeOS.Entity.Domain.security;
 using CakeOS.Entity.DTOs.Business.Invoice;
@@ -24,10 +25,11 @@ namespace CakeOs.Business.Services.Business
     public class InvoiceServices : ServicesBase<InvoiceListDto, InvoiceCreateDto, Invoice>, IInvoiceServices
     {
         private readonly IMapper _mapper;
-        private readonly IInvoiceData _invoiceData;
-        private readonly IClientData _clientData;
-        private readonly IInvoiceItemData _invoiceItemData;
-        private readonly IPersonData _personData;
+        private readonly IInvoiceRepository _invoiceData;
+        private readonly IClientRepository _clientData;
+        private readonly IInvoiceItemRepository _invoiceItemData;
+        private readonly IPersonRepository _personData;
+        private readonly IPaymentRepository _paymentData;
 
         /// <summary>
         /// Necesario para la utilizacion de las transaciones
@@ -36,10 +38,11 @@ namespace CakeOs.Business.Services.Business
 
         public InvoiceServices(
             IMapper mapper,
-            IInvoiceData data,
-            IClientData clientData,
-            IInvoiceItemData invoiceItemData,
-            IPersonData personData,
+            IInvoiceRepository data,
+            IClientRepository clientData,
+            IInvoiceItemRepository invoiceItemData,
+            IPersonRepository personData,
+            IPaymentRepository paymentData,
             ApplicationDbContext context)
            : base(data, mapper)
         {
@@ -49,18 +52,17 @@ namespace CakeOs.Business.Services.Business
             _invoiceItemData = invoiceItemData;
             _context = context;
             _personData = personData;
+            _paymentData = paymentData;
         }
 
         public async Task<InvoiceListDto> CreateInvoiceAsync(InvoiceCreateDto dto, int userId)
         {
             if (dto.TypeDocument is null)
-                throw new Exception("Debes seleccionar algún tipo de documento.");
+                throw new ArgumentException("Debes seleccionar algún tipo de documento.");
             if (dto.Document is null)
-                throw new Exception("El número de documento estar vacío");
+                throw new ArgumentException("El número de documento estar vacío");
             if (dto.Items is null || !dto.Items.Any())
-                throw new Exception("La factura debe tener al menos un ítem");
-            if (dto.InitialPayment > 0 && string.IsNullOrEmpty(dto.PaymentMethod))
-                throw new Exception("Debe especificar el método de pago");
+                throw new ArgumentException("La factura debe tener al menos un ítem");
 
             var strategy = _context.Database.CreateExecutionStrategy();
 
@@ -93,7 +95,7 @@ namespace CakeOs.Business.Services.Business
                         UserId = userId,
                         Code = code,
                         Total = total,
-                        OutstandingBalance = total - (dto.InitialPayment ?? 0),
+                        OutstandingBalance = total - (dto.InitialPayment),
                         Status = InvoiceStatus.Pendiente,
                         CreatedAt = DateTime.UtcNow,
                         DeliveryDate = dto.DeliveryDate,
@@ -122,6 +124,31 @@ namespace CakeOs.Business.Services.Business
                         await _invoiceItemData.AddAsync(invoiceItem);
                     }
 
+                    if(dto.HasInitialPayment)
+                    {
+                        PaymentType type;
+
+                        if (dto.InitialPayment > 0 && !Enum.IsDefined(typeof(PaymentMethod), dto.PaymentMethod.Value))
+                            throw new ArgumentException("Debe especificar un método de pago cuando se registra un pago inicial");
+
+                        if (invoice.OutstandingBalance == 0)
+                            type = PaymentType.PagoTotal;
+                        else
+                            type = PaymentType.Abono;
+
+                        var paymet = new Payment
+                        {
+                            Invoice = invoice,
+                            UserId = userId,
+                            Amount = dto.InitialPayment,
+                            PaymentMethod = dto.PaymentMethod.Value,
+                            PaymentType = type,
+                            PaymentDate = DateTime.UtcNow
+                        };
+
+                        await _paymentData.AddAsync(paymet);
+                    }
+
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
 
@@ -141,6 +168,15 @@ namespace CakeOs.Business.Services.Business
         {
             var invoices = await _invoiceData.GetInvoicesForTodayAsync();
             return invoices;
+        }
+
+        public async Task<InvoiceDetailDto?> GetWithDetailsAsync(int id)
+        {
+            if (id <= 0)
+                throw new Exception("No existe ninguna factura con ese ID");
+
+            var invoiceDetails = await _invoiceData.GetWithDetailsAsync(id);
+            return invoiceDetails;
         }
 
         private async Task<string> GenerateInvoiceCodeAsync()

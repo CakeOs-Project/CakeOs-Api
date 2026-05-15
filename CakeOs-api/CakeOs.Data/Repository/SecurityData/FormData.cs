@@ -1,5 +1,5 @@
-using CakeOs.Data.Interfaz.ISecurityData;
-using CakeOs.Data.Repository.Data;
+using CakeOs.Data.Base;
+using CakeOs.Data.Interfaces.Security;
 using CakeOs.Entity.Context;
 using CakeOS.Entity.Domain.security;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +10,7 @@ namespace CakeOs.Data.Repository.SecurityData;
 /// Implementación del repositorio de datos para la entidad Formulario.
 /// Proporciona operaciones CRUD y métodos específicos para gestión de formularios.
 /// </summary>
-public class FormData : Data<Form>, IFormData
+public class FormData : DataBase<Form>, IFormRepository
 {
     private readonly ApplicationDbContext _context;
 

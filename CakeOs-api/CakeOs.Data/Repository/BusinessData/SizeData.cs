@@ -1,5 +1,5 @@
-using CakeOs.Data.Interfaz.IBusinessData;
-using CakeOs.Data.Repository.Data;
+using CakeOs.Data.Base;
+using CakeOs.Data.Interfaces.Business;
 using CakeOs.Entity.Context;
 using CakeOs.Entity.Domain.Parameter;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +10,7 @@ namespace CakeOs.Data.Repository.BusinessData;
 /// Implementación del repositorio de datos para la entidad Tamaño.
 /// Proporciona operaciones CRUD básicas para la gestión de tamaños de productos.
 /// </summary>
-public class SizeData : Data<Size>, ISizeData
+public class SizeData : DataBase<Size>, ISizeRepository
 {
     private readonly ApplicationDbContext _context;
 

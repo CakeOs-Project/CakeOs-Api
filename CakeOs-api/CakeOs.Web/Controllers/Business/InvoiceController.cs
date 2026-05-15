@@ -23,8 +23,19 @@ namespace CakeOs.Web.Controllers.Business
 
         [HttpGet("today")]
         public async Task<IActionResult> GetInvoicesForToday()
-    {
+        {
             var result = await _services.GetInvoicesForTodayAsync();
+            return Ok(result);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetInvoiceDetailAsync(int id)
+        {
+            var result = await _services.GetWithDetailsAsync(id);
+
+            if (result is null)
+                return NotFound();
+
             return Ok(result);
         }
 

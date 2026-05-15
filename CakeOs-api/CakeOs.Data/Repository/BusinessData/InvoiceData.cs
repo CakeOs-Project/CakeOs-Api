@@ -1,9 +1,11 @@
-using CakeOs.Data.Interfaz.IBusinessData;
-using CakeOs.Data.Repository.Data;
+using CakeOs.Data.Base;
+using CakeOs.Data.Interfaces.Business;
 using CakeOs.Entity.Context;
-using CakeOs.Entity.Enum;
+using CakeOs.Entity.Enum.Invoice;
 using CakeOS.Entity.Domain.Business;
 using CakeOS.Entity.DTOs.Business.Invoice;
+using CakeOS.Entity.DTOs.Business.InvoiceItem;
+using CakeOS.Entity.DTOs.Business.Payment;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 
@@ -13,7 +15,7 @@ namespace CakeOs.Data.Repository.BusinessData;
 /// Implementación del repositorio de datos para la entidad Factura.
 /// Proporciona operaciones CRUD y métodos específicos para búsquedas y reportes.
 /// </summary>
-public class InvoiceData : Data<Invoice>, IInvoiceData
+public class InvoiceData : DataBase<Invoice>, IInvoiceRepository
 {
     private readonly ApplicationDbContext _context;
 
@@ -67,13 +69,62 @@ public class InvoiceData : Data<Invoice>, IInvoiceData
     /// </summary>
     /// <param name="id">Identificador de la factura</param>
     /// <returns>Factura con todos sus detalles o null</returns>
-    public async Task<Invoice?> GetWithDetailsAsync(int id)
+    public async Task<InvoiceDetailDto?> GetWithDetailsAsync(int id)
     {
         return await _context.Set<Invoice>()
-            .Include(i => i.Client)
-            .Include(i => i.InvoiceItems)
-            .Include(i => i.Payments)
-            .FirstOrDefaultAsync(i => i.Id == id);
+        .Include(i => i.Client)
+            .ThenInclude(c => c.Person)
+        .Include(i => i.User)
+            .ThenInclude(u => u.Person)
+        .Include(i => i.InvoiceItems)
+            .ThenInclude(ii => ii.Product)
+        .Include(i => i.InvoiceItems)
+            .ThenInclude(ii => ii.Filled)
+        .Include(i => i.Payments)
+            .ThenInclude(p => p.User)
+                .ThenInclude(u => u.Person)
+        .Where(i => i.Id == id)
+        .Select(i => new InvoiceDetailDto
+        {
+            Id = i.Id,
+            Code = i.Code,
+            ClientFullName = i.Client.Person.Name + " " + i.Client.Person.LastName,
+            ClientTypeDocument = i.Client.Person.TypeDocument,
+            ClientDocument = i.Client.Person.Document,
+            ClientPhone = i.Client.Person.Phone,
+            ClientEmail = i.Client.Email,
+            CreatedAt = i.CreatedAt,
+            DeliveryDate = i.DeliveryDate,
+            Status = i.Status,
+            Total = i.Total,
+            OutstandingBalance = i.OutstandingBalance,
+            CreatedByFullName = i.User.Person.Name + " " + i.User.Person.LastName,
+            Items = i.InvoiceItems.Select(ii => new InvoiceItemDetailDto
+            {
+                Id = ii.Id,
+                ProductName = ii.Product.Name,
+                Quantity = ii.Quantity,
+                UnitPrice = ii.UnitPrice,
+                SubTotal = ii.SubTotal,
+                Status = ii.Status,
+                HasFilling = ii.HasFilling,
+                FilledName = ii.Filled != null ? ii.Filled.Name : null,
+                HasDecoration = ii.HasDecoration,
+                DecorationDescription = ii.DecorationDescription,
+                HasMessage = ii.HasMessage,
+                Message = ii.Message
+            }).ToList(),
+            Payments = i.Payments.Select(p => new PaymentListDto
+            {
+                Id = p.Id,
+                Amount = p.Amount,
+                PaymentMethod = p.PaymentMethod,
+                PaymentType = p.PaymentType,
+                PaymentDate = p.PaymentDate,
+                RegisteredByFullName = p.User.Person.Name + " " + p.User.Person.LastName
+            }).ToList()
+        })
+        .FirstOrDefaultAsync();
     }
 
     /// <summary>

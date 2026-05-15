@@ -1,5 +1,5 @@
-using CakeOs.Data.Interfaz.IBusinessData;
-using CakeOs.Data.Repository.Data;
+using CakeOs.Data.Base;
+using CakeOs.Data.Interfaces.Business;
 using CakeOs.Entity.Context;
 using CakeOs.Entity.Domain.Business;
 
@@ -11,7 +11,7 @@ namespace CakeOs.Data.Repository.BusinessData;
 /// Implementación del repositorio de datos para la entidad Producto.
 /// Proporciona operaciones CRUD y métodos específicos de búsqueda.
 /// </summary>
-public class ProductData : Data<Product>, IProductData
+public class ProductData : DataBase<Product>, IProductRepository
 {
     private readonly ApplicationDbContext _context;
 

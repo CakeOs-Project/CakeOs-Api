@@ -1,5 +1,5 @@
-using CakeOs.Data.Interfaz.IBusinessData;
-using CakeOs.Data.Repository.Data;
+using CakeOs.Data.Base;
+using CakeOs.Data.Interfaces.Business;
 using CakeOs.Entity.Context;
 using CakeOs.Entity.Domain.Parameter;
 using CakeOS.Entity.Domain.Business;
@@ -11,7 +11,7 @@ namespace CakeOs.Data.Repository.BusinessData;
 /// Implementación del repositorio de datos para la entidad Forma.
 /// Proporciona operaciones CRUD básicas para la gestión de formas de productos.
 /// </summary>
-public class ShapeData : Data<Shape>, IShapeData
+public class ShapeData : DataBase<Shape>, IShapeRepository
 {
     private readonly ApplicationDbContext _context;
 

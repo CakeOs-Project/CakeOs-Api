@@ -1,14 +1,14 @@
-using CakeOs.Data.Interfaz.IData;
+using CakeOs.Data.Base;
 using CakeOs.Entity.Domain.Business;
 using CakeOS.Entity.Domain.Business;
 
-namespace CakeOs.Data.Interfaz.IBusinessData;
+namespace CakeOs.Data.Interfaces.Business;
 
 /// <summary>
 /// Interfaz para el acceso a datos de la entidad Producto.
 /// Hereda todas las operaciones CRUD básicas de IData.
 /// </summary>
-public interface IProductData : IData<Product>
+public interface IProductRepository : IData<Product>
 {
     
 

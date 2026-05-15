@@ -1,6 +1,7 @@
-using CakeOs.Data.Interfaz.IBusinessData;
-using CakeOs.Data.Repository.Data;
+using CakeOs.Data.Base;
+using CakeOs.Data.Interfaces.Business;
 using CakeOs.Entity.Context;
+using CakeOs.Entity.Enum.Payment;
 using CakeOS.Entity.Domain.Business;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,7 +11,7 @@ namespace CakeOs.Data.Repository.BusinessData;
 /// Implementación del repositorio de datos para la entidad Pago.
 /// Proporciona operaciones CRUD y métodos específicos para gestión de pagos.
 /// </summary>
-public class PaymentData : Data<Payment>, IPaymentData
+public class PaymentData : DataBase<Payment>, IPaymentRepository
 {
     private readonly ApplicationDbContext _context;
 
@@ -40,7 +41,7 @@ public class PaymentData : Data<Payment>, IPaymentData
     /// <returns>Pago registrado</returns>
     public async Task<Payment> RegisterAdvancePaymentAsync(Payment payment)
     {
-        payment.PaymentType = "Advance";
+        payment.PaymentType = PaymentType.Abono;
         return await AddAsync(payment);
     }
 
@@ -51,7 +52,7 @@ public class PaymentData : Data<Payment>, IPaymentData
     /// <returns>Pago registrado</returns>
     public async Task<Payment> RegisterFinalPaymentAsync(Payment payment)
     {
-        payment.PaymentType = "Final";
+        payment.PaymentType = PaymentType.PagoFinal;
         return await AddAsync(payment);
     }
 

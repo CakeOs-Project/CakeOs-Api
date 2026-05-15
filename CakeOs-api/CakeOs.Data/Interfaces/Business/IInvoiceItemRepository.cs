@@ -1,14 +1,14 @@
-using CakeOs.Data.Interfaz.IData;
+using CakeOs.Data.Base;
 using CakeOS.Entity.Domain.Business;
 
 
-namespace CakeOs.Data.Interfaz.IBusinessData;
+namespace CakeOs.Data.Interfaces.Business;
 
 /// <summary>
 /// Interfaz para el acceso a datos de la entidad Item de Factura.
 /// Hereda todas las operaciones CRUD básicas de IData.
 /// </summary>
-public interface IInvoiceItemData : IData<InvoiceItem>
+public interface IInvoiceItemRepository : IData<InvoiceItem>
 {
     /// <summary>
     /// Obtiene todos los ítems de una factura específica.

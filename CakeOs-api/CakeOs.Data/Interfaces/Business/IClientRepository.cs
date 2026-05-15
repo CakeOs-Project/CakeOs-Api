@@ -1,17 +1,21 @@
-using CakeOs.Data.Interfaz.IData;
+using CakeOs.Data.Base;
 using CakeOS.Entity.Domain.Business;
 using CakeOS.Entity.DTOs.Business.Client;
 
-
-namespace CakeOs.Data.Interfaz.IBusinessData;
+namespace CakeOs.Data.Interfaces.Business;
 
 /// <summary>
 /// Interfaz para el acceso a datos de la entidad Cliente.
 /// Hereda todas las operaciones CRUD básicas de IData.
 /// </summary>
-public interface IClientData : IData<Client>
+public interface IClientRepository : IData<Client>
 {
-    Task<IEnumerable<ClientListDto>> GetClientListAsync(CancellationToken ct = default);
+    /// <summary>
+    /// CU-14 CU-14: Listar clientes
+    /// </summary>
+    /// <param name="ct"></param>
+    /// <returns></returns>
+    Task<List<ClientListDto>> GetClientListAsync(CancellationToken ct = default);
 
     /// <summary>
     /// CU-13: Busca clientes por nombre o número de teléfono.
@@ -28,5 +32,4 @@ public interface IClientData : IData<Client>
     /// <returns>Cliente encontrado o null</returns>
     Task<Client?> GetByDocumentNumberAsync(string document);
 
-    
 }

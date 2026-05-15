@@ -1,13 +1,13 @@
-using CakeOs.Data.Interfaz.IData;
+using CakeOs.Data.Base;
 using CakeOS.Entity.Domain.security;
 
-namespace CakeOs.Data.Interfaz.ISecurityData;
+namespace CakeOs.Data.Interfaces.Security;
 
 /// <summary>
 /// Interfaz para el acceso a datos de la entidad Usuario.
 /// Hereda todas las operaciones CRUD básicas de IData.
 /// </summary>
-public interface IUserData : IData<User>
+public interface IUserRepository : IData<User>
 {
     /// <summary>
     /// CU-09: Obtiene un usuario por su correo electrónico (para login).

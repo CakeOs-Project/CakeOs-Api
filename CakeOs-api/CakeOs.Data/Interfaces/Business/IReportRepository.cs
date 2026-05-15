@@ -1,10 +1,10 @@
-namespace CakeOs.Data.Interfaz.IBusinessData;
+namespace CakeOs.Data.Interfaces.Business;
 
 /// <summary>
 /// Interfaz para el acceso a datos de reportes y análisis del sistema.
 /// Proporciona métodos especializados para consultas complejas de reportería.
 /// </summary>
-public interface IReportData
+public interface IReportRepository
 {
     /// <summary>
     /// CU-36: Obtiene el resumen del día con cantidad de facturas y total vendido.
