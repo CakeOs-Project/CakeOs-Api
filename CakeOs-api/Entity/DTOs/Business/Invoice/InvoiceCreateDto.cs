@@ -1,3 +1,4 @@
+using CakeOs.Entity.Enum.Payment;
 using CakeOS.Entity.DTOs.Business.InvoiceItem;
 
 namespace CakeOS.Entity.DTOs.Business.Invoice
@@ -21,8 +22,9 @@ namespace CakeOS.Entity.DTOs.Business.Invoice
         /// 
         public DateTime DeliveryDate { get; set; }
         public string? Observations { get; set; }
-        public decimal? InitialPayment { get; set; }
-        public string? PaymentMethod { get; set; }
+        public bool HasInitialPayment { get; set; }
+        public decimal InitialPayment { get; set; }
+        public PaymentMethod? PaymentMethod { get; set; }
         public List<InvoiceItemCreateDto> Items { get; set; } = new List<InvoiceItemCreateDto>();
     }
 }

@@ -4,13 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CakeOs.Entity.Enum
+namespace CakeOs.Entity.Enum.Invoice
 {
-    public enum InvoiceStatus
+    public enum InvoiceItemStatus
     {
         Pendiente = 1,
-        Lista = 2,
-        Pagada = 3,
-        Cancelada = 4
+        EnProceso = 2,
+        Listo = 3
     }
 }

@@ -8,5 +8,6 @@ namespace CakeOs.Business.Interfaces.Business
     {
         Task<InvoiceListDto> CreateInvoiceAsync(InvoiceCreateDto dto, int userId);
         Task<List<InvoiceListDto>> GetInvoicesForTodayAsync();
+        Task<InvoiceDetailDto?> GetWithDetailsAsync(int id);
     }
 }

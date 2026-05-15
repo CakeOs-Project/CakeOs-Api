@@ -1,4 +1,4 @@
-using CakeOs.Data.Interfaz.IBusinessData;
+using CakeOs.Data.Interfaces.Business;
 using CakeOs.Entity.Context;
 using CakeOs.Entity.Domain.Business;
 using CakeOS.Entity.Domain.Business;
@@ -10,7 +10,7 @@ namespace CakeOs.Data.Repository.BusinessData;
 /// Implementación del repositorio de datos para reportes y análisis.
 /// Proporciona métodos especializados para consultas complejas de reportería.
 /// </summary>
-public class ReportData : IReportData
+public class ReportData : IReportRepository
 {
     private readonly ApplicationDbContext _context;
 
@@ -100,7 +100,10 @@ public class ReportData : IReportData
             })
             .ToListAsync();
 
-        return payments.ToDictionary(p => p.PaymentMethod, p => p.Amount);
+        return payments.ToDictionary(
+                p => p.PaymentMethod.ToString(),
+                p => p.Amount
+            );
     }
 
     /// <summary>

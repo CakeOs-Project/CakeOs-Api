@@ -1,6 +1,6 @@
 using CakeOs.Entity.Domain.Business;
 using CakeOs.Entity.Domain.Parameter;
-using CakeOs.Entity.Enum;
+using CakeOs.Entity.Enum.Invoice;
 using CakeOS.Entity.Domain.Base;
 
 

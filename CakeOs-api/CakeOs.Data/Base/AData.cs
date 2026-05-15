@@ -1,6 +1,4 @@
-﻿using CakeOs.Data.Interfaz.IData;
-
-namespace CakeOs.Data.Repository.Data
+﻿namespace CakeOs.Data.Base
 {
     public abstract class AData<TEntity> : IData<TEntity> where TEntity : class
     {

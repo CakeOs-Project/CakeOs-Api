@@ -1,5 +1,4 @@
-﻿using CakeOs.Data.Interfaz.IData;
-using CakeOs.Data.Repository.Data;
+﻿using CakeOs.Data.Base;
 using CakeOS.Entity.Domain.Base;
 using MapsterMapper;
 

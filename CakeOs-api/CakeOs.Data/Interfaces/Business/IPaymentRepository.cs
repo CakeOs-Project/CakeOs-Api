@@ -1,14 +1,14 @@
-using CakeOs.Data.Interfaz.IData;
+using CakeOs.Data.Base;
 using CakeOS.Entity.Domain.Business;
 
 
-namespace CakeOs.Data.Interfaz.IBusinessData;
+namespace CakeOs.Data.Interfaces.Business;
 
 /// <summary>
 /// Interfaz para el acceso a datos de la entidad Pago.
 /// Hereda todas las operaciones CRUD básicas de IData.
 /// </summary>
-public interface IPaymentData : IData<Payment>
+public interface IPaymentRepository : IData<Payment>
 {
     /// <summary>
     /// CU-35: Obtiene el historial completo de pagos de una factura.

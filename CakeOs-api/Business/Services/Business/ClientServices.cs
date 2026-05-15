@@ -1,6 +1,6 @@
 ﻿using CakeOs.Business.Base;
 using CakeOs.Business.Interfaces.Business;
-using CakeOs.Data.Interfaz.IBusinessData;
+using CakeOs.Data.Interfaces.Business;
 using CakeOS.Entity.Domain.Business;
 using CakeOS.Entity.DTOs.Business.Client;
 using MapsterMapper;
@@ -17,9 +17,9 @@ namespace CakeOs.Business.Services.Business
         IClientServices
     {
         private readonly IMapper _mapper;
-        private readonly IClientData _data;
+        private readonly IClientRepository _data;
 
-        public ClientServices(IClientData data, IMapper mapper)
+        public ClientServices(IClientRepository data, IMapper mapper)
             : base(data, mapper)
         {
             _data = data;

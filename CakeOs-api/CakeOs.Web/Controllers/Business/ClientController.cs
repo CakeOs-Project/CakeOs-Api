@@ -1,5 +1,4 @@
-﻿using CakeOs.Business.Base;
-using CakeOs.Web.Controllers.Base;
+﻿using CakeOs.Business.Interfaces.Business;
 using CakeOS.Entity.DTOs.Business.Client;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,14 +9,25 @@ namespace CakeOs.Web.Controllers.Business
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
-    public class ClientController : BaseCrudController<ClientListDto>
+    [Produces("application/json")]
+    public class ClientController : Controller
     {
+        private readonly IClientServices _Services;
+
+        public ClientController(IClientServices services)
+        {
+            _Services = services;
+        }
+
         /// <summary>
         /// Inicializa una nueva instancia del controlador de clientes.
         /// </summary>
         /// <param name="service">Servicio de clientes.</param>
-        public ClientController(IServices<ClientListDto> service) : base(service)
+        [HttpGet]
+        public async Task<IActionResult> GetClientListAsync(CancellationToken cancellationToken = default)
         {
+            var Client = await _Services.GetClientListAsync(cancellationToken);
+            return Ok(Client);
         }
     }
 }

@@ -1,4 +1,4 @@
-using CakeOs.Entity.Enum;
+using CakeOs.Entity.Enum.Invoice;
 
 namespace CakeOS.Entity.DTOs.Business.Invoice
 {

@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace CakeOs.Data.Interfaz.IData;
+namespace CakeOs.Data.Base;
 
 /// <summary>
 /// Interfaz genérica para el acceso a datos que define las operaciones CRUD básicas

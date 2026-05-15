@@ -1,4 +1,4 @@
-using CakeOs.Entity.Enum;
+using CakeOs.Entity.Enum.Invoice;
 using CakeOS.Entity.Domain.Base;
 using CakeOS.Entity.Domain.security;
 

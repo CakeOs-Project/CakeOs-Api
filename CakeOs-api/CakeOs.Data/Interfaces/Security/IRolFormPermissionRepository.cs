@@ -1,13 +1,13 @@
-using CakeOs.Data.Interfaz.IData;
+using CakeOs.Data.Base;
 using CakeOS.Entity.Domain.security;
 
-namespace CakeOs.Data.Interfaz.ISecurityData;
+namespace CakeOs.Data.Interfaces.Security;
 
 /// <summary>
 /// Interfaz para el acceso a datos de la entidad Rol-Formulario-Permiso.
 /// Hereda todas las operaciones CRUD básicas de IData.
 /// </summary>
-public interface IRolFormPermissionData : IData<RolFormPermission>
+public interface IRolFormPermissionRepository : IData<RolFormPermission>
 {
     /// <summary>
     /// CU-07: Obtiene todos los permisos asignados a un rol.

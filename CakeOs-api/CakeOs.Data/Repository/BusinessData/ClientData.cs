@@ -1,5 +1,5 @@
-using CakeOs.Data.Interfaz.IBusinessData;
-using CakeOs.Data.Repository.Data;
+using CakeOs.Data.Base;
+using CakeOs.Data.Interfaces.Business;
 using CakeOs.Entity.Context;
 using CakeOS.Entity.Domain.Business;
 using CakeOS.Entity.DTOs.Business.Client;
@@ -11,7 +11,7 @@ namespace CakeOs.Data.Repository.BusinessData;
 /// Implementación del repositorio de datos para la entidad Cliente.
 /// Proporciona operaciones CRUD y métodos de búsqueda específicos.
 /// </summary>
-public class ClientData : Data<Client>, IClientData
+public class ClientData : DataBase<Client>, IClientRepository
 {
     private readonly ApplicationDbContext _context;
 
@@ -20,25 +20,25 @@ public class ClientData : Data<Client>, IClientData
         _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
-    public async Task<IEnumerable<ClientListDto>> GetClientListAsync(CancellationToken cancellationToken = default)
+    /// <summary>
+    /// CU-14 CU-14: Listar clientes
+    /// </summary>
+    /// <param name="ct"></param>
+    /// <returns></returns>
+    public async Task<List<ClientListDto>> GetClientListAsync(CancellationToken cancellationToken = default)
     {
-        string query = """
-           SELECT TOP (1000) 
-              c.[Id],
-              p.Name + ' ' + p.LastName as FullName,
-              p.[TypeDocument],
-              p.[Document],
-              p.Phone,
-              c.[Email],
-              c.[IsActive]
-          FROM Client c
-          INNER JOIN Person p ON c.PersonId = p.Id
-          WHERE c.IsActive = 1;
-         """;
-
-        return await _context.Set<ClientListDto>()
-            .FromSqlRaw(query)
-            .ToListAsync(cancellationToken);
+        return await _context.Set<Client>()
+            .Select(c => new ClientListDto
+            {
+                Id = c.Id,
+                FullName = c.Person.Name + " " + c.Person.LastName,
+                TypeDocument = c.Person.TypeDocument,
+                Document = c.Person.Document,
+                Phone = c.Person.Phone,
+                Email = c.Email,
+                IsActive = c.IsActive
+            })
+            .ToListAsync();
     }
 
     /// <summary>

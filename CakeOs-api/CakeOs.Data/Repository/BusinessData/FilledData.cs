@@ -1,5 +1,5 @@
-using CakeOs.Data.Interfaz.IBusinessData;
-using CakeOs.Data.Repository.Data;
+using CakeOs.Data.Base;
+using CakeOs.Data.Interfaces.Business;
 using CakeOs.Entity.Context;
 using CakeOs.Entity.Domain.Parameter;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +10,7 @@ namespace CakeOs.Data.Repository.BusinessData;
 /// Implementación del repositorio de datos para la entidad Relleno.
 /// Proporciona operaciones CRUD básicas para la gestión de rellenos de productos.
 /// </summary>
-public class FilledData : Data<Filled>, IFilledData
+public class FilledData : DataBase<Filled>, IFilledRepository
 {
     private readonly ApplicationDbContext _context;
 

@@ -1,16 +1,15 @@
-﻿using CakeOs.Data.Interfaz.IData;
-using CakeOs.Entity.Context;
+﻿using CakeOs.Entity.Context;
 using CakeOS.Entity.Domain.Base;
 using Microsoft.EntityFrameworkCore;
 
-namespace CakeOs.Data.Repository.Data
+namespace CakeOs.Data.Base
 {
     /// <summary>
     /// Implementación genérica del repositorio de datos que proporciona
     /// operaciones CRUD básicas y funcionalidades comunes para todas las entidades.
     /// </summary>
     /// <typeparam name="T">El tipo de entidad del dominio, debe heredar de BaseDomain.</typeparam>
-    public class Data<T> :  AData<T> where T : BaseDomain
+    public class DataBase<T> :  AData<T> where T : BaseDomain
     {
         private readonly ApplicationDbContext _context;
         protected readonly DbSet<T> _dbSet;
@@ -19,7 +18,7 @@ namespace CakeOs.Data.Repository.Data
         /// Inicializa una nueva instancia de la clase Data.
         /// </summary>
         /// <param name="context">Contexto de base de datos de Entity Framework.</param>
-        public Data(ApplicationDbContext context)
+        public DataBase(ApplicationDbContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _dbSet = _context.Set<T>();

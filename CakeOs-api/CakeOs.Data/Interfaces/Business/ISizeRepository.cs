@@ -1,15 +1,14 @@
-using CakeOs.Data.Interfaz.IData;
-
 using CakeOS.Entity.Domain.Business;
 using CakeOs.Entity.Domain.Parameter;
+using CakeOs.Data.Base;
 
-namespace CakeOs.Data.Interfaz.IBusinessData;
+namespace CakeOs.Data.Interfaces.Business;
 
 /// <summary>
 /// Interfaz para el acceso a datos de la entidad Tamaño.
 /// Hereda todas las operaciones CRUD básicas de IData.
 /// </summary>
-public interface ISizeData : IData<Size>
+public interface ISizeRepository : IData<Size>
 {
     /// <summary>
     /// CU-23: Obtiene todos los tamaños activos del sistema.

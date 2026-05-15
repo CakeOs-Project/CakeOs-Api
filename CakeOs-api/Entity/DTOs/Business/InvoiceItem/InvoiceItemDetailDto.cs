@@ -1,3 +1,5 @@
+using CakeOs.Entity.Enum.Invoice;
+
 namespace CakeOS.Entity.DTOs.Business.InvoiceItem
 {
     public class InvoiceItemDetailDto
@@ -7,7 +9,7 @@ namespace CakeOS.Entity.DTOs.Business.InvoiceItem
         public int Quantity { get; set; }
         public decimal UnitPrice { get; set; }
         public decimal SubTotal { get; set; }
-        public string Status { get; set; }
+        public InvoiceItemStatus Status { get; set; }
         public bool HasFilling { get; set; }
         public string? FilledName { get; set; }
         public bool HasDecoration { get; set; }
