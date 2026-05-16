@@ -1,5 +1,7 @@
 using CakeOs.Business.Base;
+using CakeOs.Business.Interfaces.Business;
 using CakeOs.Web.Controllers.Base;
+using CakeOS.Entity.Domain.Business;
 using CakeOS.Entity.DTOs.Business.Payment;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,14 +12,40 @@ namespace CakeOs.Web.Controllers.Business
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
-    public class PaymentController : BaseCrudController<PaymentListDto>
+    public class PaymentController : Controller
     {
-        /// <summary>
-        /// Inicializa una nueva instancia del controlador de pagos.
-        /// </summary>
-        /// <param name="service">Servicio de pagos.</param>
-        public PaymentController(IServices<PaymentListDto> service) : base(service)
+        private readonly IPaymentServices _services;
+        public PaymentController(IPaymentServices services)
         {
+            _services = services;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken = default)
+        {
+            var payment = await _services.GetAllAsync(cancellationToken);
+            return Ok(payment);
+        }
+
+        [HttpGet("invoice/{id}")]
+        public async Task<IActionResult> GetByInvoiceIdAsync(int invoiceId)
+        {
+            var payment = await _services.GetByInvoiceIdAsync(invoiceId);
+            return Ok(payment);
+        }
+
+        [HttpGet("daily-summary")]
+        public async Task<IActionResult> GetTotalPaidByDayAsync()
+        {
+            var result = await _services.GetTotalPaidByDayAsync();
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RegisterPaymentAsync(PaymentCreateDto dto, int userId)
+        {
+            var payment = await _services.RegisterPaymentAsync(dto, userId);
+            return Ok(payment);
         }
     }
 }

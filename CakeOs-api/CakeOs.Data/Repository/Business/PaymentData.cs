@@ -20,6 +20,14 @@ public class PaymentData : DataBase<Payment>, IPaymentRepository
         _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
+    public override async Task<IEnumerable<Payment>> GetAllAsync(CancellationToken ct)
+    {
+        return await _context.Set<Payment>()
+            .Include(p => p.User)
+                .ThenInclude(u => u.Person)
+            .ToListAsync(ct);
+    }
+
     /// <summary>
     /// CU-35: Obtiene el historial completo de pagos de una factura.
     /// </summary>
@@ -29,42 +37,25 @@ public class PaymentData : DataBase<Payment>, IPaymentRepository
     {
         return await _context.Set<Payment>()
             .Where(p => p.InvoiceId == invoiceId)
+            .Include(p => p.User)
+                .ThenInclude(u => u.Person)
             .OrderByDescending(p => p.PaymentDate)
             .AsNoTracking()
             .ToListAsync();
     }
-
+        
     /// <summary>
-    /// CU-33: Registra un anticipo para una factura.
-    /// </summary>
-    /// <param name="payment">Datos del pago anticipado</param>
-    /// <returns>Pago registrado</returns>
-    public async Task<Payment> RegisterAdvancePaymentAsync(Payment payment)
-    {
-        payment.PaymentType = PaymentType.Abono;
-        return await AddAsync(payment);
-    }
-
-    /// <summary>
-    /// CU-34: Registra el pago final o total de una factura.
-    /// </summary>
-    /// <param name="payment">Datos del pago final</param>
-    /// <returns>Pago registrado</returns>
-    public async Task<Payment> RegisterFinalPaymentAsync(Payment payment)
-    {
-        payment.PaymentType = PaymentType.PagoFinal;
-        return await AddAsync(payment);
-    }
-
-    /// <summary>
-    /// Obtiene la suma total de pagos realizados para una factura.
+    /// Obtiene la suma total de pagos de facturas al dia.
     /// </summary>
     /// <param name="invoiceId">Identificador de la factura</param>
     /// <returns>Total pagado</returns>
-    public async Task<decimal> GetTotalPaidByInvoiceAsync(int invoiceId)
+    public async Task<decimal> GetTotalPaidByDayAsync()
     {
+        var start = DateTime.Today;
+        var end = start.AddDays(1);
+
         return await _context.Set<Payment>()
-            .Where(p => p.InvoiceId == invoiceId)
+            .Where(p => p.PaymentDate >= start && p.PaymentDate < end)
             .SumAsync(p => p.Amount);
     }
 }

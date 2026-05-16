@@ -1,4 +1,5 @@
-﻿using CakeOs.Web.Extensions.Infrastructure;
+﻿using CakeOs.Business.Mapping;
+using CakeOs.Web.Extensions.Infrastructure;
 using CakeOs.Web.Extensions.Module;
 using Mapster;
 using MapsterMapper;
@@ -12,8 +13,7 @@ namespace CakeOs.Web.Extensions
         {
             services.AddModuleServices();
 
-            var config = TypeAdapterConfig.GlobalSettings;
-            config.Scan(Assembly.GetExecutingAssembly());
+            var config = MappingConfig.Register();
 
             services.AddSingleton(config);
             services.AddScoped<IMapper, ServiceMapper>();

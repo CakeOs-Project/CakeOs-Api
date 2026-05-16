@@ -56,7 +56,7 @@ namespace CakeOs.Entity.Context
 
             modelBuilder.Entity<Payment>()
                 .HasOne(e => e.User)
-                .WithMany()
+                .WithMany(u => u.Payments)
                 .HasForeignKey(e => e.UserId)
                 .OnDelete(DeleteBehavior.NoAction);
         }

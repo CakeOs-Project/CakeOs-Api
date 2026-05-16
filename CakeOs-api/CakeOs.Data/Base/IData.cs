@@ -56,7 +56,7 @@ public interface IData<T> where T : class
     /// <param name="id">Identificador de la entidad a eliminar</param>
     /// <param name="cancellationToken">Token para cancelar la operación asíncrona</param>
     /// <returns>True si se eliminó correctamente, False en caso contrario</returns>
-    Task<bool> DeleteAsync(int id, CancellationToken cancellationToken = default);
+    Task<bool> SoftDeleteAsync(int id, CancellationToken cancellationToken = default);
 
     // ==================== Métodos de Activación/Desactivación ====================
 
@@ -86,22 +86,6 @@ public interface IData<T> where T : class
     /// <returns>True si existe, False en caso contrario</returns>
     Task<bool> ExistsAsync(int id);
 
-    // ==================== Paginación ====================
-
-    /// <summary>
-    /// Obtiene un conjunto paginado de entidades con filtro opcional.
-    /// Útil para mostrar listados grandes de datos en páginas.
-    /// </summary>
-    /// <param name="pageNumber">Número de página a obtener (comienza en 1)</param>
-    /// <param name="pageSize">Cantidad de elementos por página</param>
-    /// <param name="filter">Filtro opcional para aplicar a los datos</param>
-    /// <param name="cancellationToken">Token para cancelar la operación asíncrona</param>
-    /// <returns>Tupla con los elementos de la página y el total de registros</returns>
-    Task<(IEnumerable<T> Items, int TotalCount)> GetPagedAsync(
-        int pageNumber, 
-        int pageSize,                                                                      
-        string? filter = null,
-        CancellationToken cancellationToken = default);
 
     // ==================== Guardado de cambios ====================
 

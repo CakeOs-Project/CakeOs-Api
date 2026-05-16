@@ -1,4 +1,5 @@
 ﻿using CakeOs.Business.Base;
+using CakeOs.Entity.DTOs.Transversal;
 using CakeOS.Entity.Domain.Business;
 using CakeOS.Entity.DTOs.Business.Payment;
 using System;
@@ -11,5 +12,19 @@ namespace CakeOs.Business.Interfaces.Business
 {
     public interface IPaymentServices : IServices<PaymentListDto, PaymentCreateDto, Payment>
     {
+        Task<IEnumerable<PaymentListDto>> GetByInvoiceIdAsync(int invoiceId);
+
+        /// <summary>
+        /// CU-33 y CU-34: Registra un anticipo para una factura.
+        /// </summary>
+        /// <param name="payment">Datos del pago anticipado</param>
+        /// <returns>Pago registrado</returns>
+        Task<PaymentListDto> RegisterPaymentAsync(PaymentCreateDto payment, int userId);
+
+        /// <summary>
+        /// Obtiene la suma total de pagos realizados para una factura.
+        /// </summary>
+        /// <returns>Total pagado</returns>
+        Task<decimal> GetTotalPaidByDayAsync();
     }
 }

@@ -10,12 +10,6 @@ namespace CakeOs.Data.Interfaces.Business;
 /// </summary>
 public interface IClientRepository : IData<Client>
 {
-    /// <summary>
-    /// CU-14 CU-14: Listar clientes
-    /// </summary>
-    /// <param name="ct"></param>
-    /// <returns></returns>
-    Task<List<ClientListDto>> GetClientListAsync(CancellationToken ct = default);
 
     /// <summary>
     /// CU-13: Busca clientes por nombre o número de teléfono.

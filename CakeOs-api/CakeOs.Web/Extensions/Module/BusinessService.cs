@@ -9,6 +9,7 @@ namespace CakeOs.Web.Extensions.Module
         {
             services.AddScoped<IInvoiceServices, InvoiceServices>();
             services.AddScoped<IClientServices, ClientServices>();
+            services.AddScoped<IPaymentServices, PaymentService>();
             return services;
         }
     }

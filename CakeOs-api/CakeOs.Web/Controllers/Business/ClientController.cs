@@ -24,9 +24,9 @@ namespace CakeOs.Web.Controllers.Business
         /// </summary>
         /// <param name="service">Servicio de clientes.</param>
         [HttpGet]
-        public async Task<IActionResult> GetClientListAsync(CancellationToken cancellationToken = default)
+        public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken = default)
         {
-            var Client = await _Services.GetClientListAsync(cancellationToken);
+            var Client = await _Services.GetAllAsync(cancellationToken);
             return Ok(Client);
         }
     }
