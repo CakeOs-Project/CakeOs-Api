@@ -86,7 +86,7 @@ namespace CakeOs.Web.Controllers.Business
         public async Task<IActionResult> CreateAsync(ProductCreateDto dto)
         {
             var product = await _services.CreateAsync(dto);
-            return CreatedAtRoute(nameof(GetByIdAsync), new { id = product.Id }, product);
+            return CreatedAtRoute("GetProductByIdAsync", new { id = product.Id }, product);
         }
 
         #endregion

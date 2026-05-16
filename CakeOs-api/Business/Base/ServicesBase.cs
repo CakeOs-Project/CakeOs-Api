@@ -166,10 +166,16 @@ namespace CakeOs.Business.Base
             {
                 if (id <= 0) throw new ArgumentOutOfRangeException(nameof(id), "El id debe ser mayor a 0.");
 
+                bool result;
                 if (isActive)
-                    return await _repository.ActivateAsync(id);
+                    result = await _repository.ActivateAsync(id);
                 else
-                    return await _repository.DeactivateAsync(id);
+                    result = await _repository.DeactivateAsync(id);
+
+                if (result)
+                    await _repository.SaveChangesAsync();
+
+                return result;
             }
             catch (Exception ex)
             {

@@ -1,5 +1,7 @@
 ﻿using CakeOs.Business.Interfaces.Business;
+using CakeOs.Business.Interfaces.Parameter;
 using CakeOs.Business.Services.Business;
+using CakeOs.Business.Services.Parameter;
 
 namespace CakeOs.Web.Extensions.Module
 {
@@ -11,6 +13,7 @@ namespace CakeOs.Web.Extensions.Module
             services.AddScoped<IClientServices, ClientServices>();
             services.AddScoped<IPaymentServices, PaymentService>();
             services.AddScoped<IProductServices, ProductService>();
+            services.AddScoped<IFilledServices, FilledService>();
             return services;
         }
     }
