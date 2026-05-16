@@ -16,7 +16,7 @@
 
         public abstract Task<TEntity> UpdateAsync(TEntity entity);
 
-        public abstract Task<bool> DeleteAsync(int id, CancellationToken cancellationToken = default);
+        public abstract Task<bool> SoftDeleteAsync(int id, CancellationToken cancellationToken = default);
 
         // ==================== ACTIVACIÓN ====================
 
@@ -27,14 +27,6 @@
         // ==================== EXISTENCIA ====================
 
         public abstract Task<bool> ExistsAsync(int id);
-
-        // ==================== PAGINACIÓN ====================
-
-        public abstract Task<(IEnumerable<TEntity> Items, int TotalCount)> GetPagedAsync(
-            int pageNumber,
-            int pageSize,
-            string? filter = null,
-            CancellationToken cancellationToken = default);
 
         // ==================== SAVE ====================
 

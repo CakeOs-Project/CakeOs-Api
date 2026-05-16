@@ -19,7 +19,7 @@ namespace CakeOs.Business.Mapping.Registers.Business
                     ? $"{src.Person.Name} {src.Person.LastName}"
                     : string.Empty)
                 .Map(dest => dest.TypeDocument, src => src.Person != null ? src.Person.TypeDocument : string.Empty)
-                .Map(dest => dest.Document, src => src.Person != null ? src.Person.Document: string.Empty)
+                .Map(dest => dest.Document, src => src.Person != null ? src.Person.Document : string.Empty)
                 .Map(dest => dest.Phone, src => src.Person != null ? src.Person.Phone : string.Empty);
 
             config.NewConfig<ClientCreateDto, Client>()

@@ -20,25 +20,12 @@ public class ClientData : DataBase<Client>, IClientRepository
         _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
-    /// <summary>
-    /// CU-14 CU-14: Listar clientes
-    /// </summary>
-    /// <param name="ct"></param>
-    /// <returns></returns>
-    public async Task<List<ClientListDto>> GetClientListAsync(CancellationToken cancellationToken = default)
+    public override async Task<IEnumerable<Client>> GetAllAsync(CancellationToken cancellationToken)
     {
         return await _context.Set<Client>()
-            .Select(c => new ClientListDto
-            {
-                Id = c.Id,
-                FullName = c.Person.Name + " " + c.Person.LastName,
-                TypeDocument = c.Person.TypeDocument,
-                Document = c.Person.Document,
-                Phone = c.Person.Phone,
-                Email = c.Email,
-                IsActive = c.IsActive
-            })
-            .ToListAsync();
+            .Where(c => c.IsActive)
+            .Include(c => c.Person)
+            .ToListAsync(cancellationToken);
     }
 
     /// <summary>

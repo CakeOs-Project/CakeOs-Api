@@ -1,5 +1,7 @@
-﻿using CakeOs.Business.Mapping.Registers.Parameter;
+﻿using CakeOs.Business.Mapping.Registers.Business;
+using CakeOs.Business.Mapping.Registers.Parameter;
 using Mapster;
+using MapsterMapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +16,7 @@ namespace CakeOs.Business.Mapping
         public static TypeAdapterConfig Register()
         {
             var config = TypeAdapterConfig.GlobalSettings;
-            config.Scan(typeof(TypeMapping).GetTypeInfo().Assembly);
+            config.Scan(typeof(ClientMapping).GetTypeInfo().Assembly);
 
             return config;
         }

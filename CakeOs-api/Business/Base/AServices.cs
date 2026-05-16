@@ -12,7 +12,7 @@ namespace CakeOs.Business.Base
         where TDtoCreate : class
         where TEntity : BaseDomain
     {
-        public abstract Task<IEnumerable<TDtoList>> GetAllAsync(bool includeInactive, CancellationToken cancellationToken = default);
+        public abstract Task<IEnumerable<TDtoList>> GetAllAsync( CancellationToken cancellationToken = default);
         public abstract Task<TDtoList?> GetByIdAsync(int id, CancellationToken ct = default);
         public abstract Task<TDtoList> CreateAsync(TDtoCreate dto);
         public abstract Task<bool> ToggleActiveAsync(int id, bool isActive);

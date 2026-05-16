@@ -42,7 +42,7 @@ namespace CakeOs.Data.Base
         /// <param name="id">El identificador de la entidad.</param>
         /// <param name="cancellationToken">Token de cancelación.</param>
         /// <returns>True si la entidad fue encontrada y eliminada; de lo contrario, false.</returns>
-        public override async Task<bool> DeleteAsync(int id, CancellationToken cancellationToken = default)
+        public override async Task<bool> SoftDeleteAsync(int id, CancellationToken cancellationToken = default)
         {
             var entity = await _dbSet.FindAsync(new object[] { id }, cancellationToken);
             if (entity == null) return false;
@@ -131,27 +131,6 @@ namespace CakeOs.Data.Base
         public override async Task<bool> ExistsAsync(int id)
         {
             return await _dbSet.AnyAsync(e => e.Id == id);
-        }
-
-        /// <summary>
-        /// Obtiene una lista paginada de entidades.
-        /// </summary>
-        /// <param name="pageNumber">El número de la página (comenzando por 1).</param>
-        /// <param name="pageSize">La cantidad de registros por página.</param>
-        /// <param name="filter">Filtro opcional (no implementado en esta versión genérica).</param>
-        /// <param name="cancellationToken">Token de cancelación.</param>
-        /// <returns>Una tupla con los elementos paginados y el conteo total de elementos.</returns>
-        public override async Task<(IEnumerable<T> Items, int TotalCount)> GetPagedAsync(
-            int pageNumber, int pageSize, string? filter = null, CancellationToken cancellationToken = default)
-        {
-            IQueryable<T> query = _dbSet.AsNoTracking();
-
-            var totalCount = await query.CountAsync(cancellationToken);
-            var items = await query.Skip((pageNumber - 1) * pageSize)
-                                   .Take(pageSize)
-                                   .ToListAsync(cancellationToken);
-
-            return (items, totalCount);
         }
 
         /// <summary>

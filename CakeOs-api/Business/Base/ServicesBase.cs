@@ -43,7 +43,7 @@ namespace CakeOs.Business.Base
         /// <param name="ct">Token para cancelar la operación asíncrona.</param>
         /// <returns>Colección de DTOs mapeados desde las entidades encontradas.</returns>
         /// <exception cref="Exception">Si ocurre un error durante la consulta.</exception>
-        public override async Task<IEnumerable<TDtoList>> GetAllAsync(bool includeInactive = false, CancellationToken ct = default)
+        public override async Task<IEnumerable<TDtoList>> GetAllAsync( CancellationToken ct = default)
         {
             try
             {
@@ -146,7 +146,7 @@ namespace CakeOs.Business.Base
             {
                 if (id <= 0) throw new ArgumentOutOfRangeException(nameof(id), "El id debe ser mayor a 0.");
 
-                return await _repository.DeleteAsync(id);
+                return await _repository.SoftDeleteAsync(id);
             }
             catch (Exception ex)
             {
