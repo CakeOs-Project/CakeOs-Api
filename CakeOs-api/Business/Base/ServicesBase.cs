@@ -1,4 +1,5 @@
 ﻿using CakeOs.Data.Base;
+using CakeOs.Entity.DTOs.Transversal;
 using CakeOS.Entity.Domain.Base;
 using MapsterMapper;
 
@@ -117,7 +118,7 @@ namespace CakeOs.Business.Base
         /// <exception cref="ArgumentNullException">Si el DTO es nulo.</exception>
         /// <exception cref="ArgumentOutOfRangeException">Si el id es menor o igual a 0.</exception>
         /// <exception cref="Exception">Si ocurre un error durante la actualización.</exception>
-        public override async Task<TDtoList> UpdateAsync(int id, TDtoCreate dto)
+        public override async Task<ResponseDto> UpdateAsync(int id, TDtoCreate dto)
         {
             try
             {
@@ -129,11 +130,19 @@ namespace CakeOs.Business.Base
                     throw new ArgumentNullException(nameof(existingEntity), "El registro no existe.");
 
                 var updatedEntity = _mapper.Map(dto, existingEntity);
-                await _repository.UpdateAsync(updatedEntity);
-                await _repository.SaveChangesAsync();
+                var entity = await _repository.UpdateAsync(updatedEntity);
+                if (entity is not null)
+                {
+                    await _repository.SaveChangesAsync();
+                    return ResponseDto.Ok("actualizada correcamente");
+                }
+                else
+                {
+                    return ResponseDto.Fail("error al actualizar");
 
-                return _mapper.Map<TDtoList>(updatedEntity);
-            }
+                }
+          }
+
             catch (Exception ex)
             {
                 throw new("Error al actualizar el registro.", ex);
