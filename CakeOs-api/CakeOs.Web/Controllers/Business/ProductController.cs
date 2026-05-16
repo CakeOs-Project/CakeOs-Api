@@ -86,12 +86,28 @@ namespace CakeOs.Web.Controllers.Business
         public async Task<IActionResult> CreateAsync(ProductCreateDto dto)
         {
             var product = await _services.CreateAsync(dto);
-            return CreatedAtRoute(nameof(GetByIdAsync), new { id = product.Id }, product);
+            return CreatedAtRoute("GetProductByIdAsync", new { id = product.Id }, product);
         }
 
         #endregion
 
         #region "PUT"
+
+        /// <summary>
+        /// CU-17: Actualiza un producto existente.
+        /// </summary>
+        /// <param name="id">ID del producto a actualizar</param>
+        /// <param name="dto">Datos del producto a actualizar</param>
+        /// <returns>Producto actualizado</returns>
+        [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> UpdateAsync(int id, ProductCreateDto dto)
+        {
+            var product = await _services.UpdateAsync(id, dto);
+            return Ok(product);
+        }
 
         /// <summary>
         /// CU-18: Activa o desactiva un producto.
@@ -114,14 +130,14 @@ namespace CakeOs.Web.Controllers.Business
 
         #endregion
 
-        #region "DELETE"
+        #region "PATCH"
 
         /// <summary>
         /// Elimina lógicamente un producto (soft delete).
         /// </summary>
         /// <param name="id">ID del producto a eliminar</param>
         /// <returns>Resultado de la operación</returns>
-        [HttpDelete("{id}")]
+        [HttpPatch("{id}/delete")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> SoftDeleteAsync(int id)
