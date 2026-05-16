@@ -96,11 +96,47 @@ namespace CakeOs.Business.Base
 
                 var candidate = _mapper.Map<TEntity>(dto);
                 var entity = await _repository.AddAsync(candidate);
-                return _mapper.Map<TDtoList>(entity);
+                await _repository.SaveChangesAsync();
+
+                // Recargar la entidad con sus relaciones desde la BD
+                var createdEntity = await _repository.GetByIdAsync(entity.Id);
+                return _mapper.Map<TDtoList>(createdEntity);
             }
             catch (Exception ex)
             {
                 throw new("Error al crear el registro.", ex);
+            }
+        }
+
+        /// <summary>
+        /// Actualiza un registro existente a partir del DTO proporcionado.
+        /// </summary>
+        /// <param name="id">Identificador del registro a actualizar. Debe ser mayor a 0.</param>
+        /// <param name="dto">DTO con los datos actualizados. No puede ser nulo.</param>
+        /// <returns>DTO del registro actualizado.</returns>
+        /// <exception cref="ArgumentNullException">Si el DTO es nulo.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Si el id es menor o igual a 0.</exception>
+        /// <exception cref="Exception">Si ocurre un error durante la actualización.</exception>
+        public override async Task<TDtoList> UpdateAsync(int id, TDtoCreate dto)
+        {
+            try
+            {
+                if (id <= 0) throw new ArgumentOutOfRangeException(nameof(id), "El id debe ser mayor a 0.");
+                if (dto is null) throw new ArgumentNullException(nameof(dto), "El DTO no puede ser nulo.");
+
+                var existingEntity = await _repository.GetByIdAsync(id);
+                if (existingEntity == null)
+                    throw new ArgumentNullException(nameof(existingEntity), "El registro no existe.");
+
+                var updatedEntity = _mapper.Map(dto, existingEntity);
+                await _repository.UpdateAsync(updatedEntity);
+                await _repository.SaveChangesAsync();
+
+                return _mapper.Map<TDtoList>(updatedEntity);
+            }
+            catch (Exception ex)
+            {
+                throw new("Error al actualizar el registro.", ex);
             }
         }
 
@@ -146,7 +182,10 @@ namespace CakeOs.Business.Base
             {
                 if (id <= 0) throw new ArgumentOutOfRangeException(nameof(id), "El id debe ser mayor a 0.");
 
-                return await _repository.SoftDeleteAsync(id);
+                var result = await _repository.SoftDeleteAsync(id);
+                if (result)
+                    await _repository.SaveChangesAsync();
+                return result;
             }
             catch (Exception ex)
             {
