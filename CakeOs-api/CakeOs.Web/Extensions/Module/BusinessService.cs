@@ -14,6 +14,9 @@ namespace CakeOs.Web.Extensions.Module
             services.AddScoped<IPaymentServices, PaymentService>();
             services.AddScoped<IProductServices, ProductService>();
             services.AddScoped<IFilledServices, FilledService>();
+            services.AddScoped<IShapeServices, ShapeService>();
+            services.AddScoped<ISizeServices, SizeService>();
+            services.AddScoped<ITypeServices, TypeService>();
             return services;
         }
     }
