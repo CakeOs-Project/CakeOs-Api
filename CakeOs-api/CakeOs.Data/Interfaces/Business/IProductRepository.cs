@@ -10,14 +10,10 @@ namespace CakeOs.Data.Interfaces.Business;
 /// </summary>
 public interface IProductRepository : IData<Product>
 {
-    
-
     /// <summary>
     /// Busca productos por nombre.
     /// </summary>
     /// <param name="name">Nombre del producto a buscar</param>
     /// <returns>Lista de productos que coinciden</returns>
     Task<IEnumerable<Product>> SearchByNameAsync(string name);
-
- 
 }

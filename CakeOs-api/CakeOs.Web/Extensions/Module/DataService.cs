@@ -14,6 +14,7 @@ namespace CakeOs.Web.Extensions.Module
             services.AddScoped<IPersonRepository, PersonData>();
             services.AddScoped<IInvoiceItemRepository, InvoiceItemData>();
             services.AddScoped<IPaymentRepository, PaymentData>();
+            services.AddScoped<IProductRepository, ProductData>();
             return services;
         }
     }
