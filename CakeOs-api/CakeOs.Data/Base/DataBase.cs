@@ -1,4 +1,5 @@
 ﻿using CakeOs.Entity.Context;
+using CakeOs.Entity.Domain.Base;
 using CakeOS.Entity.Domain.Base;
 using Microsoft.EntityFrameworkCore;
 
@@ -32,6 +33,7 @@ namespace CakeOs.Data.Base
         /// <returns>La entidad agregada.</returns>
         public override async Task<T> AddAsync(T entity, CancellationToken cancellationToken = default)
         {
+            entity.IsActive = true;
             await _dbSet.AddAsync(entity, cancellationToken);
             return entity;
         }
@@ -44,11 +46,18 @@ namespace CakeOs.Data.Base
         /// <returns>True si la entidad fue encontrada y eliminada; de lo contrario, false.</returns>
         public override async Task<bool> SoftDeleteAsync(int id, CancellationToken cancellationToken = default)
         {
-            var entity = await _dbSet.FindAsync(new object[] { id }, cancellationToken);
+            var entity = await GetByIdAsync(id,cancellationToken);
             if (entity == null) return false;
 
-            _dbSet.Remove(entity);
-            return true;
+            if (entity is BaseAuditory auditory)
+            {
+                auditory.IsDeleted = true;
+                _dbSet.Update(entity);
+                await _context.SaveChangesAsync(cancellationToken);
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -105,6 +114,7 @@ namespace CakeOs.Data.Base
 
             entity.IsActive = true;
             _dbSet.Update(entity);
+            await _context.SaveChangesAsync();
             return true;
         }
 
@@ -120,6 +130,7 @@ namespace CakeOs.Data.Base
 
             entity.IsActive = false;
             _dbSet.Update(entity);
+            await _context.SaveChangesAsync();
             return true;
         }
 

@@ -183,7 +183,7 @@ namespace CakeOs.Web.Controllers.Parameter
 
                 var result = await _services.ToggleActiveAsync(id, isActive);
 
-                if (!result)
+                if (!result.Success)
                     return NotFound(new { message = $"Parámetro de tipo con ID {id} no encontrado" });
 
                 var status = isActive ? "activado" : "desactivado";
@@ -214,7 +214,7 @@ namespace CakeOs.Web.Controllers.Parameter
 
                 var result = await _services.SoftDeleteAsync(id);
 
-                if (!result)
+                if (!result.Success)
                     return NotFound(new { message = $"Parámetro de tipo con ID {id} no encontrado" });
 
                 return Ok(new { message = "Parámetro de tipo eliminado exitosamente" });

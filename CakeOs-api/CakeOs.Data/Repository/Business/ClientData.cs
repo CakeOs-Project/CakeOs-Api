@@ -28,25 +28,18 @@ public class ClientData : DataBase<Client>, IClientRepository
             .ToListAsync(cancellationToken);
     }
 
-    /// <summary>
-    /// CU-13: Busca clientes por nombre o número de teléfono.
-    /// </summary>
-    /// <param name="searchTerm">Término de búsqueda (nombre o teléfono)</param>
-    /// <returns>Lista de clientes que coinciden con la búsqueda</returns>
-    public async Task<IEnumerable<Client>> SearchByNameOrPhoneAsync(string searchTerm)
+    public override async Task<Client?> GetByIdAsync(int id, CancellationToken ct)
     {
         return await _context.Set<Client>()
             .Include(c => c.Person)
-            .Where(c => c.Person != null && (c.Person.Name.Contains(searchTerm) || c.Person.Phone.Contains(searchTerm)))
-            .AsNoTracking()
-            .ToListAsync();
+            .FirstOrDefaultAsync(c => c.Id == id, ct);
     }
 
     /// <summary>
-    /// Busca un cliente por su número de documento.
+    /// CU-13: Busca un cliente por su número de documento.
     /// </summary>
-    /// <param name="documentNumber">Número de documento del cliente</param>
-    /// <returns>Cliente encontrado o null</returns>
+    /// <param name="searchTerm">Término de búsqueda (nombre o teléfono)</param>
+    /// <returns>Lista de clientes que coinciden con la búsqueda</returns>
     public async Task<Client?> GetByDocumentNumberAsync(string documentNumber)
     {
         return await _context.Set<Client>()

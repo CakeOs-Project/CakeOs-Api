@@ -160,7 +160,7 @@ namespace CakeOs.Business.Base
         /// <returns><c>true</c> si la operación fue exitosa, <c>false</c> en caso contrario.</returns>
         /// <exception cref="ArgumentOutOfRangeException">Si el id es menor o igual a 0.</exception>
         /// <exception cref="Exception">Si ocurre un error durante el proceso.</exception>
-        public override async Task<bool> ToggleActiveAsync(int id, bool isActive)
+        public override async Task<ResponseDto> ToggleActiveAsync(int id, bool isActive)
         {
             try
             {
@@ -175,7 +175,7 @@ namespace CakeOs.Business.Base
                 if (result)
                     await _repository.SaveChangesAsync();
 
-                return result;
+                return ResponseDto.Ok("Se actualizo correctamente!.");
             }
             catch (Exception ex)
             {
@@ -191,7 +191,7 @@ namespace CakeOs.Business.Base
         /// <returns><c>true</c> si el borrado fue exitoso, <c>false</c> en caso contrario.</returns>
         /// <exception cref="ArgumentOutOfRangeException">Si el id es menor o igual a 0.</exception>
         /// <exception cref="Exception">Si ocurre un error durante el proceso.</exception>
-        public override async Task<bool> SoftDeleteAsync(int id)
+        public override async Task<ResponseDto> SoftDeleteAsync(int id)
         {
             try
             {
@@ -200,7 +200,10 @@ namespace CakeOs.Business.Base
                 var result = await _repository.SoftDeleteAsync(id);
                 if (result)
                     await _repository.SaveChangesAsync();
-                return result;
+                else
+                    return ResponseDto.Ok("Error al eliminar.");
+
+                return ResponseDto.Ok("Se elimino correctamente.");
             }
             catch (Exception ex)
             {

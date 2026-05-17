@@ -1,4 +1,5 @@
 ﻿using CakeOs.Business.Base;
+using CakeOs.Entity.DTOs.Business.Payment;
 using CakeOs.Entity.DTOs.Transversal;
 using CakeOS.Entity.Domain.Business;
 using CakeOS.Entity.DTOs.Business.Payment;
@@ -26,5 +27,10 @@ namespace CakeOs.Business.Interfaces.Business
         /// </summary>
         /// <returns>Total pagado</returns>
         Task<decimal> GetTotalPaidByDayAsync();
+
+        Task<PaymentSummaryDto> GetDailySummaryAsync(DateTime date);
+        Task<PaymentSummaryDto> GetWeeklySummaryAsync(DateTime date);
+        Task<PaymentSummaryDto> GetMonthlySummaryAsync(DateTime date);
+        Task<PaymentSummaryDto> GetCustomSummaryAsync(DateTime from, DateTime to);
     }
 }

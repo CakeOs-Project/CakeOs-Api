@@ -17,7 +17,7 @@ namespace CakeOs.Business.Base
         public abstract Task<TDtoList?> GetByIdAsync(int id, CancellationToken ct = default);
         public abstract Task<TDtoList> CreateAsync(TDtoCreate dto);
         public abstract Task<ResponseDto> UpdateAsync(int id, TDtoCreate dto);
-        public abstract Task<bool> ToggleActiveAsync(int id, bool isActive);
-        public abstract Task<bool> SoftDeleteAsync(int id);
+        public abstract Task<ResponseDto> ToggleActiveAsync(int id, bool isActive);
+        public abstract Task<ResponseDto> SoftDeleteAsync(int id);
     }
 }

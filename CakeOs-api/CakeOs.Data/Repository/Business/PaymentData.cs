@@ -1,6 +1,7 @@
 using CakeOs.Data.Base;
 using CakeOs.Data.Interfaces.Business;
 using CakeOs.Entity.Context;
+using CakeOs.Entity.DTOs.Business.Payment;
 using CakeOs.Entity.Enum.Payment;
 using CakeOS.Entity.Domain.Business;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +26,7 @@ public class PaymentData : DataBase<Payment>, IPaymentRepository
         return await _context.Set<Payment>()
             .Include(p => p.User)
                 .ThenInclude(u => u.Person)
+            .OrderByDescending(p => p.PaymentDate)
             .ToListAsync(ct);
     }
 
@@ -43,7 +45,7 @@ public class PaymentData : DataBase<Payment>, IPaymentRepository
             .AsNoTracking()
             .ToListAsync();
     }
-        
+
     /// <summary>
     /// Obtiene la suma total de pagos de facturas al dia.
     /// </summary>
@@ -57,5 +59,15 @@ public class PaymentData : DataBase<Payment>, IPaymentRepository
         return await _context.Set<Payment>()
             .Where(p => p.PaymentDate >= start && p.PaymentDate < end)
             .SumAsync(p => p.Amount);
+    }
+
+    public async Task<List<Payment>> GetSummaryByRangeAsync(DateTime from, DateTime to)
+    {
+        return await _context.Set<Payment>()
+            .Where(p => p.PaymentDate >= from && p.PaymentDate <= to && p.IsActive)
+            .Include(p => p.User)
+                .ThenInclude(u => u.Person)
+            .OrderByDescending(p => p.PaymentDate)
+            .ToListAsync();
     }
 }
