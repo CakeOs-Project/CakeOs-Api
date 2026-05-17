@@ -27,18 +27,11 @@ namespace CakeOs.Web.Controllers.Business
             return Ok(payment);
         }
 
-        [HttpGet("invoice/{id}")]
+        [HttpGet("invoice/{invoiceId}")]
         public async Task<IActionResult> GetByInvoiceIdAsync(int invoiceId)
         {
             var payment = await _services.GetByInvoiceIdAsync(invoiceId);
             return Ok(payment);
-        }
-
-        [HttpGet("daily-summary")]
-        public async Task<IActionResult> GetTotalPaidByDayAsync()
-        {
-            var result = await _services.GetTotalPaidByDayAsync();
-            return Ok(result);
         }
 
         [HttpPost]

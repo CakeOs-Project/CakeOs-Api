@@ -6,7 +6,6 @@ namespace CakeOs.Business.Interfaces.Business
 {
     public interface IClientServices : IServices<ClientListDto,ClientCreateDto,Client>
     {
-        Task<ClientListDto> SearchByNameOrPhoneAsync(string phone);
         Task<ClientListDto?> GetByDocumentNumberAsync(string document);
     }
 }

@@ -87,7 +87,7 @@ namespace CakeOs.Business.Services.Business
                     }
 
                     string code = await GenerateInvoiceCodeAsync();
-                    var total = dto.Items.Sum(i => i.Quantity * i.UnitPrice);
+                    var total = dto.Items.Sum(i => i.Quantity * i.UnitPrice);                    
 
                     var invoice = new Invoice
                     {
@@ -132,7 +132,10 @@ namespace CakeOs.Business.Services.Business
                             throw new ArgumentException("Debe especificar un método de pago cuando se registra un pago inicial");
 
                         if (invoice.OutstandingBalance == 0)
+                        {
                             type = PaymentType.PagoTotal;
+                            invoice.Status = InvoiceStatus.Pagada;
+                        }  
                         else
                             type = PaymentType.Abono;
 

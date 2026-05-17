@@ -122,7 +122,7 @@ namespace CakeOs.Web.Controllers.Business
         {
             var result = await _services.ToggleActiveAsync(id, isActive);
 
-            if (!result)
+            if (!result.Success)
                 return NotFound();
 
             return Ok(new { message = "El estado del producto ha sido actualizado." });
@@ -137,17 +137,13 @@ namespace CakeOs.Web.Controllers.Business
         /// </summary>
         /// <param name="id">ID del producto a eliminar</param>
         /// <returns>Resultado de la operación</returns>
-        [HttpPatch("{id}/delete")]
+        [HttpPatch("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> SoftDeleteAsync(int id)
         {
             var result = await _services.SoftDeleteAsync(id);
-
-            if (!result)
-                return NotFound();
-
-            return Ok(new { message = "El producto ha sido eliminado." });
+            return Ok(result);
         }
 
         #endregion

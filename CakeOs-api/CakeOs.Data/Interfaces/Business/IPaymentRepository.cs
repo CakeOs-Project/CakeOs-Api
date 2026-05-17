@@ -1,4 +1,5 @@
 using CakeOs.Data.Base;
+using CakeOs.Entity.DTOs.Business.Payment;
 using CakeOS.Entity.Domain.Business;
 
 
@@ -22,4 +23,6 @@ public interface IPaymentRepository : IData<Payment>
     /// </summary>
     /// <returns>Total pagado</returns>
     Task<decimal> GetTotalPaidByDayAsync();
+
+    Task<List<Payment>> GetSummaryByRangeAsync(DateTime from, DateTime to);
 }
