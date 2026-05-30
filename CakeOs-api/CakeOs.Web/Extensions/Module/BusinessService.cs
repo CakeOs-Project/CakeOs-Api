@@ -10,6 +10,7 @@ namespace CakeOs.Web.Extensions.Module
         public static IServiceCollection AddBusinessService(this IServiceCollection services)
         {
             services.AddScoped<IInvoiceServices, InvoiceServices>();
+            services.AddScoped<IInvoiceItemServices, InvoiceItemServices>();
             services.AddScoped<IClientServices, ClientServices>();
             services.AddScoped<IPaymentServices, PaymentService>();
             services.AddScoped<IProductServices, ProductService>();

@@ -10,19 +10,20 @@ namespace CakeOs.Data.Interfaces.Business;
 /// </summary>
 public interface IInvoiceItemRepository : IData<InvoiceItem>
 {
-    /// <summary>
-    /// Obtiene todos los ítems de una factura específica.
-    /// </summary>
-    /// <param name="invoiceId">Identificador de la factura</param>
-    /// <returns>Lista de ítems de la factura</returns>
-    //Task<IEnumerable<InvoiceItem>> GetByInvoiceIdAsync(int invoiceId);
 
     /// <summary>
     /// CU-30: Marca un ítem como listo (cambia su estado).
     /// </summary>
     /// <param name="itemId">Identificador del ítem</param>
     /// <returns>True si se marcó como listo correctamente</returns>
-    //Task<bool> MarkAsReadyAsync(int itemId);
+    Task<bool> MarkAsReadyAsync(int itemId);
+
+    /// <summary>
+    /// CU-31 — verificar si todos los ítems están listos
+    /// </summary>
+    /// <param name="itemId"></param>
+    /// <returns></returns>
+    Task<bool> AllItemReady(int InvoiceId);
 
     /// <summary>
     /// Obtiene ítems de una factura con todos sus detalles (producto, parámetros).

@@ -1,9 +1,10 @@
+using CakeOs.Entity.Domain.Base;
 using CakeOs.Entity.Domain.Business;
 using CakeOS.Entity.Domain.Base;
 
 namespace CakeOs.Entity.Domain.Parameter
 {
-    public class Types : BaseDomain
+    public class Types : BaseTenantDomain
     {
         public string Name { get; set; } = string.Empty;
         public bool DefaultFill { get; set; }

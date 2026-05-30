@@ -1,10 +1,11 @@
+using CakeOs.Entity.Domain.Base;
 using CakeOs.Entity.Enum.Invoice;
 using CakeOS.Entity.Domain.Base;
 using CakeOS.Entity.Domain.security;
 
 namespace CakeOS.Entity.Domain.Business
 {
-    public class Invoice : BaseDomain
+    public class Invoice : BaseTenantDomain
     {
         public string Code { get; set; } = string.Empty;
         public int ClientId { get; set; }

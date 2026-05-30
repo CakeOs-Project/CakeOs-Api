@@ -6,14 +6,12 @@ using CakeOS.Entity.Domain.Business;
 
 namespace CakeOs.Entity.Domain.Business;
 
-public class Product : BaseAuditory
+public class Product : BaseTenantDomain
 {
-    public string Name { get; set; }
     public int TypeId { get; set; }
     public int SizeId { get; set; }
     public int ShapeId { get; set; }
     public decimal Price { get; set; }
-    public string? Description { get; set; }
 
     ///
     /// Relaciones
