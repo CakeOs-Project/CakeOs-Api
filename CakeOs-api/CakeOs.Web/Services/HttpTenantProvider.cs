@@ -11,7 +11,7 @@ namespace CakeOs.Web.Services
             var claim = httpContextAccessor.HttpContext?.User
                 .FindFirst("tenantId")?.Value;
 
-            TenantId = 2; // linea de prueba
+            TenantId = 1; // linea de prueba — sincronizado con el seed data de desarrollo
 
             if (int.TryParse(claim, out var id))
                 TenantId = id;

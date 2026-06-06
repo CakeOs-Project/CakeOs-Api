@@ -46,7 +46,7 @@ namespace CakeOs.Entity.Context
 
             modelBuilder.Entity<Client>()
                 .HasQueryFilter(e =>
-                    (e.TenantId == TenantId) && e.IsActive && !e.IsDeleted);
+                    (TenantId == null || e.TenantId == TenantId) && e.IsActive && !e.IsDeleted);
 
             modelBuilder.Entity<Product>()
                 .HasQueryFilter(e =>
@@ -79,6 +79,23 @@ namespace CakeOs.Entity.Context
             // ===========================
             // Filtros solo IsDeleted
             // ===========================
+            modelBuilder.Entity<Tenant>()
+                .HasQueryFilter(e => !e.IsDeleted);
+
+            // ===========================
+            // Seed: tenant de desarrollo
+            // ===========================
+            modelBuilder.Entity<Tenant>().HasData(new Tenant
+            {
+                Id = 1,
+                Name = "CakeOs Dev",
+                Slug = "cakeos",
+                Phone = "0000000000",
+                Address = "Dirección de prueba",
+                IsActive = true,
+                IsDeleted = false
+            });
+
             modelBuilder.Entity<Form>()
                 .HasQueryFilter(e => !e.IsDeleted);
 
@@ -138,11 +155,61 @@ namespace CakeOs.Entity.Context
                 .WithMany(u => u.Payments)
                 .HasForeignKey(e => e.UserId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            // Tenant → todas las entidades tenant: sin cascade delete
+            modelBuilder.Entity<Person>()
+                .HasOne(e => e.Tenant).WithMany(t => t.Persons)
+                .HasForeignKey(e => e.TenantId).OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<User>()
+                .HasOne(e => e.Tenant).WithMany(t => t.Users)
+                .HasForeignKey(e => e.TenantId).OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Rol>()
+                .HasOne(e => e.Tenant).WithMany(t => t.Roles)
+                .HasForeignKey(e => e.TenantId).OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<RolFormPermission>()
+                .HasOne(e => e.Tenant).WithMany(t => t.RolFormPermissions)
+                .HasForeignKey(e => e.TenantId).OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Client>()
+                .HasOne(e => e.Tenant).WithMany(t => t.Clients)
+                .HasForeignKey(e => e.TenantId).OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Invoice>()
+                .HasOne(e => e.Tenant).WithMany(t => t.Invoices)
+                .HasForeignKey(e => e.TenantId).OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Payment>()
+                .HasOne(e => e.Tenant).WithMany(t => t.Payments)
+                .HasForeignKey(e => e.TenantId).OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Product>()
+                .HasOne(e => e.Tenant).WithMany(t => t.Products)
+                .HasForeignKey(e => e.TenantId).OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Filled>()
+                .HasOne(e => e.Tenant).WithMany(t => t.Filleds)
+                .HasForeignKey(e => e.TenantId).OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Shape>()
+                .HasOne(e => e.Tenant).WithMany(t => t.Shapes)
+                .HasForeignKey(e => e.TenantId).OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Size>()
+                .HasOne(e => e.Tenant).WithMany(t => t.Sizes)
+                .HasForeignKey(e => e.TenantId).OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Types>()
+                .HasOne(e => e.Tenant).WithMany(t => t.Types)
+                .HasForeignKey(e => e.TenantId).OnDelete(DeleteBehavior.Restrict);
         }
 
         // ===========================
         // Security
         // ===========================
+        public DbSet<Tenant> Tenant { get; set; }
         public DbSet<Person> Person { get; set; }
         public DbSet<User> User { get; set; }
         public DbSet<Rol> Rol { get; set; }
