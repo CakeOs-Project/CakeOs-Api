@@ -9,6 +9,7 @@ using CakeOS.Entity.Domain.Business;
 using CakeOS.Entity.Domain.security;
 using CakeOS.Entity.DTOs.Business.Client;
 using CakeOS.Entity.DTOs.Business.Invoice;
+using CakeOS.Utilities.Provider;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -22,7 +23,7 @@ using System.Threading.Tasks;
 namespace CakeOs.Business.Services.Business
 {
     public class ClientServices
-        : ServicesBase<ClientListDto, ClientCreateDto, Client>,
+        : TenantServicesBase<ClientListDto, ClientCreateDto, Client>,
         IClientServices
     {
         private readonly IMapper _mapper;
@@ -30,8 +31,8 @@ namespace CakeOs.Business.Services.Business
         private readonly IPersonRepository _person;
         private readonly ApplicationDbContext _context;
 
-        public ClientServices(IClientRepository data, IPersonRepository person, IMapper mapper, ApplicationDbContext context)
-            : base(data, mapper)
+        public ClientServices(IClientRepository data, IPersonRepository person, IMapper mapper, ApplicationDbContext context, ITenantProvider tenantProvider)
+            : base(data, mapper, tenantProvider)
         {
             _data = data;
             _mapper = mapper;
@@ -56,6 +57,9 @@ namespace CakeOs.Business.Services.Business
             if (string.IsNullOrWhiteSpace(dto.LastName))
                 throw new ArgumentNullException("Los apellidos son requerido.");
 
+            var tenantId = _tenantProvider.TenantId
+                ?? throw new InvalidOperationException("No se pudo determinar el TenantId.");
+
             var strategy = _context.Database.CreateExecutionStrategy();
 
             return await strategy.ExecuteAsync(async () =>
@@ -76,7 +80,8 @@ namespace CakeOs.Business.Services.Business
                         Document = dto.Document,
                         Phone = dto.Phone,
                         Address = dto.Address,
-                        CreateAt = DateTime.UtcNow
+                        CreateAt = DateTime.UtcNow,
+                        TenantId = tenantId
                     };
 
                     var newPerson = await _person.AddAsync(person);
@@ -84,7 +89,8 @@ namespace CakeOs.Business.Services.Business
                     var client = new Client
                     {
                         Person = newPerson,
-                        Email = dto.Email
+                        Email = dto.Email,
+                        TenantId = tenantId
                     };
 
                     var newClient = await _data.AddAsync(client);

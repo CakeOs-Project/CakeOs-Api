@@ -8,6 +8,7 @@ using CakeOs.Entity.Enum.Payment;
 using CakeOS.Entity.Domain.Business;
 using CakeOS.Entity.Domain.security;
 using CakeOS.Entity.DTOs.Business.Invoice;
+using CakeOS.Utilities.Provider;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +23,7 @@ using System.Threading.Tasks;
 
 namespace CakeOs.Business.Services.Business
 {
-    public class InvoiceServices : ServicesBase<InvoiceListDto, InvoiceCreateDto, Invoice>, IInvoiceServices
+    public class InvoiceServices : TenantServicesBase<InvoiceListDto, InvoiceCreateDto, Invoice>, IInvoiceServices
     {
         private readonly IMapper _mapper;
         private readonly IInvoiceRepository _invoiceData;
@@ -43,8 +44,9 @@ namespace CakeOs.Business.Services.Business
             IInvoiceItemRepository invoiceItemData,
             IPersonRepository personData,
             IPaymentRepository paymentData,
-            ApplicationDbContext context)
-           : base(data, mapper)
+            ApplicationDbContext context,
+            ITenantProvider tenantProvider)
+           : base(data, mapper, tenantProvider)
         {
             _mapper = mapper;
             _invoiceData = data;
@@ -64,6 +66,9 @@ namespace CakeOs.Business.Services.Business
             if (dto.Items is null || !dto.Items.Any())
                 throw new ArgumentException("La factura debe tener al menos un ítem");
 
+            var tenantId = _tenantProvider.TenantId
+                ?? throw new InvalidOperationException("No se pudo determinar el TenantId.");
+
             var strategy = _context.Database.CreateExecutionStrategy();
 
             return await strategy.ExecuteAsync(async () =>
@@ -75,19 +80,21 @@ namespace CakeOs.Business.Services.Business
                     if (client is null)
                     {
                         var person = _mapper.Map<Person>(dto);
+                        person.TenantId = tenantId;
                         var newPerson = await _personData.AddAsync(person);
                         var newClient = new Client
                         {
                             Person = person,
                             Email = dto.Email,
-                            IsActive = true
+                            IsActive = true,
+                            TenantId = tenantId
                         };
                         await _clientData.AddAsync(newClient);
                         client = newClient;
                     }
 
                     string code = await GenerateInvoiceCodeAsync();
-                    var total = dto.Items.Sum(i => i.Quantity * i.UnitPrice);                    
+                    var total = dto.Items.Sum(i => i.Quantity * i.UnitPrice);
 
                     var invoice = new Invoice
                     {
@@ -99,7 +106,8 @@ namespace CakeOs.Business.Services.Business
                         Status = InvoiceStatus.Pendiente,
                         CreatedAt = DateTime.UtcNow,
                         DeliveryDate = dto.DeliveryDate,
-                        IsActive = true
+                        IsActive = true,
+                        TenantId = tenantId
                     };
                     await _invoiceData.AddAsync(invoice);
 
@@ -148,7 +156,8 @@ namespace CakeOs.Business.Services.Business
                             Amount = dto.InitialPayment,
                             PaymentMethod = dto.PaymentMethod.Value,
                             PaymentType = type,
-                            PaymentDate = DateTime.UtcNow
+                            PaymentDate = DateTime.UtcNow,
+                            TenantId = tenantId
                         };
 
                         await _paymentData.AddAsync(paymet);

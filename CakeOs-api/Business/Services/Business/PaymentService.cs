@@ -8,6 +8,7 @@ using CakeOs.Entity.Enum.Invoice;
 using CakeOs.Entity.Enum.Payment;
 using CakeOS.Entity.Domain.Business;
 using CakeOS.Entity.DTOs.Business.Payment;
+using CakeOS.Utilities.Provider;
 using MapsterMapper;
 
 namespace CakeOs.Business.Services.Business
@@ -15,13 +16,14 @@ namespace CakeOs.Business.Services.Business
     /// <summary>
     /// Servicio para gestionar operaciones relacionadas con pagos.
     /// </summary>
-    public class PaymentService : ServicesBase<PaymentListDto, PaymentCreateDto, Payment>, IPaymentServices
+    public class PaymentService : TenantServicesBase<PaymentListDto, PaymentCreateDto, Payment>, IPaymentServices
     {
         private readonly IPaymentRepository _repository;
         private readonly IInvoiceRepository _invoice;
         private readonly IMapper _mapper;
 
-        public PaymentService(IPaymentRepository data, IInvoiceRepository invoice, IMapper mapper) : base(data, mapper)
+        public PaymentService(IPaymentRepository data, IInvoiceRepository invoice, IMapper mapper, ITenantProvider tenantProvider)
+            : base(data, mapper, tenantProvider)
         {
             _repository = data;
             _invoice = invoice;
@@ -37,6 +39,8 @@ namespace CakeOs.Business.Services.Business
         public async Task<PaymentListDto> RegisterPaymentAsync(PaymentCreateDto dto, int userId)
         {
             var payment = _mapper.Map<Payment>(dto);
+            payment.TenantId = _tenantProvider.TenantId
+                ?? throw new InvalidOperationException("No se pudo determinar el TenantId.");
 
             var invoice = await _invoice.GetByIdAsync(payment.InvoiceId);
             if (invoice == null) throw new ArgumentNullException("La factura no existe.");

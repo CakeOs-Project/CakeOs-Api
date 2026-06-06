@@ -3,6 +3,7 @@ using CakeOs.Business.Interfaces.Parameter;
 using CakeOs.Data.Interfaces.Business;
 using CakeOs.Entity.Domain.Parameter;
 using CakeOs.Entity.DTOs.Parameter.Filled;
+using CakeOS.Utilities.Provider;
 using MapsterMapper;
 
 namespace CakeOs.Business.Services.Parameter
@@ -17,7 +18,7 @@ namespace CakeOs.Business.Services.Parameter
     /// CU-22: Activar/Desactivar parámetro de relleno
     /// CU-23: Listar parámetros de relleno
     /// </summary>
-    public class FilledService : ServicesBase<FilledListDto, FilledCreateDto, Filled>, IFilledServices
+    public class FilledService : TenantServicesBase<FilledListDto, FilledCreateDto, Filled>, IFilledServices
     {
         private readonly IFilledRepository _repository;
         private readonly IMapper _mapper;
@@ -27,8 +28,10 @@ namespace CakeOs.Business.Services.Parameter
         /// </summary>
         /// <param name="repository">Repositorio de datos para la entidad Filled</param>
         /// <param name="mapper">Instancia de Mapster para mapeo entre entidades y DTOs</param>
+        /// <param name="tenantProvider">Proveedor del TenantId activo</param>
         /// <exception cref="ArgumentNullException">Si el repositorio o mapper es nulo</exception>
-        public FilledService(IFilledRepository repository, IMapper mapper) : base(repository, mapper)
+        public FilledService(IFilledRepository repository, IMapper mapper, ITenantProvider tenantProvider)
+            : base(repository, mapper, tenantProvider)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
