@@ -1,6 +1,6 @@
 ﻿namespace CakeOs.Web.Extensions.Module
 {
-    public static class ModuleServices
+    public static class ModuleServiceExtensions
     {
         public static IServiceCollection AddModuleServices(this IServiceCollection services)
         {

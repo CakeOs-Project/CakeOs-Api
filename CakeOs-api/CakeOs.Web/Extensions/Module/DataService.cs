@@ -20,6 +20,13 @@ namespace CakeOs.Web.Extensions.Module
             services.AddScoped<IShapeRepository, ShapeData>();
             services.AddScoped<ISizeRepository, SizeData>();
             services.AddScoped<ITypeRepository, TypeData>();
+            services.AddScoped<IUserRepository, UserData>();
+            services.AddScoped<IRolRepository, RolData>();
+            services.AddScoped<IRolFormPermissionRepository, RolFormPermissionData>();
+            services.AddScoped<IFormRepository, FormData>();
+            services.AddScoped<IFormModuleRepository, FormModuleData>();
+            services.AddScoped<IModuleRepository, ModuleData>();
+            services.AddScoped<IPermissionRepository, PermissionData>();
             return services;
         }
     }

@@ -27,6 +27,8 @@ public class UserData : DataBase<User>, IUserRepository
     public async Task<User?> GetByEmailAsync(string email)
     {
         return await _context.Set<User>()
+            .Include(u => u.Person)
+            .Include(u => u.Rol)
             .FirstOrDefaultAsync(u => u.Email == email);
     }
 
@@ -68,6 +70,8 @@ public class UserData : DataBase<User>, IUserRepository
     public async Task<User?> ValidateCredentialsAsync(string email, string passwordHash)
     {
         return await _context.Set<User>()
+            .Include(u => u.Person)
+            .Include(u => u.Rol)
             .FirstOrDefaultAsync(u => u.Email == email && u.Password == passwordHash);
     }
 }

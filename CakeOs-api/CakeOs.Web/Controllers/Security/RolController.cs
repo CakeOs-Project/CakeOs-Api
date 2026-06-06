@@ -1,14 +1,14 @@
 using CakeOs.Business.Interfaces.Security;
 using CakeOS.Entity.Domain.security;
-using CakeOS.Entity.DTOs.SecurityDtos.PersonaDtos;
+using CakeOS.Entity.DTOs.Security.Rol;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CakeOs.Web.Controllers.Security
 {
     [Route("api/security/[controller]")]
-    public class PersonController : SecurityCrudController<PersonListDTO, PersonCreateDTO, Person>
+    public class RolController : SecurityCrudController<RolListDto, RolCreateDto, Rol>
     {
-        public PersonController(IPersonServices service) : base(service)
+        public RolController(IRolServices service) : base(service)
         {
         }
     }

@@ -10,5 +10,6 @@ namespace CakeOs.Business.Interfaces.Security
     public interface IAuthServices
     {
         Task<TokenDto> LoginAsync(LoginDto dto);
+        Task<TokenInfoDto> GetTokenInfoAsync(string token);
     }
 }

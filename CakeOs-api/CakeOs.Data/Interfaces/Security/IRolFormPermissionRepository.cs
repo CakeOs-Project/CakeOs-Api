@@ -17,6 +17,13 @@ public interface IRolFormPermissionRepository : IData<RolFormPermission>
     Task<IEnumerable<RolFormPermission>> GetByRolIdAsync(int rolId);
 
     /// <summary>
+    /// Obtiene permisos de un rol incluyendo formulario, módulo y permiso.
+    /// </summary>
+    /// <param name="rolId">Identificador del rol</param>
+    /// <returns>Lista de relaciones con sus datos de navegación</returns>
+    Task<IEnumerable<RolFormPermission>> GetByRolIdWithModulesAsync(int rolId);
+
+    /// <summary>
     /// Obtiene permisos específicos de un rol para un formulario.
     /// </summary>
     /// <param name="rolId">Identificador del rol</param>
