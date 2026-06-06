@@ -35,6 +35,23 @@ public class RolFormPermissionData : DataBase<RolFormPermission>, IRolFormPermis
     }
 
     /// <summary>
+    /// Obtiene permisos de un rol incluyendo formulario, módulo y permiso.
+    /// </summary>
+    /// <param name="rolId">Identificador del rol</param>
+    /// <returns>Lista de relaciones con sus datos de navegación</returns>
+    public async Task<IEnumerable<RolFormPermission>> GetByRolIdWithModulesAsync(int rolId)
+    {
+        return await _context.Set<RolFormPermission>()
+            .Where(rfp => rfp.RolId == rolId)
+            .Include(rfp => rfp.Form)
+                .ThenInclude(f => f.FormModules)
+                    .ThenInclude(fm => fm.Module)
+            .Include(rfp => rfp.Permission)
+            .AsNoTracking()
+            .ToListAsync();
+    }
+
+    /// <summary>
     /// Obtiene permisos específicos de un rol para un formulario.
     /// </summary>
     /// <param name="rolId">Identificador del rol</param>

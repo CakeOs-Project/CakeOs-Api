@@ -1,4 +1,5 @@
 ﻿using CakeOS.Entity.DTOs.Security.Auth;
+using CakeOS.Entity.Domain.security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace CakeOs.Business.Interfaces
 {
     public interface IToken
     {
-        Task<TokenDto> GenerateTokensAsync(LoginDto login);
+        Task<TokenDto> GenerateTokensAsync(User user, string fullName, string rolName);
     }
 }

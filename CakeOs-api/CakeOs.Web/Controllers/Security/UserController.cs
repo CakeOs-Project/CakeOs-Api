@@ -1,23 +1,36 @@
-using CakeOs.Business.Base;
-using CakeOs.Web.Controllers.Base;
+using CakeOs.Business.Interfaces.Security;
+using CakeOS.Entity.Domain.security;
+using CakeOS.Entity.DTOs.Security.Auth;
 using CakeOS.Entity.DTOs.Security.User;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CakeOs.Web.Controllers.Security
 {
-    /// <summary>
-    /// Controlador para gestionar operaciones relacionadas con usuarios.
-    /// </summary>
-    //[ApiController]
-    //[Route("api/[controller]")]
-    //public class UserController : BaseCrudController<UserListDto>
-    //{
-    //    /// <summary>
-    //    /// Inicializa una nueva instancia del controlador de usuarios.
-    //    /// </summary>
-    //    /// <param name="service">Servicio de usuarios.</param>
-    //    public UserController(IServices<UserListDto> service) : base(service)
-    //    {
-    //    }
-    //}
+    [Route("api/security/[controller]")]
+    public class UserController : SecurityCrudController<UserListDto, UserCreateDto, User>
+    {
+        private readonly IUserServices _userService;
+
+        public UserController(IUserServices service) : base(service)
+        {
+            _userService = service;
+        }
+
+        [HttpGet("by-email")]
+        public async Task<IActionResult> GetByEmailAsync([FromQuery] string email)
+        {
+            var data = await _userService.GetByEmailAsync(email);
+            if (data is null)
+                return NotFound(new { message = "Usuario no encontrado." });
+
+            return Ok(data);
+        }
+
+        [HttpPatch("{userId:int}/change-password")]
+        public async Task<IActionResult> ChangePasswordAsync(int userId, [FromBody] ChangePasswordDto dto)
+        {
+            var changed = await _userService.ChangePasswordAsync(userId, dto);
+            return Ok(new { success = changed });
+        }
+    }
 }
