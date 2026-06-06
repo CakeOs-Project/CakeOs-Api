@@ -1,9 +1,10 @@
+using CakeOs.Entity.Domain.Base;
 using CakeOS.Entity.Domain.Base;
 using CakeOS.Entity.Domain.Business;
 
 namespace CakeOS.Entity.Domain.security
 {
-    public class Person : BaseDomain
+    public class Person : BaseTenantDomain
     {
         public string Name { get; set; }
         public string LastName { get; set; }

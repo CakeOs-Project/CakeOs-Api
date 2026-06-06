@@ -11,6 +11,10 @@ namespace CakeOs.Entity.Domain.Base
     public abstract class BaseTenantDomain : BaseDomain
     {
         public int TenantId { get; set; }
+        public Boolean IsDeleted { get; set; }
+
+        //Relaciones
         public Tenant Tenant { get; set; } = null!;
+
     }
 }

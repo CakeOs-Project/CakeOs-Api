@@ -103,7 +103,7 @@ public class InvoiceData : DataBase<Invoice>, IInvoiceRepository
             Items = i.InvoiceItems.Select(ii => new InvoiceItemDetailDto
             {
                 Id = ii.Id,
-                ProductName = ii.Product.Name,
+                ProductName = "Prueba",
                 Quantity = ii.Quantity,
                 UnitPrice = ii.UnitPrice,
                 SubTotal = ii.SubTotal,

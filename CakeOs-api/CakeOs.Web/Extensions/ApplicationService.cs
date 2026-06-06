@@ -1,6 +1,8 @@
 ﻿using CakeOs.Business.Mapping;
 using CakeOs.Web.Extensions.Infrastructure;
 using CakeOs.Web.Extensions.Module;
+using CakeOs.Web.Services;
+using CakeOS.Utilities.Provider;
 using Mapster;
 using MapsterMapper;
 using System.Reflection;
@@ -17,6 +19,9 @@ namespace CakeOs.Web.Extensions
 
             services.AddSingleton(config);
             services.AddScoped<IMapper, ServiceMapper>();
+
+            services.AddHttpContextAccessor();
+            services.AddScoped<ITenantProvider, HttpTenantProvider>();
 
             return services;
         }

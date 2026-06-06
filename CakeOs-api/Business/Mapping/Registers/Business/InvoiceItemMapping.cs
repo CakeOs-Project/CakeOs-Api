@@ -14,7 +14,7 @@ namespace CakeOs.Business.Mapping.Registers.Business
         public void Register(TypeAdapterConfig config)
         {
             config.NewConfig<InvoiceItem, InvoiceItemDetailDto>()
-                .Map(dest => dest.ProductName, src => src.Product != null ? src.Product.Name : null)
+                //.Map(dest => dest.ProductName, src => src.Product != null ? src.Product.Name : null)
                 .Map(dest => dest.FilledName, src => src.Filled != null ? src.Filled.Name : null);
                 //.Map(dest => dest.DecorationImageUrl, src => src.Image != null ? src.Image.Url : null);
 
