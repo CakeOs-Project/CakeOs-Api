@@ -3,7 +3,7 @@ using CakeOS.Entity.Domain.Business;
 
 namespace CakeOs.Entity.Domain.Parameter
 {
-    public class Filled : BaseAuditory
+    public class Filled : BaseTenantDomain
     {
         public string Name { get; set; } = string.Empty;
         public Boolean DefaultFilled { get; set; }

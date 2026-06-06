@@ -3,7 +3,7 @@ using CakeOS.Entity.Domain.Base;
 
 namespace CakeOS.Entity.Domain.security
 {
-    public class Rol : BaseAuditory
+    public class Rol : BaseTenantDomain
     {
         public string Name { get; set; }
         public string Description { get; set; }

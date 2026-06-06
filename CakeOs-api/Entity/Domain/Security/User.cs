@@ -3,7 +3,7 @@ using CakeOS.Entity.Domain.Business;
 
 namespace CakeOS.Entity.Domain.security
 {
-    public class User : BaseAuditory
+    public class User : BaseTenantDomain
     {
         public string Email { get; set; }
         public string Password { get; set; }

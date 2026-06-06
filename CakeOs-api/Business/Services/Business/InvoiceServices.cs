@@ -105,6 +105,8 @@ namespace CakeOs.Business.Services.Business
 
                     foreach (var item in dto.Items)
                     {
+
+
                         var invoiceItem = new InvoiceItem
                         {
                             Invoice = invoice,

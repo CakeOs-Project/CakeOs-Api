@@ -10,6 +10,7 @@ namespace CakeOs.Web.Extensions.Module
         public static IServiceCollection AddDataService(this IServiceCollection services)
         {
             services.AddScoped<IInvoiceRepository, InvoiceData>();
+            services.AddScoped<IInvoiceItemRepository, InvoiceItemData>();
             services.AddScoped<IClientRepository, ClientData>();
             services.AddScoped<IPersonRepository, PersonData>();
             services.AddScoped<IInvoiceItemRepository, InvoiceItemData>();

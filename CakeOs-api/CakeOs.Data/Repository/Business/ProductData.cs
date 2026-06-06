@@ -85,7 +85,7 @@ public class ProductData : DataBase<Product>, IProductRepository
             return await query.ToListAsync();
 
         return await query
-            .Where(p => p.Name != null && EF.Functions.Like(p.Name, $"%{name}%"))
+            .Where(p => p.Type.Name != null && EF.Functions.Like(p.Size.Name, $"%{name}%"))
             .ToListAsync();
     }
 }

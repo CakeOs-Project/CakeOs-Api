@@ -25,4 +25,12 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CakeOS.Utilities\CakeOS.Utilities.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="DTOs\Security\Tenant\" />
+  </ItemGroup>
+
 </Project>

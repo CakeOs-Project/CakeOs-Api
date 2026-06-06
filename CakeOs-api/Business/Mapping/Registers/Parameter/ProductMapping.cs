@@ -9,6 +9,7 @@ namespace CakeOs.Business.Mapping.Registers.Parameter
         public void Register(TypeAdapterConfig config)
         {
             config.NewConfig<Product, ProductListDto>()
+                .Map(dest => dest.FullName, src => src.Type != null ? $"{src.Type.Name} de {src.Size.Name} {src.Shape.Name}" : string.Empty)
                 .Map(dest => dest.TypeName, src => src.Type != null ? src.Type.Name : string.Empty)
                 .Map(dest => dest.SizeName, src => src.Size != null ? src.Size.Name : string.Empty)
                 .Map(dest => dest.ShapeName, src => src.Shape != null ? src.Shape.Name : string.Empty);
