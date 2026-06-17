@@ -1,11 +1,15 @@
 using CakeOs.Business.Interfaces.Security;
 using CakeOS.Entity.Domain.security;
 using CakeOS.Entity.DTOs.SecurityDtos.RolFormularioPermisoDtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CakeOs.Web.Controllers.Security
 {
+    [ApiController]
     [Route("api/security/[controller]")]
+    [Authorize]
+    [Produces("application/json")]
     public class RolFormPermissionController : SecurityCrudController<RolFormPermissionListDTO, RolFormPermissionCreateDTO, RolFormPermission>
     {
         private readonly IRolFormPermissionServices _rolFormPermissionService;

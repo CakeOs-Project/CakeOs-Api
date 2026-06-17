@@ -3,6 +3,7 @@ using CakeOs.Business.Interfaces.Business;
 using CakeOs.Web.Controllers.Base;
 using CakeOS.Entity.Domain.Business;
 using CakeOS.Entity.DTOs.Business.Payment;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CakeOs.Web.Controllers.Business
@@ -12,6 +13,8 @@ namespace CakeOs.Web.Controllers.Business
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
+    [Produces("application/json")]
     public class PaymentController : Controller
     {
         private readonly IPaymentServices _services;

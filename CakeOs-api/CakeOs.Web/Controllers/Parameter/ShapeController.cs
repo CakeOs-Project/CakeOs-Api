@@ -1,5 +1,6 @@
 using CakeOs.Business.Interfaces.Parameter;
 using CakeOs.Entity.DTOs.Parameter.Shape;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CakeOs.Web.Controllers.Parameter
@@ -13,6 +14,7 @@ namespace CakeOs.Web.Controllers.Parameter
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     [Produces("application/json")]
     public class ShapeController : ControllerBase
     {

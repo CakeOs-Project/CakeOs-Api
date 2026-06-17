@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using CakeOs.Web.Services.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -31,7 +33,13 @@ namespace CakeOs.Web.Extensions.Infrastructure
                     };
                 });
 
-            services.AddAuthorization();
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("RequireTenant", policy =>
+                    policy.Requirements.Add(new TenantRequirement()));
+            });
+
+            services.AddSingleton<IAuthorizationHandler, TenantAuthorizationHandler>();
 
             return services;
         }

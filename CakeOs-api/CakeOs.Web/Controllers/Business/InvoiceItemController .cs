@@ -1,6 +1,7 @@
 ﻿using CakeOs.Business.Interfaces.Business;
 using CakeOs.Business.Services.Business;
 using CakeOS.Entity.DTOs.Business.Invoice;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CakeOs.Web.Controllers.Business
@@ -10,6 +11,7 @@ namespace CakeOs.Web.Controllers.Business
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     [Produces("application/json")]
     public class InvoiceItemController : Controller
     {

@@ -13,10 +13,11 @@ namespace CakeOs.Data.Interfaces.Business;
 public interface IInvoiceRepository : IData<Invoice>
 {
     /// <summary>
-    /// CU-27: Obtiene todas las facturas creadas el día actual.
+    /// CU-27: Obtiene las facturas creadas en un rango de tiempo específico (Día, Semana o Mes actual).
     /// </summary>
-    /// <returns>Lista de facturas del día</returns>
-    Task<List<InvoiceListDto>> GetInvoicesForTodayAsync();
+    /// <param name="range">Filtro de rango de tiempo (Today, ThisWeek, ThisMonth)</param>
+    /// <returns>Lista de facturas filtradas</returns>
+    Task<List<InvoiceListDto>> GetInvoicesByRangeAsync(TimeRangeFilter range);
 
     /// <summary>
     /// CU-28: Obtiene facturas por fecha de entrega específica.

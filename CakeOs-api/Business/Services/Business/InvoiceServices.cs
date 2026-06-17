@@ -178,9 +178,9 @@ namespace CakeOs.Business.Services.Business
             });
         }
 
-        public async Task<List<InvoiceListDto>> GetInvoicesForTodayAsync()
+        public async Task<List<InvoiceListDto>> GetInvoicesByRangeAsync(TimeRangeFilter range)
         {
-            var invoices = await _invoiceData.GetInvoicesForTodayAsync();
+            var invoices = await _invoiceData.GetInvoicesByRangeAsync(range);
             return invoices;
         }
 

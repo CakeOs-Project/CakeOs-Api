@@ -1,5 +1,6 @@
 ﻿using CakeOs.Business.Interfaces.Business;
 using CakeOS.Entity.DTOs.Business.Client;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.AccessControl;
 
@@ -11,6 +12,7 @@ namespace CakeOs.Web.Controllers.Business
     [ApiController]
     [Route("api/[controller]")]
     [Produces("application/json")]
+    [Authorize]
     public class ClientController : Controller
     {
         private readonly IClientServices _Services;

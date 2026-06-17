@@ -1,4 +1,5 @@
 ﻿using CakeOs.Business.Base;
+using CakeOs.Entity.Enum.Invoice;
 using CakeOS.Entity.Domain.Business;
 using CakeOS.Entity.DTOs.Business.Invoice;
 
@@ -7,7 +8,7 @@ namespace CakeOs.Business.Interfaces.Business
     public interface IInvoiceServices : IServices<InvoiceListDto,InvoiceCreateDto,Invoice>
     {
         Task<InvoiceListDto> CreateInvoiceAsync(InvoiceCreateDto dto, int userId);
-        Task<List<InvoiceListDto>> GetInvoicesForTodayAsync();
+        Task<List<InvoiceListDto>> GetInvoicesByRangeAsync(TimeRangeFilter range);
         Task<InvoiceDetailDto?> GetWithDetailsAsync(int id);
     }
 }

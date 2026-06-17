@@ -1,6 +1,8 @@
 ﻿using CakeOs.Business.Interfaces.Business;
 using CakeOs.Business.Services.Business;
+using CakeOs.Entity.Enum.Invoice;
 using CakeOS.Entity.DTOs.Business.Invoice;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CakeOs.Web.Controllers.Business
@@ -10,6 +12,7 @@ namespace CakeOs.Web.Controllers.Business
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     [Produces("application/json")]
     public class InvoiceController : Controller
     {
@@ -22,9 +25,9 @@ namespace CakeOs.Web.Controllers.Business
         #region "GET"
 
         [HttpGet("today")]
-        public async Task<IActionResult> GetInvoicesForToday()
+        public async Task<IActionResult> GetInvoicesForToday([FromQuery] TimeRangeFilter range = TimeRangeFilter.Today)
         {
-            var result = await _services.GetInvoicesForTodayAsync();
+            var result = await _services.GetInvoicesByRangeAsync(range);
             return Ok(result);
         }
 

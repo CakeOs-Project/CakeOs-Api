@@ -13,6 +13,15 @@ namespace CakeOs.Entity.Context
         private readonly ITenantProvider? _tenantProvider;
         private int? TenantId => _tenantProvider?.TenantId;
 
+        /// <summary>
+        /// Solo es true cuando el contexto se construyó sin ITenantProvider
+        /// (p. ej. herramientas de diseño/migraciones). En ese caso se omite
+        /// el filtro de tenant. Si el provider existe pero no resolvió un
+        /// TenantId (usuario no autenticado / claim ausente), el filtro NO
+        /// debe omitirse: debe devolver vacío.
+        /// </summary>
+        private bool BypassTenantFilter => _tenantProvider is null;
+
         public ApplicationDbContext(
             DbContextOptions<ApplicationDbContext> options,
             ITenantProvider? tenantProvider = null)
@@ -30,71 +39,57 @@ namespace CakeOs.Entity.Context
             // ===========================
             modelBuilder.Entity<Person>()
                 .HasQueryFilter(e =>
-                    (TenantId == null || e.TenantId == TenantId) && e.IsActive && !e.IsDeleted);
+                    (BypassTenantFilter || e.TenantId == TenantId) && e.IsActive && !e.IsDeleted);
 
             modelBuilder.Entity<User>()
                 .HasQueryFilter(e =>
-                    (TenantId == null || e.TenantId == TenantId) && e.IsActive && !e.IsDeleted);
+                    (BypassTenantFilter || e.TenantId == TenantId) && e.IsActive && !e.IsDeleted);
 
             modelBuilder.Entity<Rol>()
                 .HasQueryFilter(e =>
-                    (TenantId == null || e.TenantId == TenantId) && e.IsActive && !e.IsDeleted);
+                    (BypassTenantFilter || e.TenantId == TenantId) && e.IsActive && !e.IsDeleted);
 
             modelBuilder.Entity<RolFormPermission>()
                 .HasQueryFilter(e =>
-                    (TenantId == null || e.TenantId == TenantId) && e.IsActive && !e.IsDeleted);
+                    (BypassTenantFilter || e.TenantId == TenantId) && e.IsActive && !e.IsDeleted);
 
             modelBuilder.Entity<Client>()
                 .HasQueryFilter(e =>
-                    (TenantId == null || e.TenantId == TenantId) && e.IsActive && !e.IsDeleted);
+                    (BypassTenantFilter || e.TenantId == TenantId) && e.IsActive && !e.IsDeleted);
 
             modelBuilder.Entity<Product>()
                 .HasQueryFilter(e =>
-                    (TenantId == null || e.TenantId == TenantId) && e.IsActive && !e.IsDeleted);
+                    (BypassTenantFilter || e.TenantId == TenantId) && e.IsActive && !e.IsDeleted);
 
             modelBuilder.Entity<Invoice>()
                 .HasQueryFilter(e =>
-                    (TenantId == null || e.TenantId == TenantId) && e.IsActive && !e.IsDeleted);
+                    (BypassTenantFilter || e.TenantId == TenantId) && e.IsActive && !e.IsDeleted);
 
             modelBuilder.Entity<Payment>()
                 .HasQueryFilter(e =>
-                    (TenantId == null || e.TenantId == TenantId) && e.IsActive && !e.IsDeleted);
+                    (BypassTenantFilter || e.TenantId == TenantId) && e.IsActive && !e.IsDeleted);
 
             modelBuilder.Entity<Types>()
                 .HasQueryFilter(e =>
-                    (TenantId == null || e.TenantId == TenantId) && e.IsActive && !e.IsDeleted);
+                    (BypassTenantFilter || e.TenantId == TenantId) && e.IsActive && !e.IsDeleted);
 
             modelBuilder.Entity<Size>()
                 .HasQueryFilter(e =>
-                    (TenantId == null || e.TenantId == TenantId) && e.IsActive && !e.IsDeleted);
+                    (BypassTenantFilter || e.TenantId == TenantId) && e.IsActive && !e.IsDeleted);
 
             modelBuilder.Entity<Shape>()
                 .HasQueryFilter(e =>
-                    (TenantId == null || e.TenantId == TenantId) && e.IsActive && !e.IsDeleted);
+                    (BypassTenantFilter || e.TenantId == TenantId) && e.IsActive && !e.IsDeleted);
 
             modelBuilder.Entity<Filled>()
                 .HasQueryFilter(e =>
-                    (TenantId == null || e.TenantId == TenantId) && e.IsActive && !e.IsDeleted);
+                    (BypassTenantFilter || e.TenantId == TenantId) && e.IsActive && !e.IsDeleted);
 
             // ===========================
             // Filtros solo IsDeleted
             // ===========================
             modelBuilder.Entity<Tenant>()
                 .HasQueryFilter(e => !e.IsDeleted);
-
-            // ===========================
-            // Seed: tenant de desarrollo
-            // ===========================
-            modelBuilder.Entity<Tenant>().HasData(new Tenant
-            {
-                Id = 1,
-                Name = "CakeOs Dev",
-                Slug = "cakeos",
-                Phone = "0000000000",
-                Address = "Dirección de prueba",
-                IsActive = true,
-                IsDeleted = false
-            });
 
             modelBuilder.Entity<Form>()
                 .HasQueryFilter(e => !e.IsDeleted);

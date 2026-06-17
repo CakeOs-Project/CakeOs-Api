@@ -26,23 +26,39 @@ public class InvoiceData : DataBase<Invoice>, IInvoiceRepository
     }
 
     /// <summary>
-    /// CU-27: Obtiene todas las facturas creadas el día actual.
+    /// CU-27: Obtiene las facturas creadas en un rango de tiempo específico (Día, Semana o Mes actual).
     /// </summary>
-    /// <returns>Lista de facturas del día</returns>
-    public async Task<List<InvoiceListDto>> GetInvoicesForTodayAsync()
-    {
-        var start = DateTime.Today;
-        var end = start.AddDays(1);
+    /// <param name="range">Filtro de rango de tiempo (Today, ThisWeek, ThisMonth)</param>
+    /// <returns>Lista de facturas filtradas</returns>
+    public async Task<List<InvoiceListDto>> GetInvoicesByRangeAsync(TimeRangeFilter range)
+                {
+        var start = DateTime.Today; 
+        var end = start.AddDays(1); 
+
+        switch (range)
+        {
+            case TimeRangeFilter.ThisWeek:
+                end = start.AddDays(7);
+                break;
+
+            case TimeRangeFilter.ThisMonth:
+                end = start.AddDays(30);
+                break;
+
+            case TimeRangeFilter.Today:
+            default:
+                break;
+        }
 
         return await _context.Set<Invoice>()
-            .Include(i => i.Client)
-                .ThenInclude(c => c.Person)
             .Where(i => i.DeliveryDate >= start && i.DeliveryDate < end)
             .Select(i => new InvoiceListDto
             {
                 Id = i.Id,
                 Code = i.Code,
-                FullName = i.Client.Person.Name + " " + i.Client.Person.LastName,
+                FullName = i.Client != null && i.Client.Person != null
+                    ? i.Client.Person.Name + " " + i.Client.Person.LastName
+                    : "Cliente no disponible o inactivo",
                 DeliveryDate = i.DeliveryDate,
                 Status = i.Status,
                 OutstandingBalance = i.OutstandingBalance,

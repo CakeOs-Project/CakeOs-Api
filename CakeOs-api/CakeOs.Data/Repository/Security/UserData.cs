@@ -26,10 +26,15 @@ public class UserData : DataBase<User>, IUserRepository
     /// <returns>Usuario encontrado o null</returns>
     public async Task<User?> GetByEmailAsync(string email)
     {
+        // Se ignora el filtro global de tenant: en login aún no existe contexto
+        // de tenant (el usuario no tiene token todavía), así que la búsqueda
+        // debe ser global por email. Se reaplican manualmente las condiciones
+        // de IsActive/IsDeleted que el filtro global habría aplicado.
         return await _context.Set<User>()
+            .IgnoreQueryFilters()
             .Include(u => u.Person)
             .Include(u => u.Rol)
-            .FirstOrDefaultAsync(u => u.Email == email);
+            .FirstOrDefaultAsync(u => u.Email == email && u.IsActive && !u.IsDeleted);
     }
 
     /// <summary>
@@ -69,9 +74,11 @@ public class UserData : DataBase<User>, IUserRepository
     /// <returns>Usuario si las credenciales son válidas</returns>
     public async Task<User?> ValidateCredentialsAsync(string email, string passwordHash)
     {
+        // Mismo caso que GetByEmailAsync: se usa antes de existir contexto de tenant.
         return await _context.Set<User>()
+            .IgnoreQueryFilters()
             .Include(u => u.Person)
             .Include(u => u.Rol)
-            .FirstOrDefaultAsync(u => u.Email == email && u.Password == passwordHash);
+            .FirstOrDefaultAsync(u => u.Email == email && u.Password == passwordHash && u.IsActive && !u.IsDeleted);
     }
 }

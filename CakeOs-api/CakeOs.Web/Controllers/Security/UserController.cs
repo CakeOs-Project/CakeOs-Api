@@ -2,11 +2,15 @@ using CakeOs.Business.Interfaces.Security;
 using CakeOS.Entity.Domain.security;
 using CakeOS.Entity.DTOs.Security.Auth;
 using CakeOS.Entity.DTOs.Security.User;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CakeOs.Web.Controllers.Security
 {
+    [ApiController]
     [Route("api/security/[controller]")]
+    [Authorize]
+    [Produces("application/json")]
     public class UserController : SecurityCrudController<UserListDto, UserCreateDto, User>
     {
         private readonly IUserServices _userService;

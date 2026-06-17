@@ -41,10 +41,20 @@ public class RolFormPermissionData : DataBase<RolFormPermission>, IRolFormPermis
     /// <returns>Lista de relaciones con sus datos de navegación</returns>
     public async Task<IEnumerable<RolFormPermission>> GetByRolIdWithModulesAsync(int rolId)
     {
+        // Se ignora el filtro de tenant: este método se usa durante el login,
+        // antes de que el request tenga un tenant en su contexto (el token recién
+        // generado aún no está adjunto al HttpContext.User). IgnoreQueryFilters()
+        // afecta a TODAS las entidades de la consulta (no solo la raíz), así que
+        // se reaplican manualmente las condiciones IsActive/IsDeleted de
+        // RolFormPermission, Form, Permission, FormModule y Module.
         return await _context.Set<RolFormPermission>()
-            .Where(rfp => rfp.RolId == rolId)
+            .IgnoreQueryFilters()
+            .Where(rfp => rfp.RolId == rolId
+                && rfp.IsActive && !rfp.IsDeleted
+                && !rfp.Form.IsDeleted
+                && !rfp.Permission.IsDeleted)
             .Include(rfp => rfp.Form)
-                .ThenInclude(f => f.FormModules)
+                .ThenInclude(f => f.FormModules.Where(fm => !fm.IsDeleted && !fm.Module.IsDeleted))
                     .ThenInclude(fm => fm.Module)
             .Include(rfp => rfp.Permission)
             .AsNoTracking()
