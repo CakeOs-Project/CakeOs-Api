@@ -2,6 +2,7 @@ using CakeOs.Data.Base;
 using CakeOs.Entity.Domain.Base;
 using CakeOS.Utilities.Provider;
 using MapsterMapper;
+using Microsoft.Extensions.Logging;
 
 namespace CakeOs.Business.Base
 {
@@ -13,8 +14,8 @@ namespace CakeOs.Business.Base
     {
         protected readonly ITenantProvider _tenantProvider;
 
-        public TenantServicesBase(IData<TEntity> repository, IMapper mapper, ITenantProvider tenantProvider)
-            : base(repository, mapper)
+        public TenantServicesBase(IData<TEntity> repository, IMapper mapper, ILoggerFactory loggerFactory, ITenantProvider tenantProvider)
+            : base(repository, mapper, loggerFactory)
         {
             _tenantProvider = tenantProvider;
         }
@@ -38,6 +39,7 @@ namespace CakeOs.Business.Base
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error al crear {Entity} para tenant {TenantId}", typeof(TEntity).Name, _tenantProvider.TenantId);
                 throw new("Error al crear el registro.", ex);
             }
         }

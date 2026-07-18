@@ -10,6 +10,7 @@ using CakeOS.Entity.Domain.Business;
 using CakeOS.Entity.DTOs.Business.Payment;
 using CakeOS.Utilities.Provider;
 using MapsterMapper;
+using Microsoft.Extensions.Logging;
 
 namespace CakeOs.Business.Services.Business
 {
@@ -22,8 +23,8 @@ namespace CakeOs.Business.Services.Business
         private readonly IInvoiceRepository _invoice;
         private readonly IMapper _mapper;
 
-        public PaymentService(IPaymentRepository data, IInvoiceRepository invoice, IMapper mapper, ITenantProvider tenantProvider)
-            : base(data, mapper, tenantProvider)
+        public PaymentService(IPaymentRepository data, IInvoiceRepository invoice, IMapper mapper, ILoggerFactory loggerFactory, ITenantProvider tenantProvider)
+            : base(data, mapper, loggerFactory, tenantProvider)
         {
             _repository = data;
             _invoice = invoice;

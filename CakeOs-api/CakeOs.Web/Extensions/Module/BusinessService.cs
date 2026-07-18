@@ -22,6 +22,7 @@ namespace CakeOs.Web.Extensions.Module
             services.AddScoped<IShapeServices, ShapeService>();
             services.AddScoped<ISizeServices, SizeService>();
             services.AddScoped<ITypeServices, TypeService>();
+            services.AddScoped<IExtraServices, ExtraService>();
             services.AddScoped<IPersonServices, PersonServices>();
             services.AddScoped<IUserServices, UserServices>();
             services.AddScoped<IRolServices, RolServices>();

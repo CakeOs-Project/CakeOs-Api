@@ -4,6 +4,7 @@ using CakeOs.Data.Interfaces.Security;
 using CakeOS.Entity.Domain.security;
 using CakeOS.Entity.DTOs.Security.Form;
 using MapsterMapper;
+using Microsoft.Extensions.Logging;
 
 namespace CakeOs.Business.Services.Security
 {
@@ -12,8 +13,8 @@ namespace CakeOs.Business.Services.Security
         private readonly IFormRepository _repository;
         private readonly IMapper _mapper;
 
-        public FormServices(IFormRepository repository, IMapper mapper)
-            : base(repository, mapper)
+        public FormServices(IFormRepository repository, IMapper mapper, ILoggerFactory loggerFactory)
+            : base(repository, mapper, loggerFactory)
         {
             _repository = repository;
             _mapper = mapper;

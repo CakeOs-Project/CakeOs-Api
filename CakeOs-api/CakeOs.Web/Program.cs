@@ -1,6 +1,7 @@
 using CakeOs.Web.Extensions;
 using CakeOs.Web.Extensions.Infrastructure;
 using CakeOs.Web.Extensions.Module;
+using CakeOs.Web.Middleware;
 using MapsterMapper;
 using Microsoft.OpenApi.Models;
 
@@ -50,6 +51,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 

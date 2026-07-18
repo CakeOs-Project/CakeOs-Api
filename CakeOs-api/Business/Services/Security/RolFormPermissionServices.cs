@@ -5,6 +5,7 @@ using CakeOS.Entity.Domain.security;
 using CakeOS.Entity.DTOs.SecurityDtos.RolFormularioPermisoDtos;
 using CakeOS.Utilities.Provider;
 using MapsterMapper;
+using Microsoft.Extensions.Logging;
 
 namespace CakeOs.Business.Services.Security
 {
@@ -18,8 +19,9 @@ namespace CakeOs.Business.Services.Security
         public RolFormPermissionServices(
             IRolFormPermissionRepository repository,
             IMapper mapper,
+            ILoggerFactory loggerFactory,
             ITenantProvider tenantProvider)
-            : base(repository, mapper, tenantProvider)
+            : base(repository, mapper, loggerFactory, tenantProvider)
         {
             _repository = repository;
             _mapper = mapper;

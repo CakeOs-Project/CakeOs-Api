@@ -1,3 +1,4 @@
+using CakeOs.Entity.DTOs.Business.InvoiceItemExtra;
 using CakeOs.Entity.Enum.Invoice;
 
 namespace CakeOS.Entity.DTOs.Business.InvoiceItem
@@ -17,5 +18,6 @@ namespace CakeOS.Entity.DTOs.Business.InvoiceItem
         public string? DecorationDescription { get; set; }
         public bool HasMessage { get; set; }
         public string? Message { get; set; }
+        public List<InvoiceItemExtraListDto> Extras { get; set; } = new List<InvoiceItemExtraListDto>();
     }
 }

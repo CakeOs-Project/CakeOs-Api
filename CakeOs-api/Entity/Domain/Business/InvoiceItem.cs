@@ -29,6 +29,7 @@ namespace CakeOS.Entity.Domain.Business
         public Invoice? Invoice { get; set; }
         public Product? Product { get; set; }
         public Filled? Filled { get; set; }
+        public List<InvoiceItemExtra> Extras { get; set; } = new List<InvoiceItemExtra>();
 
         //public bool IsReady;
 

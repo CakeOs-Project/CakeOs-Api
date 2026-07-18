@@ -2,18 +2,10 @@
 using CakeOs.Entity.DTOs.Transversal;
 using CakeOS.Entity.Domain.Base;
 using MapsterMapper;
+using Microsoft.Extensions.Logging;
 
 namespace CakeOs.Business.Base
 {
-    /// <summary>
-    /// Implementación genérica de la capa de servicios de negocio.
-    /// Proporciona operaciones CRUD base para cualquier entidad del sistema,
-    /// delegando la persistencia al repositorio genérico y utilizando
-    /// Mapster para la conversión entre entidades y DTOs.
-    /// </summary>
-    /// <typeparam name="TDtoList">DTO utilizado para listar y retornar registros.</typeparam>
-    /// <typeparam name="TDtoCreate">DTO utilizado para crear nuevos registros.</typeparam>
-    /// <typeparam name="TEntity">Entidad de dominio que hereda de <see cref="BaseDomain"/>.</typeparam>
     public class ServicesBase<TDtoList, TDtoCreate, TEntity> : AServices<TDtoList, TDtoCreate, TEntity>
         where TDtoList : class
         where TDtoCreate : class
@@ -21,16 +13,13 @@ namespace CakeOs.Business.Base
     {
         protected readonly IData<TEntity> _repository;
         protected readonly IMapper _mapper;
+        protected readonly ILogger _logger;
 
-        /// <summary>
-        /// Inicializa una nueva instancia de <see cref="ServicesBase{TDtoList, TDtoCreate, TEntity}"/>.
-        /// </summary>
-        /// <param name="repository">Repositorio genérico para operaciones de persistencia.</param>
-        /// <param name="mapper">Instancia de Mapster para mapeo entre entidades y DTOs.</param>
-        public ServicesBase(IData<TEntity> repository, IMapper mapper)
+        public ServicesBase(IData<TEntity> repository, IMapper mapper, ILoggerFactory loggerFactory)
         {
             _repository = repository;
             _mapper = mapper;
+            _logger = loggerFactory.CreateLogger(GetType());
         }
 
         /// <summary>
@@ -53,6 +42,7 @@ namespace CakeOs.Business.Base
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error al obtener todos los registros de {Entity}", typeof(TEntity).Name);
                 throw new("Error al obtener todos los registros.", ex);
             }
         }
@@ -78,6 +68,7 @@ namespace CakeOs.Business.Base
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error al obtener {Entity} con id {Id}", typeof(TEntity).Name, id);
                 throw new("Error al obtener el registro por Id.", ex);
             }
         }
@@ -99,12 +90,12 @@ namespace CakeOs.Business.Base
                 var entity = await _repository.AddAsync(candidate);
                 await _repository.SaveChangesAsync();
 
-                // Recargar la entidad con sus relaciones desde la BD
                 var createdEntity = await _repository.GetByIdAsync(entity.Id);
                 return _mapper.Map<TDtoList>(createdEntity);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error al crear {Entity}", typeof(TEntity).Name);
                 throw new("Error al crear el registro.", ex);
             }
         }
@@ -145,6 +136,7 @@ namespace CakeOs.Business.Base
 
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error al actualizar {Entity} con id {Id}", typeof(TEntity).Name, id);
                 throw new("Error al actualizar el registro.", ex);
             }
         }
@@ -179,6 +171,7 @@ namespace CakeOs.Business.Base
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error al cambiar estado de {Entity} con id {Id}", typeof(TEntity).Name, id);
                 throw new("Error en el proceso de activación/desactivación.", ex);
             }
         }
@@ -207,6 +200,7 @@ namespace CakeOs.Business.Base
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error al eliminar {Entity} con id {Id}", typeof(TEntity).Name, id);
                 throw new("Error en el proceso de borrado lógico.", ex);
             }
         }

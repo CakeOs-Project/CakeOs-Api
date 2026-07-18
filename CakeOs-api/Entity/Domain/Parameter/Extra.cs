@@ -1,5 +1,6 @@
 ﻿
 using CakeOs.Entity.Domain.Base;
+using CakeOs.Entity.Domain.Business;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,8 @@ namespace CakeOs.Entity.Domain.Parameter
     {
         public string Name { get; set; } = null!;
         public decimal Price { get; set; }
-        public bool IsDeleted { get; set; }
+
+        // Relaciones
+        public List<InvoiceItemExtra> Extras { get; set; } = new List<InvoiceItemExtra>();
     }
 }

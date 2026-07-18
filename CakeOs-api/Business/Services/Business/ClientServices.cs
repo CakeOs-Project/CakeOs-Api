@@ -13,6 +13,7 @@ using CakeOS.Utilities.Provider;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata;
@@ -31,8 +32,8 @@ namespace CakeOs.Business.Services.Business
         private readonly IPersonRepository _person;
         private readonly ApplicationDbContext _context;
 
-        public ClientServices(IClientRepository data, IPersonRepository person, IMapper mapper, ApplicationDbContext context, ITenantProvider tenantProvider)
-            : base(data, mapper, tenantProvider)
+        public ClientServices(IClientRepository data, IPersonRepository person, IMapper mapper, ILoggerFactory loggerFactory, ApplicationDbContext context, ITenantProvider tenantProvider)
+            : base(data, mapper, loggerFactory, tenantProvider)
         {
             _data = data;
             _mapper = mapper;

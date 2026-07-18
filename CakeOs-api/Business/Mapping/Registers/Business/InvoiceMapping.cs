@@ -1,11 +1,7 @@
-﻿using CakeOS.Entity.Domain.Business;
+﻿using CakeOs.Entity.Enum.Invoice;
+using CakeOS.Entity.Domain.Business;
 using CakeOS.Entity.DTOs.Business.Invoice;
 using Mapster;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CakeOs.Business.Mapping.Registers.Business
 {
@@ -34,7 +30,7 @@ namespace CakeOs.Business.Mapping.Registers.Business
 
             config.NewConfig<InvoiceCreateDto, Invoice>()
                 .Map(dest => dest.IsActive, src => true)
-                .Map(dest => dest.Status, src => "creada")
+                .Map(dest => dest.Status, src => InvoiceStatus.Pendiente)
                 .Map(dest => dest.CreatedAt, src => DateTime.UtcNow)
                 .Ignore(dest => dest.InvoiceItems);
 

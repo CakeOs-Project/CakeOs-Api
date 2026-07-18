@@ -5,6 +5,7 @@ using CakeOs.Entity.Domain.Parameter;
 using CakeOs.Entity.DTOs.Parameter.Type;
 using CakeOS.Utilities.Provider;
 using MapsterMapper;
+using Microsoft.Extensions.Logging;
 
 namespace CakeOs.Business.Services.Parameter
 {
@@ -30,8 +31,8 @@ namespace CakeOs.Business.Services.Parameter
         /// <param name="mapper">Instancia de Mapster para mapeo entre entidades y DTOs</param>
         /// <param name="tenantProvider">Proveedor del TenantId activo</param>
         /// <exception cref="ArgumentNullException">Si el repositorio o mapper es nulo</exception>
-        public TypeService(ITypeRepository repository, IMapper mapper, ITenantProvider tenantProvider)
-            : base(repository, mapper, tenantProvider)
+        public TypeService(ITypeRepository repository, IMapper mapper, ILoggerFactory loggerFactory, ITenantProvider tenantProvider)
+            : base(repository, mapper, loggerFactory, tenantProvider)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));

@@ -1,6 +1,7 @@
 using CakeOs.Data.Base;
 using CakeOs.Data.Interfaces.Business;
 using CakeOs.Entity.Context;
+using CakeOs.Entity.DTOs.Business.InvoiceItemExtra;
 using CakeOs.Entity.Enum.Invoice;
 using CakeOS.Entity.Domain.Business;
 using CakeOS.Entity.DTOs.Business.Invoice;
@@ -31,7 +32,7 @@ public class InvoiceData : DataBase<Invoice>, IInvoiceRepository
     /// <param name="range">Filtro de rango de tiempo (Today, ThisWeek, ThisMonth)</param>
     /// <returns>Lista de facturas filtradas</returns>
     public async Task<List<InvoiceListDto>> GetInvoicesByRangeAsync(TimeRangeFilter range)
-                {
+    {
         var start = DateTime.Today; 
         var end = start.AddDays(1); 
 
@@ -97,6 +98,9 @@ public class InvoiceData : DataBase<Invoice>, IInvoiceRepository
             .ThenInclude(ii => ii.Product)
         .Include(i => i.InvoiceItems)
             .ThenInclude(ii => ii.Filled)
+        .Include(i => i.InvoiceItems)
+            .ThenInclude(iie => iie.Extras)
+                .ThenInclude(e => e.Extra)
         .Include(i => i.Payments)
             .ThenInclude(p => p.User)
                 .ThenInclude(u => u.Person)
@@ -129,7 +133,15 @@ public class InvoiceData : DataBase<Invoice>, IInvoiceRepository
                 HasDecoration = ii.HasDecoration,
                 DecorationDescription = ii.DecorationDescription,
                 HasMessage = ii.HasMessage,
-                Message = ii.Message
+                Message = ii.Message,
+                Extras = ii.Extras.Select(iie => new InvoiceItemExtraListDto
+                {
+                    ExtraName = iie.Extra.Name,
+                    Quantity = iie.Quantity,
+                    UnitPrice = iie.UnitPrice,
+                    SubTotal = iie.SubTotal,
+                    IsActive = iie.IsActive,
+                }).ToList()
             }).ToList(),
             Payments = i.Payments.Select(p => new PaymentListDto
             {

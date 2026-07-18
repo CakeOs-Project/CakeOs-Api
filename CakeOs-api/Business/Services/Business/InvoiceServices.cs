@@ -3,6 +3,7 @@ using CakeOs.Business.Interfaces.Business;
 using CakeOs.Data.Interfaces.Business;
 using CakeOs.Data.Interfaces.Security;
 using CakeOs.Entity.Context;
+using CakeOs.Entity.Domain.Business;
 using CakeOs.Entity.Enum.Invoice;
 using CakeOs.Entity.Enum.Payment;
 using CakeOS.Entity.Domain.Business;
@@ -10,16 +11,9 @@ using CakeOS.Entity.Domain.security;
 using CakeOS.Entity.DTOs.Business.Invoice;
 using CakeOS.Utilities.Provider;
 using MapsterMapper;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
-using System;
-using System.Collections.Generic;
-using System.IO.Pipes;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace CakeOs.Business.Services.Business
 {
@@ -29,12 +23,11 @@ namespace CakeOs.Business.Services.Business
         private readonly IInvoiceRepository _invoiceData;
         private readonly IClientRepository _clientData;
         private readonly IInvoiceItemRepository _invoiceItemData;
+        private readonly IInvoiceItemExtraRepository _invoiceItemExtraData;
         private readonly IPersonRepository _personData;
         private readonly IPaymentRepository _paymentData;
 
-        /// <summary>
-        /// Necesario para la utilizacion de las transaciones
-        /// </summary>
+        // Necesario para las transacciones
         private readonly ApplicationDbContext _context;
 
         public InvoiceServices(
@@ -42,16 +35,19 @@ namespace CakeOs.Business.Services.Business
             IInvoiceRepository data,
             IClientRepository clientData,
             IInvoiceItemRepository invoiceItemData,
+            IInvoiceItemExtraRepository invoiceItemExtraData,
             IPersonRepository personData,
             IPaymentRepository paymentData,
+            ILoggerFactory loggerFactory,
             ApplicationDbContext context,
             ITenantProvider tenantProvider)
-           : base(data, mapper, tenantProvider)
+           : base(data, mapper, loggerFactory, tenantProvider)
         {
             _mapper = mapper;
             _invoiceData = data;
             _clientData = clientData;
             _invoiceItemData = invoiceItemData;
+            _invoiceItemExtraData = invoiceItemExtraData;
             _context = context;
             _personData = personData;
             _paymentData = paymentData;
@@ -62,12 +58,14 @@ namespace CakeOs.Business.Services.Business
             if (dto.TypeDocument is null)
                 throw new ArgumentException("Debes seleccionar algún tipo de documento.");
             if (dto.Document is null)
-                throw new ArgumentException("El número de documento estar vacío");
+                throw new ArgumentException("El número de documento no puede estar vacío.");
             if (dto.Items is null || !dto.Items.Any())
-                throw new ArgumentException("La factura debe tener al menos un ítem");
+                throw new ArgumentException("La factura debe tener al menos un ítem.");
 
             var tenantId = _tenantProvider.TenantId
                 ?? throw new InvalidOperationException("No se pudo determinar el TenantId.");
+
+            _logger.LogInformation("Iniciando creación de factura para documento {Document}", dto.Document);
 
             var strategy = _context.Database.CreateExecutionStrategy();
 
@@ -81,7 +79,7 @@ namespace CakeOs.Business.Services.Business
                     {
                         var person = _mapper.Map<Person>(dto);
                         person.TenantId = tenantId;
-                        var newPerson = await _personData.AddAsync(person);
+                        await _personData.AddAsync(person);
                         var newClient = new Client
                         {
                             Person = person,
@@ -94,7 +92,9 @@ namespace CakeOs.Business.Services.Business
                     }
 
                     string code = await GenerateInvoiceCodeAsync();
-                    var total = dto.Items.Sum(i => i.Quantity * i.UnitPrice);
+                    var total = dto.Items.Sum(i =>
+                        i.Quantity * i.UnitPrice +
+                        i.Extras.Sum(e => e.Quantity * e.UnitPrice));
 
                     var invoice = new Invoice
                     {
@@ -102,7 +102,7 @@ namespace CakeOs.Business.Services.Business
                         UserId = userId,
                         Code = code,
                         Total = total,
-                        OutstandingBalance = total - (dto.InitialPayment),
+                        OutstandingBalance = total - dto.InitialPayment,
                         Status = InvoiceStatus.Pendiente,
                         CreatedAt = DateTime.UtcNow,
                         DeliveryDate = dto.DeliveryDate,
@@ -111,66 +111,53 @@ namespace CakeOs.Business.Services.Business
                     };
                     await _invoiceData.AddAsync(invoice);
 
-                    foreach (var item in dto.Items)
+                    foreach (var itemDto in dto.Items)
                     {
-
-
-                        var invoiceItem = new InvoiceItem
-                        {
-                            Invoice = invoice,
-                            ProductId = item.ProductId,
-                            Quantity = item.Quantity,
-                            UnitPrice = item.UnitPrice,
-                            SubTotal = item.Quantity * item.UnitPrice,
-                            HasFilling = item.HasFilling,
-                            FilledId = item.FilledId,
-                            HasDecoration = item.HasDecoration,
-                            DecorationDescription = item.DecorationDescription,
-                            HasMessage = item.HasMessage,
-                            Message = item.Message,
-                            Status = InvoiceItemStatus.Pendiente
-                        };
-
+                        var invoiceItem = _mapper.Map<InvoiceItem>(itemDto);
+                        invoiceItem.Invoice = invoice;
                         await _invoiceItemData.AddAsync(invoiceItem);
+
+                        foreach (var extraDto in itemDto.Extras)
+                        {
+                            var invoiceItemExtra = _mapper.Map<InvoiceItemExtra>(extraDto);
+                            invoiceItemExtra.InvoiceItem = invoiceItem;
+                            await _invoiceItemExtraData.AddAsync(invoiceItemExtra);
+                        }
                     }
 
-                    if(dto.HasInitialPayment)
+                    if (dto.HasInitialPayment)
                     {
-                        PaymentType type;
+                        if (dto.InitialPayment > 0 && !Enum.IsDefined(typeof(PaymentMethod), dto.PaymentMethod!.Value))
+                            throw new ArgumentException("Debe especificar un método de pago válido cuando se registra un pago inicial.");
 
-                        if (dto.InitialPayment > 0 && !Enum.IsDefined(typeof(PaymentMethod), dto.PaymentMethod.Value))
-                            throw new ArgumentException("Debe especificar un método de pago cuando se registra un pago inicial");
-
-                        if (invoice.OutstandingBalance == 0)
-                        {
-                            type = PaymentType.PagoTotal;
+                        var paymentType = invoice.OutstandingBalance == 0 ? PaymentType.PagoTotal : PaymentType.Abono;
+                        if (paymentType == PaymentType.PagoTotal)
                             invoice.Status = InvoiceStatus.Pagada;
-                        }  
-                        else
-                            type = PaymentType.Abono;
 
-                        var paymet = new Payment
+                        var payment = new Payment
                         {
                             Invoice = invoice,
                             UserId = userId,
                             Amount = dto.InitialPayment,
-                            PaymentMethod = dto.PaymentMethod.Value,
-                            PaymentType = type,
+                            PaymentMethod = dto.PaymentMethod!.Value,
+                            PaymentType = paymentType,
                             PaymentDate = DateTime.UtcNow,
                             TenantId = tenantId
                         };
-
-                        await _paymentData.AddAsync(paymet);
+                        await _paymentData.AddAsync(payment);
                     }
 
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
 
+                    _logger.LogInformation("Factura {Code} creada exitosamente. Total: {Total}", invoice.Code, invoice.Total);
+
                     var result = await _invoiceData.GetByIdWithDetailsAsync(invoice.Id);
                     return _mapper.Map<InvoiceListDto>(result);
                 }
-                catch
+                catch (Exception ex)
                 {
+                    _logger.LogError(ex, "Error al crear factura para documento {Document}", dto.Document);
                     if (transaction.GetDbTransaction().Connection is not null)
                         await transaction.RollbackAsync();
                     throw;

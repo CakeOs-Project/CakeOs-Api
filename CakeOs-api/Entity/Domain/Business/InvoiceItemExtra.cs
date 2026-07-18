@@ -13,7 +13,7 @@ namespace CakeOs.Entity.Domain.Business
     {
         public int InvoiceItemId { get; set; }
         public int ExtraId { get; set; }
-        public int Quantiy { get; set; }
+        public int Quantity { get; set; }
         public decimal UnitPrice { get; set; }
         public decimal SubTotal { get; set; }
 

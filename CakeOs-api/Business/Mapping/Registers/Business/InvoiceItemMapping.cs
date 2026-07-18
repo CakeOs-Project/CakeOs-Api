@@ -1,11 +1,9 @@
-﻿using CakeOS.Entity.Domain.Business;
+﻿using CakeOs.Entity.Domain.Business;
+using CakeOs.Entity.DTOs.Business.InvoiceItemExtra;
+using CakeOs.Entity.Enum.Invoice;
+using CakeOS.Entity.Domain.Business;
 using CakeOS.Entity.DTOs.Business.InvoiceItem;
 using Mapster;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CakeOs.Business.Mapping.Registers.Business
 {
@@ -14,13 +12,27 @@ namespace CakeOs.Business.Mapping.Registers.Business
         public void Register(TypeAdapterConfig config)
         {
             config.NewConfig<InvoiceItem, InvoiceItemDetailDto>()
-                //.Map(dest => dest.ProductName, src => src.Product != null ? src.Product.Name : null)
                 .Map(dest => dest.FilledName, src => src.Filled != null ? src.Filled.Name : null);
-                //.Map(dest => dest.DecorationImageUrl, src => src.Image != null ? src.Image.Url : null);
 
             config.NewConfig<InvoiceItemCreateDto, InvoiceItem>()
                 .Map(dest => dest.IsActive, src => true)
-                .Map(dest => dest.Status, src => "pendiente");
+                .Map(dest => dest.Status, src => InvoiceItemStatus.Pendiente)
+                .Map(dest => dest.SubTotal, src => src.Quantity * src.UnitPrice)
+                .Map(dest => dest.FilledId, src => src.HasFilling ? src.FilledId : null)
+                .Ignore(dest => dest.Extras)
+                .Ignore(dest => dest.Filled)
+                .Ignore(dest => dest.Product)
+                .Ignore(dest => dest.Image)
+                .Ignore(dest => dest.Invoice);
+
+            config.NewConfig<InvoiceItemExtraCreateDto, InvoiceItemExtra>()
+                .Map(dest => dest.IsActive, src => true)
+                .Map(dest => dest.SubTotal, src => src.Quantity * src.UnitPrice)
+                .Ignore(dest => dest.Extra)
+                .Ignore(dest => dest.InvoiceItem);
+
+            config.NewConfig<InvoiceItemExtra, InvoiceItemExtraListDto>()
+                .Map(dest => dest.ExtraName, src => src.Extra != null ? src.Extra.Name : null);
         }
     }
 }

@@ -3,6 +3,7 @@ using CakeOs.Business.Interfaces.Security;
 using CakeOs.Data.Interfaces.Security;
 using CakeOS.Entity.DTOs.Security.Auth;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -15,17 +16,20 @@ namespace CakeOs.Business.Services.Security
         private readonly IRolFormPermissionRepository _rolFormPermissionRepository;
         private readonly IToken _tokenService;
         private readonly IConfiguration _configuration;
+        private readonly ILogger<AuthServices> _logger;
 
         public AuthServices(
             IUserRepository userRepository,
             IRolFormPermissionRepository rolFormPermissionRepository,
             IToken tokenService,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            ILogger<AuthServices> logger)
         {
             _userRepository = userRepository;
             _rolFormPermissionRepository = rolFormPermissionRepository;
             _tokenService = tokenService;
             _configuration = configuration;
+            _logger = logger;
         }
 
         public async Task<TokenDto> LoginAsync(LoginDto dto)
@@ -36,13 +40,21 @@ namespace CakeOs.Business.Services.Security
             if (string.IsNullOrWhiteSpace(dto.Email) || string.IsNullOrWhiteSpace(dto.Password))
                 throw new UnauthorizedAccessException("Correo o contrasena invalidos.");
 
+            _logger.LogInformation("Intento de login para {Email}", dto.Email);
+
             var user = await _userRepository.GetByEmailAsync(dto.Email.Trim());
 
             if (user is null || !user.IsActive || user.IsDeleted)
+            {
+                _logger.LogWarning("Login fallido — usuario no encontrado o inactivo: {Email}", dto.Email);
                 throw new UnauthorizedAccessException("Usuario no encontrado o inactivo.");
+            }
 
             if (!string.Equals(user.Password, dto.Password, StringComparison.Ordinal))
+            {
+                _logger.LogWarning("Login fallido — contraseña incorrecta para {Email}", dto.Email);
                 throw new UnauthorizedAccessException("Correo o contrasena invalidos.");
+            }
 
             var fullName = BuildFullName(user.Person?.Name, user.Person?.LastName);
             var rolName = user.Rol?.Name ?? string.Empty;
@@ -52,6 +64,8 @@ namespace CakeOs.Business.Services.Security
 
             token.Modules = modules;
             token.IsCompleteInfo = HasCompleteInfo(token, modules);
+
+            _logger.LogInformation("Login exitoso para {Email} (UserId: {UserId})", dto.Email, user.Id);
 
             // Fallback minimo: siempre devolver ids clave aunque no exista todo el arbol de permisos.
             if (!token.IsCompleteInfo)

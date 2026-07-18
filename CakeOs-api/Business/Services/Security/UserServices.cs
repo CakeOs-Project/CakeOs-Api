@@ -10,6 +10,7 @@ using CakeOS.Utilities.Provider;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.Logging;
 
 namespace CakeOs.Business.Services.Security
 {
@@ -25,9 +26,10 @@ namespace CakeOs.Business.Services.Security
             IUserRepository userRepository,
             IPersonRepository personRepository,
             IMapper mapper,
+            ILoggerFactory loggerFactory,
             ApplicationDbContext context,
             ITenantProvider tenantProvider)
-            : base(userRepository, mapper, tenantProvider)
+            : base(userRepository, mapper, loggerFactory, tenantProvider)
         {
             _userRepository = userRepository;
             _personRepository = personRepository;

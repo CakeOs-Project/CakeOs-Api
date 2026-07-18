@@ -7,6 +7,7 @@ using CakeOS.Entity.Domain.Business;
 using CakeOS.Entity.DTOs.Business.InvoiceItem;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,8 +22,8 @@ namespace CakeOs.Business.Services.Business
         private readonly IInvoiceRepository _invoice;
         private readonly IMapper _mapper;
 
-        public InvoiceItemServices(IInvoiceItemRepository item, IInvoiceRepository invoice , IMapper mapper)
-            : base(item, mapper)
+        public InvoiceItemServices(IInvoiceItemRepository item, IInvoiceRepository invoice, IMapper mapper, ILoggerFactory loggerFactory)
+            : base(item, mapper, loggerFactory)
         {
             _item = item;
             _invoice = invoice;

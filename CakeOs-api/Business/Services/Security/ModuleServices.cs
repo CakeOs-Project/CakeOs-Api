@@ -4,13 +4,14 @@ using CakeOs.Data.Interfaces.Security;
 using CakeOS.Entity.Domain.security;
 using CakeOS.Entity.DTOs.SecurityDtos.ModuloDtos;
 using MapsterMapper;
+using Microsoft.Extensions.Logging;
 
 namespace CakeOs.Business.Services.Security
 {
     public class ModuleServices : ServicesBase<ModuleListDTO, ModuleCreateDTO, Module>, IModuleServices
     {
-        public ModuleServices(IModuleRepository repository, IMapper mapper)
-            : base(repository, mapper)
+        public ModuleServices(IModuleRepository repository, IMapper mapper, ILoggerFactory loggerFactory)
+            : base(repository, mapper, loggerFactory)
         {
         }
     }

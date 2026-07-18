@@ -5,6 +5,7 @@ using CakeOs.Entity.Domain.Business;
 using CakeOS.Entity.DTOs.BusinessDtos.ProductoDtos;
 using CakeOS.Utilities.Provider;
 using MapsterMapper;
+using Microsoft.Extensions.Logging;
 
 namespace CakeOs.Business.Services.Business
 {
@@ -16,8 +17,8 @@ namespace CakeOs.Business.Services.Business
         private readonly IProductRepository _repository;
         private readonly IMapper _mapper;
 
-        public ProductService(IProductRepository data, IMapper mapper, ITenantProvider tenantProvider)
-            : base(data, mapper, tenantProvider)
+        public ProductService(IProductRepository data, IMapper mapper, ILoggerFactory loggerFactory, ITenantProvider tenantProvider)
+            : base(data, mapper, loggerFactory, tenantProvider)
         {
             _repository = data;
             _mapper = mapper;
