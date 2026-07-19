@@ -37,12 +37,20 @@ namespace CakeOs.Entity.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<int>("PersonId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TenantId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("PersonId");
+
+                    b.HasIndex("TenantId");
 
                     b.ToTable("Client");
                 });
@@ -71,13 +79,18 @@ namespace CakeOs.Entity.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<decimal>("OutstandingBalance")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("Total")
                         .HasPrecision(18, 2)
@@ -89,6 +102,8 @@ namespace CakeOs.Entity.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ClientId");
+
+                    b.HasIndex("TenantId");
 
                     b.HasIndex("UserId");
 
@@ -136,9 +151,8 @@ namespace CakeOs.Entity.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("SubTotal")
                         .HasPrecision(18, 2)
@@ -179,30 +193,31 @@ namespace CakeOs.Entity.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime>("PaymentDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("PaymentMethod")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PaymentType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UserId")
+                    b.Property<int?>("PaymentMethod")
                         .HasColumnType("int");
 
-                    b.Property<int?>("UserId1")
+                    b.Property<int>("PaymentType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("InvoiceId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("TenantId");
 
-                    b.HasIndex("UserId1");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Payment");
                 });
@@ -342,6 +357,9 @@ namespace CakeOs.Entity.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -354,11 +372,16 @@ namespace CakeOs.Entity.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
                     b.Property<string>("TypeDocument")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("TenantId");
 
                     b.ToTable("Person");
                 });
@@ -385,7 +408,12 @@ namespace CakeOs.Entity.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("TenantId");
 
                     b.ToTable("Rol");
                 });
@@ -413,6 +441,9 @@ namespace CakeOs.Entity.Migrations
                     b.Property<int>("RolId")
                         .HasColumnType("int");
 
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("FormId");
@@ -420,6 +451,8 @@ namespace CakeOs.Entity.Migrations
                     b.HasIndex("PermissionId");
 
                     b.HasIndex("RolId");
+
+                    b.HasIndex("TenantId");
 
                     b.ToTable("RolFormPermission");
                 });
@@ -452,13 +485,53 @@ namespace CakeOs.Entity.Migrations
                     b.Property<int>("RolId")
                         .HasColumnType("int");
 
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("PersonId");
 
                     b.HasIndex("RolId");
 
+                    b.HasIndex("TenantId");
+
                     b.ToTable("User");
+                });
+
+            modelBuilder.Entity("CakeOs.Entity.Domain.Business.InvoiceItemExtra", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ExtraId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("InvoiceItemId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("SubTotal")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("UnitPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExtraId");
+
+                    b.HasIndex("InvoiceItemId");
+
+                    b.ToTable("InvoiceItemExtra");
                 });
 
             modelBuilder.Entity("CakeOs.Entity.Domain.Business.Product", b =>
@@ -469,8 +542,48 @@ namespace CakeOs.Entity.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal>("Price")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("ShapeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SizeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TypeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ShapeId");
+
+                    b.HasIndex("SizeId");
+
+                    b.HasIndex("TenantId");
+
+                    b.HasIndex("TypeId");
+
+                    b.ToTable("Product");
+                });
+
+            modelBuilder.Entity("CakeOs.Entity.Domain.Parameter.Extra", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -483,27 +596,16 @@ namespace CakeOs.Entity.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Price")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("ShapeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SizeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TypeId")
+                    b.Property<int>("TenantId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ShapeId");
+                    b.HasIndex("TenantId");
 
-                    b.HasIndex("SizeId");
-
-                    b.HasIndex("TypeId");
-
-                    b.ToTable("Product");
+                    b.ToTable("Extra");
                 });
 
             modelBuilder.Entity("CakeOs.Entity.Domain.Parameter.Filled", b =>
@@ -527,7 +629,12 @@ namespace CakeOs.Entity.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("TenantId");
 
                     b.ToTable("Filled");
                 });
@@ -551,14 +658,22 @@ namespace CakeOs.Entity.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<long>("Size")
                         .HasColumnType("bigint");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Url")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("TenantId");
 
                     b.ToTable("Image");
                 });
@@ -574,11 +689,19 @@ namespace CakeOs.Entity.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("TenantId");
 
                     b.ToTable("Shape");
                 });
@@ -594,11 +717,19 @@ namespace CakeOs.Entity.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("TenantId");
 
                     b.ToTable("Size");
                 });
@@ -617,13 +748,56 @@ namespace CakeOs.Entity.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("Type");
+                });
+
+            modelBuilder.Entity("CakeOs.Entity.Domain.Security.Tenant", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Slug")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Type");
+                    b.ToTable("Tenant");
                 });
 
             modelBuilder.Entity("CakeOS.Entity.Domain.Business.Client", b =>
@@ -634,7 +808,15 @@ namespace CakeOs.Entity.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("CakeOs.Entity.Domain.Security.Tenant", "Tenant")
+                        .WithMany("Clients")
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Person");
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("CakeOS.Entity.Domain.Business.Invoice", b =>
@@ -645,6 +827,12 @@ namespace CakeOs.Entity.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("CakeOs.Entity.Domain.Security.Tenant", "Tenant")
+                        .WithMany("Invoices")
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("CakeOS.Entity.Domain.security.User", "User")
                         .WithMany("Invoices")
                         .HasForeignKey("UserId")
@@ -652,6 +840,8 @@ namespace CakeOs.Entity.Migrations
                         .IsRequired();
 
                     b.Navigation("Client");
+
+                    b.Navigation("Tenant");
 
                     b.Navigation("User");
                 });
@@ -695,17 +885,21 @@ namespace CakeOs.Entity.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("CakeOs.Entity.Domain.Security.Tenant", "Tenant")
+                        .WithMany("Payments")
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("CakeOS.Entity.Domain.security.User", "User")
-                        .WithMany()
+                        .WithMany("Payments")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("CakeOS.Entity.Domain.security.User", null)
-                        .WithMany("Payments")
-                        .HasForeignKey("UserId1");
-
                     b.Navigation("Invoice");
+
+                    b.Navigation("Tenant");
 
                     b.Navigation("User");
                 });
@@ -729,6 +923,28 @@ namespace CakeOs.Entity.Migrations
                     b.Navigation("Module");
                 });
 
+            modelBuilder.Entity("CakeOS.Entity.Domain.security.Person", b =>
+                {
+                    b.HasOne("CakeOs.Entity.Domain.Security.Tenant", "Tenant")
+                        .WithMany("Persons")
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("CakeOS.Entity.Domain.security.Rol", b =>
+                {
+                    b.HasOne("CakeOs.Entity.Domain.Security.Tenant", "Tenant")
+                        .WithMany("Roles")
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
+                });
+
             modelBuilder.Entity("CakeOS.Entity.Domain.security.RolFormPermission", b =>
                 {
                     b.HasOne("CakeOS.Entity.Domain.security.Form", "Form")
@@ -749,11 +965,19 @@ namespace CakeOs.Entity.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("CakeOs.Entity.Domain.Security.Tenant", "Tenant")
+                        .WithMany("RolFormPermissions")
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Form");
 
                     b.Navigation("Permission");
 
                     b.Navigation("Rol");
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("CakeOS.Entity.Domain.security.User", b =>
@@ -770,9 +994,36 @@ namespace CakeOs.Entity.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("CakeOs.Entity.Domain.Security.Tenant", "Tenant")
+                        .WithMany("Users")
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Person");
 
                     b.Navigation("Rol");
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("CakeOs.Entity.Domain.Business.InvoiceItemExtra", b =>
+                {
+                    b.HasOne("CakeOs.Entity.Domain.Parameter.Extra", "Extra")
+                        .WithMany("Extras")
+                        .HasForeignKey("ExtraId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CakeOS.Entity.Domain.Business.InvoiceItem", "InvoiceItem")
+                        .WithMany("Extras")
+                        .HasForeignKey("InvoiceItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Extra");
+
+                    b.Navigation("InvoiceItem");
                 });
 
             modelBuilder.Entity("CakeOs.Entity.Domain.Business.Product", b =>
@@ -789,6 +1040,12 @@ namespace CakeOs.Entity.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("CakeOs.Entity.Domain.Security.Tenant", "Tenant")
+                        .WithMany("Products")
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("CakeOs.Entity.Domain.Parameter.Types", "Type")
                         .WithMany("Products")
                         .HasForeignKey("TypeId")
@@ -799,7 +1056,75 @@ namespace CakeOs.Entity.Migrations
 
                     b.Navigation("Size");
 
+                    b.Navigation("Tenant");
+
                     b.Navigation("Type");
+                });
+
+            modelBuilder.Entity("CakeOs.Entity.Domain.Parameter.Extra", b =>
+                {
+                    b.HasOne("CakeOs.Entity.Domain.Security.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("CakeOs.Entity.Domain.Parameter.Filled", b =>
+                {
+                    b.HasOne("CakeOs.Entity.Domain.Security.Tenant", "Tenant")
+                        .WithMany("Filleds")
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("CakeOs.Entity.Domain.Parameter.Image", b =>
+                {
+                    b.HasOne("CakeOs.Entity.Domain.Security.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("CakeOs.Entity.Domain.Parameter.Shape", b =>
+                {
+                    b.HasOne("CakeOs.Entity.Domain.Security.Tenant", "Tenant")
+                        .WithMany("Shapes")
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("CakeOs.Entity.Domain.Parameter.Size", b =>
+                {
+                    b.HasOne("CakeOs.Entity.Domain.Security.Tenant", "Tenant")
+                        .WithMany("Sizes")
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("CakeOs.Entity.Domain.Parameter.Types", b =>
+                {
+                    b.HasOne("CakeOs.Entity.Domain.Security.Tenant", "Tenant")
+                        .WithMany("Types")
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("CakeOS.Entity.Domain.Business.Client", b =>
@@ -812,6 +1137,11 @@ namespace CakeOs.Entity.Migrations
                     b.Navigation("InvoiceItems");
 
                     b.Navigation("Payments");
+                });
+
+            modelBuilder.Entity("CakeOS.Entity.Domain.Business.InvoiceItem", b =>
+                {
+                    b.Navigation("Extras");
                 });
 
             modelBuilder.Entity("CakeOS.Entity.Domain.security.Form", b =>
@@ -857,6 +1187,11 @@ namespace CakeOs.Entity.Migrations
                     b.Navigation("InvoiceItems");
                 });
 
+            modelBuilder.Entity("CakeOs.Entity.Domain.Parameter.Extra", b =>
+                {
+                    b.Navigation("Extras");
+                });
+
             modelBuilder.Entity("CakeOs.Entity.Domain.Parameter.Filled", b =>
                 {
                     b.Navigation("InvoiceItems");
@@ -880,6 +1215,33 @@ namespace CakeOs.Entity.Migrations
             modelBuilder.Entity("CakeOs.Entity.Domain.Parameter.Types", b =>
                 {
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("CakeOs.Entity.Domain.Security.Tenant", b =>
+                {
+                    b.Navigation("Clients");
+
+                    b.Navigation("Filleds");
+
+                    b.Navigation("Invoices");
+
+                    b.Navigation("Payments");
+
+                    b.Navigation("Persons");
+
+                    b.Navigation("Products");
+
+                    b.Navigation("RolFormPermissions");
+
+                    b.Navigation("Roles");
+
+                    b.Navigation("Shapes");
+
+                    b.Navigation("Sizes");
+
+                    b.Navigation("Types");
+
+                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }

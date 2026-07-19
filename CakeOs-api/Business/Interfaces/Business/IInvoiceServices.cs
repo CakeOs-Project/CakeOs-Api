@@ -7,7 +7,7 @@ namespace CakeOs.Business.Interfaces.Business
 {
     public interface IInvoiceServices : IServices<InvoiceListDto,InvoiceCreateDto,Invoice>
     {
-        Task<InvoiceListDto> CreateInvoiceAsync(InvoiceCreateDto dto, int userId);
+        Task<InvoiceListDto> CreateInvoiceAsync(InvoiceCreateDto dto);
         Task<List<InvoiceListDto>> GetInvoicesByRangeAsync(TimeRangeFilter range);
         Task<InvoiceDetailDto?> GetWithDetailsAsync(int id);
     }

@@ -416,3 +416,6 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# Migracion de db Entiy Framework Core
+**/Migrations/

@@ -6,11 +6,13 @@ using CakeOs.Entity.DTOs.Transversal;
 using CakeOS.Entity.Domain.security;
 using CakeOS.Entity.DTOs.Security.Auth;
 using CakeOS.Entity.DTOs.Security.User;
+using CakeOS.Utilities.Interfaces;
 using CakeOS.Utilities.Provider;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
+using System.ComponentModel.DataAnnotations;
 
 namespace CakeOs.Business.Services.Security
 {
@@ -21,6 +23,7 @@ namespace CakeOs.Business.Services.Security
         private readonly IPersonRepository _personRepository;
         private readonly IMapper _mapper;
         private readonly ApplicationDbContext _context;
+        private readonly IPasswordHasherService _password;
 
         public UserServices(
             IUserRepository userRepository,
@@ -28,6 +31,7 @@ namespace CakeOs.Business.Services.Security
             IMapper mapper,
             ILoggerFactory loggerFactory,
             ApplicationDbContext context,
+            IPasswordHasherService password,
             ITenantProvider tenantProvider)
             : base(userRepository, mapper, loggerFactory, tenantProvider)
         {
@@ -35,6 +39,7 @@ namespace CakeOs.Business.Services.Security
             _personRepository = personRepository;
             _mapper = mapper;
             _context = context;
+            _password = password;
         }
 
         public override async Task<IEnumerable<UserListDto>> GetAllAsync(CancellationToken cancellationToken = default)
@@ -91,12 +96,14 @@ namespace CakeOs.Business.Services.Security
 
                     var createdPerson = await _personRepository.AddAsync(person);
 
+                    string passwordHash = _password.Hash(dto.Password);
+
                     var user = new User
                     {
                         Email = dto.Email.Trim(),
-                        Password = dto.Password,
+                        Password = passwordHash,
                         RolId = dto.RolId,
-                        PersonId = createdPerson.Id,
+                        Person = createdPerson,
                         TenantId = tenantId,
                         IsActive = true,
                         IsDeleted = false

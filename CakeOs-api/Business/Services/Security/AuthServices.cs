@@ -2,6 +2,9 @@ using CakeOs.Business.Interfaces;
 using CakeOs.Business.Interfaces.Security;
 using CakeOs.Data.Interfaces.Security;
 using CakeOS.Entity.DTOs.Security.Auth;
+using CakeOS.Utilities.Enum;
+using CakeOS.Utilities.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
@@ -17,19 +20,22 @@ namespace CakeOs.Business.Services.Security
         private readonly IToken _tokenService;
         private readonly IConfiguration _configuration;
         private readonly ILogger<AuthServices> _logger;
+        private readonly IPasswordHasherService _password;
 
         public AuthServices(
             IUserRepository userRepository,
             IRolFormPermissionRepository rolFormPermissionRepository,
             IToken tokenService,
             IConfiguration configuration,
-            ILogger<AuthServices> logger)
+            ILogger<AuthServices> logger,
+            IPasswordHasherService password)
         {
             _userRepository = userRepository;
             _rolFormPermissionRepository = rolFormPermissionRepository;
             _tokenService = tokenService;
             _configuration = configuration;
             _logger = logger;
+            _password = password;
         }
 
         public async Task<TokenDto> LoginAsync(LoginDto dto)
@@ -50,10 +56,22 @@ namespace CakeOs.Business.Services.Security
                 throw new UnauthorizedAccessException("Usuario no encontrado o inactivo.");
             }
 
-            if (!string.Equals(user.Password, dto.Password, StringComparison.Ordinal))
+            var verification = _password.Verify(user.Password, dto.Password);
+
+            if (verification == PasswordVerificationStatus.Failed)
             {
                 _logger.LogWarning("Login fallido — contraseña incorrecta para {Email}", dto.Email);
                 throw new UnauthorizedAccessException("Correo o contrasena invalidos.");
+            }
+
+            if (verification == PasswordVerificationStatus.SuccessRehashNeeded)
+            {
+                user.Password = _password.Hash(dto.Password);
+                await _userRepository.UpdateAsync(user);
+
+                _logger.LogInformation(
+                    "Contraseña migrada a hash seguro para {Email} (UserId: {UserId})",
+                    dto.Email, user.Id);
             }
 
             var fullName = BuildFullName(user.Person?.Name, user.Person?.LastName);

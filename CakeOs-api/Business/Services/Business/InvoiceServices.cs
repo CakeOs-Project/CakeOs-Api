@@ -26,6 +26,7 @@ namespace CakeOs.Business.Services.Business
         private readonly IInvoiceItemExtraRepository _invoiceItemExtraData;
         private readonly IPersonRepository _personData;
         private readonly IPaymentRepository _paymentData;
+        private readonly ICurrentUserService _currentUserService;
 
         // Necesario para las transacciones
         private readonly ApplicationDbContext _context;
@@ -40,7 +41,9 @@ namespace CakeOs.Business.Services.Business
             IPaymentRepository paymentData,
             ILoggerFactory loggerFactory,
             ApplicationDbContext context,
-            ITenantProvider tenantProvider)
+            ITenantProvider tenantProvider,
+            ICurrentUserService currentUserService)
+
            : base(data, mapper, loggerFactory, tenantProvider)
         {
             _mapper = mapper;
@@ -51,9 +54,10 @@ namespace CakeOs.Business.Services.Business
             _context = context;
             _personData = personData;
             _paymentData = paymentData;
+            _currentUserService = currentUserService;
         }
 
-        public async Task<InvoiceListDto> CreateInvoiceAsync(InvoiceCreateDto dto, int userId)
+        public async Task<InvoiceListDto> CreateInvoiceAsync(InvoiceCreateDto dto)
         {
             if (dto.TypeDocument is null)
                 throw new ArgumentException("Debes seleccionar algún tipo de documento.");
@@ -65,7 +69,11 @@ namespace CakeOs.Business.Services.Business
             var tenantId = _tenantProvider.TenantId
                 ?? throw new InvalidOperationException("No se pudo determinar el TenantId.");
 
-            _logger.LogInformation("Iniciando creación de factura para documento {Document}", dto.Document);
+            var userId = _currentUserService.RequireUserId();
+
+            _logger.LogInformation(
+                "Iniciando creación de factura para documento {Document} (UserId: {UserId})",
+                dto.Document, userId);
 
             var strategy = _context.Database.CreateExecutionStrategy();
 
@@ -119,6 +127,15 @@ namespace CakeOs.Business.Services.Business
 
                         foreach (var extraDto in itemDto.Extras)
                         {
+                            if (extraDto.ExtraId == 0)
+                                throw new ArgumentException("No se encontro ese id");
+
+                            if (extraDto.Quantity == 0)
+                                throw new ArgumentException("La cantidad no puede ser igual o menor a cero");
+
+                            if (extraDto.UnitPrice == 0)
+                                throw new ArgumentException("La precio unitario no puede ser cero");
+
                             var invoiceItemExtra = _mapper.Map<InvoiceItemExtra>(extraDto);
                             invoiceItemExtra.InvoiceItem = invoiceItem;
                             await _invoiceItemExtraData.AddAsync(invoiceItemExtra);

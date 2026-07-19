@@ -47,9 +47,9 @@ namespace CakeOs.Web.Controllers.Business
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CreateInvoiceAsync(InvoiceCreateDto dto, int userId)
+        public async Task<IActionResult> CreateInvoiceAsync(InvoiceCreateDto dto)
         {
-            var invoice = await _services.CreateInvoiceAsync(dto, userId);
+            var invoice = await _services.CreateInvoiceAsync(dto);
             return Ok(invoice);
         }
     }
