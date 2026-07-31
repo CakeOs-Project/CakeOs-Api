@@ -20,7 +20,7 @@ namespace CakeOs.Business.Interfaces.Business
         /// </summary>
         /// <param name="payment">Datos del pago anticipado</param>
         /// <returns>Pago registrado</returns>
-        Task<PaymentListDto> RegisterPaymentAsync(PaymentCreateDto payment, int userId);
+        Task<PaymentListDto> RegisterPaymentAsync(PaymentCreateDto payment);
 
         /// <summary>
         /// Obtiene la suma total de pagos realizados para una factura.

@@ -38,9 +38,9 @@ namespace CakeOs.Web.Controllers.Business
         }
 
         [HttpPost]
-        public async Task<IActionResult> RegisterPaymentAsync(PaymentCreateDto dto, int userId)
+        public async Task<IActionResult> RegisterPaymentAsync(PaymentCreateDto dto)
         {
-            var payment = await _services.RegisterPaymentAsync(dto, userId);
+            var payment = await _services.RegisterPaymentAsync(dto);
             return Ok(payment);
         }
     }

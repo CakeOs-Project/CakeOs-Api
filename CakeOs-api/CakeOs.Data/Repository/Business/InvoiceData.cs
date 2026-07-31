@@ -33,8 +33,8 @@ public class InvoiceData : DataBase<Invoice>, IInvoiceRepository
     /// <returns>Lista de facturas filtradas</returns>
     public async Task<List<InvoiceListDto>> GetInvoicesByRangeAsync(TimeRangeFilter range)
     {
-        var start = DateTime.Today; 
-        var end = start.AddDays(1); 
+        var start = DateTime.Today;
+        var end = start.AddDays(1);
 
         switch (range)
         {
@@ -255,5 +255,25 @@ public class InvoiceData : DataBase<Invoice>, IInvoiceRepository
 
         var parts = last.Split('-');
         return int.Parse(parts[^1]);
+    }
+
+    public async Task<bool> TryDecrementOutstandingBalanceAsync(int invoiceId, int tenantId, decimal amount)
+    {
+        var rowsAffected = await _context.Set<Invoice>()
+            .Where(i => i.Id == invoiceId
+                && i.TenantId == tenantId
+                && i.OutstandingBalance >= amount)
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(i => i.OutstandingBalance, i => i.OutstandingBalance - amount));
+
+        return rowsAffected > 0;
+    }
+
+    public async Task MarkAsPaidAsync(int invoiceId)
+    {
+        await _context.Set<Invoice>()
+            .Where(i => i.Id == invoiceId)
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(i => i.Status, InvoiceStatus.Pagada));
     }
 }

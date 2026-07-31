@@ -1,10 +1,12 @@
 ﻿using CakeOs.Business.Interfaces.Business;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CakeOs.Web.Controllers.Trasversal
 {
     [Route("api/[controller]")]
+    [Authorize(Roles = "Dueño")]
     [ApiController]
     public class ReportController : ControllerBase
     {

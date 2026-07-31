@@ -76,4 +76,18 @@ public interface IInvoiceRepository : IData<Invoice>
     /// <param name="id"></param>
     /// <returns></returns>
     Task<InvoiceListDto?> GetByIdWithDetailsAsync(int id);
+
+    /// <summary>
+    /// Intenta decrementar el saldo pendiente de forma atómica a nivel de SQL.
+    /// Devuelve false si el saldo actual ya no alcanza para cubrir el monto
+    /// (incluye el caso de que otro pago concurrente lo haya consumido primero).
+    /// No lanza excepción de negocio — esa decisión queda en Business.
+    /// </summary>
+    Task<bool> TryDecrementOutstandingBalanceAsync(int invoiceId, int tenantId, decimal amount);
+
+    /// <summary>
+    /// Marca la factura como Pagada de forma atómica, sin pasar por el
+    /// change tracker.
+    /// </summary>
+    Task MarkAsPaidAsync(int invoiceId);
 }

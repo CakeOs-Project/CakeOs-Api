@@ -43,7 +43,7 @@ namespace CakeOs.Business.CustomJWT
                 new("userId", user.Id.ToString()),
                 new("tenantId", user.TenantId.ToString()),
                 new("rolId", user.RolId.ToString()),
-                new("rolName", rolName ?? string.Empty),
+                new(ClaimTypes.Role, rolName ?? string.Empty),
                 new("fullName", fullName ?? string.Empty)
             };
 

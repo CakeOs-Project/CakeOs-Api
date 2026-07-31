@@ -1,15 +1,15 @@
 using CakeOs.Business.Base;
 using CakeOs.Business.Interfaces.Business;
-using CakeOs.Data.Base;
 using CakeOs.Data.Interfaces.Business;
+using CakeOs.Entity.Context;
 using CakeOs.Entity.DTOs.Business.Payment;
-using CakeOs.Entity.DTOs.Transversal;
-using CakeOs.Entity.Enum.Invoice;
 using CakeOs.Entity.Enum.Payment;
 using CakeOS.Entity.Domain.Business;
 using CakeOS.Entity.DTOs.Business.Payment;
 using CakeOS.Utilities.Provider;
 using MapsterMapper;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
 
 namespace CakeOs.Business.Services.Business
@@ -22,13 +22,26 @@ namespace CakeOs.Business.Services.Business
         private readonly IPaymentRepository _repository;
         private readonly IInvoiceRepository _invoice;
         private readonly IMapper _mapper;
+        private readonly ICurrentUserService _currentUserService;
 
-        public PaymentService(IPaymentRepository data, IInvoiceRepository invoice, IMapper mapper, ILoggerFactory loggerFactory, ITenantProvider tenantProvider)
+        // Necesario para las transacciones
+        private readonly ApplicationDbContext _context;
+
+        public PaymentService(
+            IPaymentRepository data, 
+            IInvoiceRepository invoice, 
+            IMapper mapper, 
+            ILoggerFactory loggerFactory, 
+            ITenantProvider tenantProvider,
+            ICurrentUserService currentUserService,
+            ApplicationDbContext context)
             : base(data, mapper, loggerFactory, tenantProvider)
         {
             _repository = data;
             _invoice = invoice;
             _mapper = mapper;
+            _currentUserService = currentUserService;
+            _context = context;
         }
 
         public async Task<IEnumerable<PaymentListDto>> GetByInvoiceIdAsync(int invoiceId)
@@ -37,42 +50,64 @@ namespace CakeOs.Business.Services.Business
             return _mapper.Map<IEnumerable<PaymentListDto>>(payment);
         }
 
-        public async Task<PaymentListDto> RegisterPaymentAsync(PaymentCreateDto dto, int userId)
+        public async Task<PaymentListDto> RegisterPaymentAsync(PaymentCreateDto dto)
         {
-            var payment = _mapper.Map<Payment>(dto);
-            payment.TenantId = _tenantProvider.TenantId
+            var tenantId = _tenantProvider.TenantId
                 ?? throw new InvalidOperationException("No se pudo determinar el TenantId.");
+            var userId = _currentUserService.RequireUserId();
 
-            var invoice = await _invoice.GetByIdAsync(payment.InvoiceId);
-            if (invoice == null) throw new ArgumentNullException("La factura no existe.");
+            if (dto.Amount <= 0)
+                throw new ArgumentException("El monto del pago debe ser mayor a cero.");
 
-            if (payment.Amount > invoice.OutstandingBalance)
-                throw new ArgumentException("El monto excede el saldo pendiente.");
+            var payment = _mapper.Map<Payment>(dto);
+            payment.TenantId = tenantId;
 
-            if (payment.Amount == invoice.OutstandingBalance)
+            var strategy = _context.Database.CreateExecutionStrategy();
+
+            return await strategy.ExecuteAsync(async () =>
             {
-                payment.PaymentType = PaymentType.PagoFinal;
-                invoice.Status = InvoiceStatus.Pagada;
-            }
-            else
-            {
-                payment.PaymentType = PaymentType.Abono;
-            }
+                await using var transaction = await _context.Database.BeginTransactionAsync();
+                try
+                {
+                    var invoice = await _invoice.GetByIdAsync(payment.InvoiceId);
+                    if (invoice is null)
+                        throw new InvalidOperationException("La factura no existe.");
 
-            invoice.OutstandingBalance -= payment.Amount;
-            await _invoice.UpdateAsync(invoice);
 
-            payment.UserId = userId;
-            var result = await _repository.AddAsync(payment);
+                    var decremented = await _invoice.TryDecrementOutstandingBalanceAsync(
+                        payment.InvoiceId, tenantId, payment.Amount);
 
-            if (result is null)
-                throw new ArgumentNullException("Error al guardar el pago.");
+                    if (!decremented)
+                        throw new ArgumentException("El monto excede el saldo pendiente.");
 
-            await _repository.SaveChangesAsync();
-            await _invoice.SaveChangesAsync();
+                    var updatedBalance = invoice.OutstandingBalance - payment.Amount;
 
-            return _mapper.Map<PaymentListDto>(result);
+                    if (updatedBalance == 0)
+                    {
+                        payment.PaymentType = PaymentType.PagoFinal;
+                        await _invoice.MarkAsPaidAsync(payment.InvoiceId);
+                    }
+                    else
+                    {
+                        payment.PaymentType = PaymentType.Abono;
+                    }
 
+                    payment.UserId = userId;
+                    var result = await _repository.AddAsync(payment);
+
+                    await _context.SaveChangesAsync();
+
+                    await transaction.CommitAsync();
+
+                    return _mapper.Map<PaymentListDto>(result);
+                }
+                catch
+                {
+                    if (transaction.GetDbTransaction().Connection is not null)
+                        await transaction.RollbackAsync();
+                    throw;
+                }
+            });
         }
 
         public async Task<decimal> GetTotalPaidByDayAsync()
