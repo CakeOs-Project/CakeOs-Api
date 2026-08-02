@@ -27,6 +27,8 @@ namespace CakeOs.Business.Services.Business
         private readonly IPersonRepository _personData;
         private readonly IPaymentRepository _paymentData;
         private readonly ICurrentUserService _currentUserService;
+        private readonly IProductRepository _productRepository;
+        private readonly IFilledRepository _filledRepository;
 
         // Necesario para las transacciones
         private readonly ApplicationDbContext _context;
@@ -42,7 +44,9 @@ namespace CakeOs.Business.Services.Business
             ILoggerFactory loggerFactory,
             ApplicationDbContext context,
             ITenantProvider tenantProvider,
-            ICurrentUserService currentUserService)
+            ICurrentUserService currentUserService,
+            IProductRepository productRepository,
+            IFilledRepository filledRepository)
 
            : base(data, mapper, loggerFactory, tenantProvider)
         {
@@ -55,6 +59,8 @@ namespace CakeOs.Business.Services.Business
             _personData = personData;
             _paymentData = paymentData;
             _currentUserService = currentUserService;
+            _productRepository = productRepository;
+            _filledRepository = filledRepository;
         }
 
         public async Task<InvoiceListDto> CreateInvoiceAsync(InvoiceCreateDto dto)
@@ -121,6 +127,25 @@ namespace CakeOs.Business.Services.Business
 
                     foreach (var itemDto in dto.Items)
                     {
+                        // Validar ProductId
+                        if (itemDto.ProductId <= 0)
+                            throw new ArgumentException("El ProductId debe ser válido.");
+
+                        var product = await _productRepository.GetByIdAsync(itemDto.ProductId);
+                        if (product is null)
+                            throw new ArgumentException($"No existe un producto con el ID {itemDto.ProductId}.");
+
+                        // Validar FilledId si HasFilling es true
+                        if (itemDto.HasFilling)
+                        {
+                            if (itemDto.FilledId is null || itemDto.FilledId <= 0)
+                                throw new ArgumentException("Debe especificar un FilledId válido cuando HasFilling es true.");
+
+                            var filled = await _filledRepository.GetByIdAsync(itemDto.FilledId.Value);
+                            if (filled is null)
+                                throw new ArgumentException($"No existe un relleno con el ID {itemDto.FilledId}.");
+                        }
+
                         var invoiceItem = _mapper.Map<InvoiceItem>(itemDto);
                         invoiceItem.Invoice = invoice;
                         await _invoiceItemData.AddAsync(invoiceItem);
