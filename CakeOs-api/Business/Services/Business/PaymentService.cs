@@ -99,7 +99,13 @@ namespace CakeOs.Business.Services.Business
 
                     await transaction.CommitAsync();
 
-                    return _mapper.Map<PaymentListDto>(result);
+                    // Recargar el pago con las relaciones incluidas (User.Person)
+                    var paymentWithUser = await _context.Set<Payment>()
+                        .Include(p => p.User)
+                            .ThenInclude(u => u.Person)
+                        .FirstOrDefaultAsync(p => p.Id == result.Id);
+
+                    return _mapper.Map<PaymentListDto>(paymentWithUser);
                 }
                 catch
                 {
