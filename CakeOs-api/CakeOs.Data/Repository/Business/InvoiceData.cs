@@ -109,21 +109,37 @@ public class InvoiceData : DataBase<Invoice>, IInvoiceRepository
         {
             Id = i.Id,
             Code = i.Code,
-            ClientFullName = i.Client.Person.Name + " " + i.Client.Person.LastName,
-            ClientTypeDocument = i.Client.Person.TypeDocument,
-            ClientDocument = i.Client.Person.Document,
-            ClientPhone = i.Client.Person.Phone,
-            ClientEmail = i.Client.Email,
+            ClientFullName = i.Client != null && i.Client.Person != null
+                ? i.Client.Person.Name + " " + i.Client.Person.LastName 
+                : "Cliente no disponible",
+            ClientTypeDocument = i.Client != null && i.Client.Person != null 
+                ? i.Client.Person.TypeDocument 
+                : string.Empty,
+            ClientDocument = i.Client != null && i.Client.Person != null 
+                ? i.Client.Person.Document 
+                : string.Empty,
+            ClientPhone = i.Client != null && i.Client.Person != null 
+                ? i.Client.Person.Phone 
+                : string.Empty,
+            ClientEmail = i.Client != null 
+                ? i.Client.Email 
+                : string.Empty,
             CreatedAt = i.CreatedAt,
             DeliveryDate = i.DeliveryDate,
             Status = i.Status,
             Total = i.Total,
             OutstandingBalance = i.OutstandingBalance,
-            CreatedByFullName = i.User.Person.Name + " " + i.User.Person.LastName,
+            CreatedByFullName = i.User != null && i.User.Person != null
+                ? i.User.Person.Name + " " + i.User.Person.LastName 
+                : "Usuario no disponible",
             Items = i.InvoiceItems.Select(ii => new InvoiceItemDetailDto
             {
                 Id = ii.Id,
-                ProductName = "Prueba",
+                ProductName = ii.Product != null 
+                    ? (ii.Product.Type != null ? ii.Product.Type.Name : "Tipo no disponible") 
+                        + " - " + (ii.Product.Size != null ? ii.Product.Size.Name : "Tamaño no disponible")
+                        + " - " + (ii.Product.Shape != null ? ii.Product.Shape.Name : "Forma no disponible")
+                    : "Producto no disponible",
                 Quantity = ii.Quantity,
                 UnitPrice = ii.UnitPrice,
                 SubTotal = ii.SubTotal,
@@ -134,14 +150,14 @@ public class InvoiceData : DataBase<Invoice>, IInvoiceRepository
                 DecorationDescription = ii.DecorationDescription,
                 HasMessage = ii.HasMessage,
                 Message = ii.Message,
-                Extras = ii.Extras.Select(iie => new InvoiceItemExtraListDto
+                Extras = ii.Extras != null ? ii.Extras.Select(iie => new InvoiceItemExtraListDto
                 {
-                    ExtraName = iie.Extra.Name,
+                    ExtraName = iie.Extra != null ? iie.Extra.Name : "Extra no disponible",
                     Quantity = iie.Quantity,
                     UnitPrice = iie.UnitPrice,
                     SubTotal = iie.SubTotal,
                     IsActive = iie.IsActive,
-                }).ToList()
+                }).ToList() : new List<InvoiceItemExtraListDto>()
             }).ToList(),
             Payments = i.Payments.Select(p => new PaymentListDto
             {
@@ -150,7 +166,9 @@ public class InvoiceData : DataBase<Invoice>, IInvoiceRepository
                 PaymentMethod = p.PaymentMethod,
                 PaymentType = p.PaymentType,
                 PaymentDate = p.PaymentDate,
-                RegisteredByFullName = p.User.Person.Name + " " + p.User.Person.LastName
+                RegisteredByFullName = p.User != null && p.User.Person != null
+                    ? p.User.Person.Name + " " + p.User.Person.LastName 
+                    : "Usuario no disponible"
             }).ToList()
         })
         .FirstOrDefaultAsync();
@@ -227,7 +245,9 @@ public class InvoiceData : DataBase<Invoice>, IInvoiceRepository
         {
             Id = i.Id,
             Code = i.Code,
-            FullName = i.Client.Person.Name + " " + i.Client.Person.LastName,
+            FullName = i.Client != null && i.Client.Person != null
+                ? i.Client.Person.Name + " " + i.Client.Person.LastName 
+                : "Cliente no disponible",
             DeliveryDate = i.DeliveryDate,
             Status = i.Status,
             OutstandingBalance = i.OutstandingBalance,
