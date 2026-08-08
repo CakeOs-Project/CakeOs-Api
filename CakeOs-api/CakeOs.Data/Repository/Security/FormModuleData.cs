@@ -18,4 +18,33 @@ public class FormModuleData : DataBase<FormModule>, IFormModuleRepository
     {
         _context = context ?? throw new ArgumentNullException(nameof(context));
     }
+
+    /// <summary>
+    /// Obtiene todas las relaciones FormModule con sus entidades relacionadas (Form y Module).
+    /// </summary>
+    /// <param name="cancellationToken">Token de cancelación.</param>
+    /// <returns>Colección de FormModule con Form y Module cargados.</returns>
+    public override async Task<IEnumerable<FormModule>> GetAllAsync(CancellationToken cancellationToken = default)
+    {
+        return await _context.Set<FormModule>()
+            .Include(fm => fm.Form)
+            .Include(fm => fm.Module)
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+    }
+
+    /// <summary>
+    /// Obtiene todas las relaciones FormModule activas con sus entidades relacionadas (Form y Module).
+    /// </summary>
+    /// <param name="cancellationToken">Token de cancelación.</param>
+    /// <returns>Colección de FormModule activos con Form y Module cargados.</returns>
+    public override async Task<IEnumerable<FormModule>> GetAllActiveAsync(CancellationToken cancellationToken = default)
+    {
+        return await _context.Set<FormModule>()
+            .Include(fm => fm.Form)
+            .Include(fm => fm.Module)
+            .Where(fm => fm.IsActive)
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+    }
 }
