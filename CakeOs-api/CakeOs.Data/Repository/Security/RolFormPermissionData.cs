@@ -20,6 +20,21 @@ public class RolFormPermissionData : DataBase<RolFormPermission>, IRolFormPermis
     }
 
     /// <summary>
+    /// Obtiene todos los registros de RolFormPermission incluyendo las relaciones navegacionales.
+    /// </summary>
+    /// <param name="cancellationToken">Token de cancelación.</param>
+    /// <returns>Colección de todas las entidades con sus relaciones cargadas.</returns>
+    public override async Task<IEnumerable<RolFormPermission>> GetAllAsync(CancellationToken cancellationToken = default)
+    {
+        return await _context.Set<RolFormPermission>()
+            .Include(rfp => rfp.Rol)
+            .Include(rfp => rfp.Form)
+            .Include(rfp => rfp.Permission)
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+    }
+
+    /// <summary>
     /// CU-07: Obtiene todos los permisos asignados a un rol.
     /// </summary>
     /// <param name="rolId">Identificador del rol</param>
@@ -28,6 +43,7 @@ public class RolFormPermissionData : DataBase<RolFormPermission>, IRolFormPermis
     {
         return await _context.Set<RolFormPermission>()
             .Where(rfp => rfp.RolId == rolId)
+            .Include(rfp => rfp.Rol)
             .Include(rfp => rfp.Form)
             .Include(rfp => rfp.Permission)
             .AsNoTracking()
