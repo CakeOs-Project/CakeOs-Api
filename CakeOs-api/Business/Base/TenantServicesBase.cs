@@ -3,6 +3,7 @@ using CakeOs.Entity.Domain.Base;
 using CakeOS.Utilities.Provider;
 using MapsterMapper;
 using Microsoft.Extensions.Logging;
+using CakeOs.Business.Exceptions;
 
 namespace CakeOs.Business.Base
 {
@@ -37,7 +38,7 @@ namespace CakeOs.Business.Base
                 var createdEntity = await _repository.GetByIdAsync(entity.Id);
                 return _mapper.Map<TDtoList>(createdEntity);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex is not ArgumentException and not ServiceException)
             {
                 _logger.LogError(ex, "Error al crear {Entity} para tenant {TenantId}", typeof(TEntity).Name, _tenantProvider.TenantId);
                 throw new("Error al crear el registro.", ex);

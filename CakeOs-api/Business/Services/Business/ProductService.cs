@@ -32,7 +32,7 @@ namespace CakeOs.Business.Services.Business
         public async Task<IEnumerable<ProductListDto>> SearchByNameAsync(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentNullException("El nombre del producto es requerido.");
+                throw new ArgumentException("El nombre del producto es requerido.", nameof(name));
 
             var products = await _repository.SearchByNameAsync(name);
             return _mapper.Map<IEnumerable<ProductListDto>>(products);

@@ -1,5 +1,7 @@
 using System.Net;
 using System.Text.Json;
+using CakeOs.Business.Exceptions;
+using CakeOs.Entity.DTOs.Transversal;
 
 namespace CakeOs.Web.Middleware
 {
@@ -35,6 +37,8 @@ namespace CakeOs.Web.Middleware
             {
                 ArgumentNullException or ArgumentException or ArgumentOutOfRangeException
                     => (HttpStatusCode.BadRequest, ex.Message),
+                NotFoundException => (HttpStatusCode.NotFound, ex.Message),
+                ConflictException => (HttpStatusCode.Conflict, ex.Message),
                 UnauthorizedAccessException
                     => (HttpStatusCode.Unauthorized, ex.Message),
                 InvalidOperationException
@@ -46,7 +50,7 @@ namespace CakeOs.Web.Middleware
             context.Response.StatusCode = (int)statusCode;
             context.Response.ContentType = "application/json";
 
-            var body = JsonSerializer.Serialize(new { message });
+            var body = JsonSerializer.Serialize(ApiResponse.Fail((int)statusCode, message));
             await context.Response.WriteAsync(body);
         }
     }

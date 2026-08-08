@@ -42,36 +42,36 @@ namespace CakeOs.Web.Controllers.Security
         public virtual async Task<IActionResult> CreateAsync([FromBody] TCreateDto dto)
         {
             var created = await _service.CreateAsync(dto);
-            return Ok(created);
+            return StatusCode(StatusCodes.Status201Created, created);
         }
 
         [HttpPut("{id:int}")]
         public virtual async Task<IActionResult> UpdateAsync(int id, [FromBody] TCreateDto dto)
         {
-            var result = await _service.UpdateAsync(id, dto);
-            if (!result.Success)
-                return NotFound(result);
+            if (id <= 0)
+                return BadRequest(new { message = "El id debe ser mayor que cero." });
 
+            var result = await _service.UpdateAsync(id, dto);
             return Ok(result);
         }
 
         [HttpPatch("{id:int}/toggle-active")]
         public virtual async Task<IActionResult> ToggleActiveAsync(int id, [FromQuery] bool isActive)
         {
-            var result = await _service.ToggleActiveAsync(id, isActive);
-            if (!result.Success)
-                return NotFound(result);
+            if (id <= 0)
+                return BadRequest(new { message = "El id debe ser mayor que cero." });
 
+            var result = await _service.ToggleActiveAsync(id, isActive);
             return Ok(result);
         }
 
         [HttpPatch("{id:int}/delete")]
         public virtual async Task<IActionResult> DeleteAsync(int id)
         {
-            var result = await _service.SoftDeleteAsync(id);
-            if (!result.Success)
-                return NotFound(result);
+            if (id <= 0)
+                return BadRequest(new { message = "El id debe ser mayor que cero." });
 
+            var result = await _service.SoftDeleteAsync(id);
             return Ok(result);
         }
     }

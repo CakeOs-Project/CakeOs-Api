@@ -14,6 +14,7 @@ using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
+using CakeOs.Business.Exceptions;
 
 namespace CakeOs.Business.Services.Business
 {
@@ -216,7 +217,7 @@ namespace CakeOs.Business.Services.Business
         public async Task<InvoiceDetailDto?> GetWithDetailsAsync(int id)
         {
             if (id <= 0)
-                throw new Exception("No existe ninguna factura con ese ID");
+                throw new ArgumentOutOfRangeException(nameof(id), "El id debe ser mayor que cero.");
 
             var invoiceDetails = await _invoiceData.GetWithDetailsAsync(id);
             return invoiceDetails;

@@ -28,7 +28,11 @@ namespace CakeOs.Web.Controllers.Business
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetByIdAsync(int id)
         {
+            if (id <= 0)
+                return BadRequest(new { message = "El id debe ser mayor que cero." });
+
             var item = await _services.GetByIdAsync(id);
+
 
             if (item is null)
                 return NotFound(new { message = "El ítem de factura no existe." });
@@ -39,16 +43,17 @@ namespace CakeOs.Web.Controllers.Business
         #endregion
 
         [HttpPatch("{id}/ready")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<IActionResult> MarkAsReadyAsync(int id)
         {
-            var result = await _services.MarkAsReadyAsync(id);
+            if (id <= 0)
+                return BadRequest(new { message = "El id debe ser mayor que cero." });
 
-            if (result.Success)
-                return Ok(result);
-            else
-                return BadRequest(result);
+            var result = await _services.MarkAsReadyAsync(id);
+            return Ok(result);
         }
     }
 }

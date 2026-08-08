@@ -33,10 +33,16 @@ namespace CakeOs.Web.Controllers.Business
             return Ok(Client);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "GetClientByIdAsync")]
         public async Task<IActionResult> GetByIdAsync(int id, CancellationToken ct)
         {
+            if (id <= 0)
+                return BadRequest(new { message = "El id debe ser mayor que cero." });
+
             var client = await _Services.GetByIdAsync(id, ct);
+            if (client is null)
+                return NotFound(new { message = "Cliente no encontrado." });
+
             return Ok(client);
         }
 
@@ -45,6 +51,9 @@ namespace CakeOs.Web.Controllers.Business
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateAsync(int id, ClientCreateDto dto)
         {
+            if (id <= 0)
+                return BadRequest(new { message = "El id debe ser mayor que cero." });
+
             var exist = await _Services.GetByIdAsync(id);
 
             if (exist is null)
@@ -52,16 +61,19 @@ namespace CakeOs.Web.Controllers.Business
 
             var client = await _Services.UpdateAsync(id, dto);
 
-            if (client.Success)
-                return Ok(client);
-            else
-                return BadRequest(client);
+            return Ok(client);
         }
 
         [HttpGet("document")]
         public async Task<IActionResult> GetByDocumentNumberAsync(string documentNumber)
         {
+            if (string.IsNullOrWhiteSpace(documentNumber))
+                return BadRequest(new { message = "El número de documento es requerido." });
+
             var client = await _Services.GetByDocumentNumberAsync(documentNumber);
+            if (client is null)
+                return NotFound(new { message = "Cliente no encontrado." });
+
             return Ok(client);
         }
 
@@ -69,12 +81,15 @@ namespace CakeOs.Web.Controllers.Business
         public async Task<IActionResult> CreateAsync(ClientCreateDto dto)
         {
             var client = await _Services.CreateAsync(dto);
-            return Ok(client);
+            return CreatedAtRoute("GetClientByIdAsync", new { id = client.Id }, client);
         }
 
         [HttpPatch("{id}/toggle-active")]
-        public async Task<IActionResult> ToggleActiveAsync(int id, bool isActive)
+        public async Task<IActionResult> ToggleActiveAsync(int id, [FromQuery] bool isActive)
         {
+            if (id <= 0)
+                return BadRequest(new { message = "El id debe ser mayor que cero." });
+
             var result = await _Services.ToggleActiveAsync(id, isActive);
             return Ok(result);
         }

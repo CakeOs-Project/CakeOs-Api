@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using CakeOs.Entity.DTOs.Transversal;
+using System.Text.Json;
 
 namespace CakeOs.Web.Extensions.Infrastructure
 {
@@ -30,6 +32,24 @@ namespace CakeOs.Web.Extensions.Infrastructure
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
                         ValidateLifetime = true,
                         ClockSkew = TimeSpan.Zero
+                    };
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnChallenge = async context =>
+                        {
+                            context.HandleResponse();
+                            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                            context.Response.ContentType = "application/json";
+                            await context.Response.WriteAsync(JsonSerializer.Serialize(
+                                ApiResponse.Fail(StatusCodes.Status401Unauthorized, "No autenticado.")));
+                        },
+                        OnForbidden = async context =>
+                        {
+                            context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                            context.Response.ContentType = "application/json";
+                            await context.Response.WriteAsync(JsonSerializer.Serialize(
+                                ApiResponse.Fail(StatusCodes.Status403Forbidden, "No autorizado.")));
+                        }
                     };
                 });
 

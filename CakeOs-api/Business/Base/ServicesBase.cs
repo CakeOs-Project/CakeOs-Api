@@ -3,6 +3,7 @@ using CakeOs.Entity.DTOs.Transversal;
 using CakeOS.Entity.Domain.Base;
 using MapsterMapper;
 using Microsoft.Extensions.Logging;
+using CakeOs.Business.Exceptions;
 
 namespace CakeOs.Business.Base
 {
@@ -40,7 +41,7 @@ namespace CakeOs.Business.Base
                 var entities = await _repository.GetAllAsync(ct);
                 return _mapper.Map<IEnumerable<TDtoList>>(entities);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex is not ArgumentException and not ServiceException)
             {
                 _logger.LogError(ex, "Error al obtener todos los registros de {Entity}", typeof(TEntity).Name);
                 throw new("Error al obtener todos los registros.", ex);
@@ -66,7 +67,7 @@ namespace CakeOs.Business.Base
                 var entity = await _repository.GetByIdAsync(id, ct);
                 return _mapper.Map<TDtoList>(entity);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex is not ArgumentException and not ServiceException)
             {
                 _logger.LogError(ex, "Error al obtener {Entity} con id {Id}", typeof(TEntity).Name, id);
                 throw new("Error al obtener el registro por Id.", ex);
@@ -93,7 +94,7 @@ namespace CakeOs.Business.Base
                 var createdEntity = await _repository.GetByIdAsync(entity.Id);
                 return _mapper.Map<TDtoList>(createdEntity);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex is not ArgumentException and not ServiceException)
             {
                 _logger.LogError(ex, "Error al crear {Entity}", typeof(TEntity).Name);
                 throw new("Error al crear el registro.", ex);
@@ -118,7 +119,7 @@ namespace CakeOs.Business.Base
 
                 var existingEntity = await _repository.GetByIdAsync(id);
                 if (existingEntity == null)
-                    throw new ArgumentNullException(nameof(existingEntity), "El registro no existe.");
+                    return ResponseDto.NotFound("El registro no existe.");
 
                 var updatedEntity = _mapper.Map(dto, existingEntity);
                 var entity = await _repository.UpdateAsync(updatedEntity);
@@ -129,12 +130,12 @@ namespace CakeOs.Business.Base
                 }
                 else
                 {
-                    return ResponseDto.Fail("error al actualizar");
+                    return ResponseDto.Conflict("No fue posible actualizar el registro por su estado actual.");
 
                 }
           }
 
-            catch (Exception ex)
+            catch (Exception ex) when (ex is not ArgumentException and not ServiceException)
             {
                 _logger.LogError(ex, "Error al actualizar {Entity} con id {Id}", typeof(TEntity).Name, id);
                 throw new("Error al actualizar el registro.", ex);
@@ -164,12 +165,13 @@ namespace CakeOs.Business.Base
                 else
                     result = await _repository.DeactivateAsync(id);
 
-                if (result)
-                    await _repository.SaveChangesAsync();
+                if (!result)
+                    return ResponseDto.NotFound("El registro no existe.");
 
-                return ResponseDto.Ok("Se actualizo correctamente!.");
+                await _repository.SaveChangesAsync();
+                return ResponseDto.Ok("Se actualizó correctamente.");
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex is not ArgumentException and not ServiceException)
             {
                 _logger.LogError(ex, "Error al cambiar estado de {Entity} con id {Id}", typeof(TEntity).Name, id);
                 throw new("Error en el proceso de activación/desactivación.", ex);
@@ -194,11 +196,11 @@ namespace CakeOs.Business.Base
                 if (result)
                     await _repository.SaveChangesAsync();
                 else
-                    return ResponseDto.Ok("Error al eliminar.");
+                    return ResponseDto.NotFound("El registro no existe.");
 
                 return ResponseDto.Ok("Se elimino correctamente.");
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex is not ArgumentException and not ServiceException)
             {
                 _logger.LogError(ex, "Error al eliminar {Entity} con id {Id}", typeof(TEntity).Name, id);
                 throw new("Error en el proceso de borrado lógico.", ex);

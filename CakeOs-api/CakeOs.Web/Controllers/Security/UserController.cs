@@ -23,6 +23,9 @@ namespace CakeOs.Web.Controllers.Security
         [HttpGet("by-email")]
         public async Task<IActionResult> GetByEmailAsync([FromQuery] string email)
         {
+            if (string.IsNullOrWhiteSpace(email))
+                return BadRequest(new { message = "El correo es requerido." });
+
             var data = await _userService.GetByEmailAsync(email);
             if (data is null)
                 return NotFound(new { message = "Usuario no encontrado." });
@@ -33,8 +36,14 @@ namespace CakeOs.Web.Controllers.Security
         [HttpPatch("{userId:int}/change-password")]
         public async Task<IActionResult> ChangePasswordAsync(int userId, [FromBody] ChangePasswordDto dto)
         {
+            if (userId <= 0)
+                return BadRequest(new { message = "El id de usuario debe ser mayor que cero." });
+
             var changed = await _userService.ChangePasswordAsync(userId, dto);
-            return Ok(new { success = changed });
+            if (!changed)
+                return Conflict(new { message = "No fue posible actualizar la contraseña." });
+
+            return Ok(new { message = "Contraseña actualizada correctamente." });
         }
     }
 }

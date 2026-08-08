@@ -20,6 +20,7 @@ using System.Reflection.Metadata;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using CakeOs.Business.Exceptions;
 
 namespace CakeOs.Business.Services.Business
 {
@@ -71,7 +72,7 @@ namespace CakeOs.Business.Services.Business
                     var existClient = await _data.GetByDocumentNumberAsync(dto.Document);
 
                     if (existClient is not null)
-                        throw new Exception("Ya existe un cliente con ese documento");
+                        throw new ConflictException("Ya existe un cliente con ese documento.");
 
                     var person = new Person
                     {
@@ -129,7 +130,7 @@ namespace CakeOs.Business.Services.Business
                 {
                     var client = await _data.GetByIdAsync(id);
                     if (client is null)
-                        throw new Exception("No existe un cliente con ese id.");
+                        return ResponseDto.NotFound("No existe un cliente con ese id.");
 
                     _mapper.Map(dto, client.Person);
                     client.Email = dto.Email;
@@ -158,7 +159,7 @@ namespace CakeOs.Business.Services.Business
 
             var client = await _data.GetByDocumentNumberAsync(document);
             if (client is null)
-                throw new ArgumentNullException("No se encontro ningun cliente con ese numero de documento.");
+                return null;
 
             return _mapper.Map<ClientListDto?>(client);
         }

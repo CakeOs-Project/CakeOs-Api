@@ -31,7 +31,12 @@ namespace CakeOs.Web.Controllers.Trasversal
 
         [HttpGet("summary/custom")]
         public async Task<IActionResult> GetCustomSummaryAsync([FromQuery] DateTime from, [FromQuery] DateTime to)
-            => Ok(await _payment.GetCustomSummaryAsync(from, to));
+        {
+            if (from > to)
+                return BadRequest(new { message = "La fecha inicial no puede ser mayor que la fecha final." });
+
+            return Ok(await _payment.GetCustomSummaryAsync(from, to));
+        }
 
     }
 }

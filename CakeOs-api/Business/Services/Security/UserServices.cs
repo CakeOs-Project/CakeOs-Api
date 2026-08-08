@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
 using System.ComponentModel.DataAnnotations;
+using CakeOs.Business.Exceptions;
 
 namespace CakeOs.Business.Services.Security
 {
@@ -78,7 +79,7 @@ namespace CakeOs.Business.Services.Security
                 {
                     var exists = await _userRepository.GetByEmailAsync(dto.Email.Trim());
                     if (exists is not null)
-                        throw new InvalidOperationException("Ya existe un usuario con ese correo.");
+                        throw new ConflictException("Ya existe un usuario con ese correo.");
 
                     var person = new Person
                     {
@@ -142,11 +143,11 @@ namespace CakeOs.Business.Services.Security
                 {
                     var user = await _userRepository.GetByIdAsync(id);
                     if (user is null)
-                        return ResponseDto.Fail("Usuario no encontrado.");
+                        return ResponseDto.NotFound("Usuario no encontrado.");
 
                     var person = await _personRepository.GetByIdAsync(user.PersonId);
                     if (person is null)
-                        return ResponseDto.Fail("Persona asociada no encontrada.");
+                        return ResponseDto.NotFound("Persona asociada no encontrada.");
 
                     user.Email = dto.Email.Trim();
                     user.RolId = dto.RolId;
@@ -195,7 +196,7 @@ namespace CakeOs.Business.Services.Security
 
             var user = await _userRepository.GetByIdAsync(userId);
             if (user is null)
-                throw new InvalidOperationException("Usuario no encontrado.");
+                throw new NotFoundException("Usuario no encontrado.");
 
             if (!string.Equals(user.Password, dto.CurrentPassword, StringComparison.Ordinal))
                 throw new UnauthorizedAccessException("Contrasena actual invalida.");

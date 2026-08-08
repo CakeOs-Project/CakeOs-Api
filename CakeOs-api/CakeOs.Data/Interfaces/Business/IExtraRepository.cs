@@ -3,6 +3,6 @@ using CakeOs.Entity.Domain.Parameter;
 
 namespace CakeOs.Data.Interfaces.Business;
 
-public interface IExtraRepository : IData<Extra>
+public interface IExtraRepository : IData<Extra>, IDataName<Extra>
 {
 }

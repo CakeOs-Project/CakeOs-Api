@@ -22,6 +22,9 @@ namespace CakeOs.Web.Controllers.Security
         [HttpGet("by-rol/{rolId:int}")]
         public async Task<IActionResult> GetByRolIdAsync(int rolId)
         {
+            if (rolId <= 0)
+                return BadRequest(new { message = "El id de rol debe ser mayor que cero." });
+
             var data = await _rolFormPermissionService.GetByRolIdAsync(rolId);
             return Ok(data);
         }

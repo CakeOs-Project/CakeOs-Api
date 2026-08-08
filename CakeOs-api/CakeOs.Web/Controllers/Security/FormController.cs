@@ -29,6 +29,9 @@ namespace CakeOs.Web.Controllers.Security
         [HttpGet("by-module/{moduleId:int}")]
         public async Task<IActionResult> GetByModuleAsync(int moduleId)
         {
+            if (moduleId <= 0)
+                return BadRequest(new { message = "El id de módulo debe ser mayor que cero." });
+
             var data = await _formService.GetByModuleIdAsync(moduleId);
             return Ok(data);
         }

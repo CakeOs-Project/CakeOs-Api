@@ -11,6 +11,7 @@ using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
+using CakeOs.Business.Exceptions;
 
 namespace CakeOs.Business.Services.Business
 {
@@ -71,14 +72,14 @@ namespace CakeOs.Business.Services.Business
                 {
                     var invoice = await _invoice.GetByIdAsync(payment.InvoiceId);
                     if (invoice is null)
-                        throw new InvalidOperationException("La factura no existe.");
+                        throw new NotFoundException("La factura no existe.");
 
 
                     var decremented = await _invoice.TryDecrementOutstandingBalanceAsync(
                         payment.InvoiceId, tenantId, payment.Amount);
 
                     if (!decremented)
-                        throw new ArgumentException("El monto excede el saldo pendiente.");
+                        throw new ConflictException("El monto excede el saldo pendiente.");
 
                     var updatedBalance = invoice.OutstandingBalance - payment.Amount;
 

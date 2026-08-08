@@ -46,11 +46,14 @@ namespace CakeOs.Web.Controllers.Business
         /// <param name="id">ID del producto</param>
         /// <param name="cancellationToken">Token de cancelación</param>
         /// <returns>Producto encontrado</returns>
-        [HttpGet("{id}", Name = nameof(GetByIdAsync))]
+        [HttpGet("{id}", Name = "GetProductByIdAsync")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
+            if (id <= 0)
+                return BadRequest(new { message = "El id debe ser mayor que cero." });
+
             var product = await _services.GetByIdAsync(id, cancellationToken);
 
             if (product is null)
@@ -69,6 +72,9 @@ namespace CakeOs.Web.Controllers.Business
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> SearchByNameAsync(string name)
         {
+            if (string.IsNullOrWhiteSpace(name))
+                return BadRequest(new { message = "El nombre es requerido." });
+
             var products = await _services.SearchByNameAsync(name);
             return Ok(products);
         }
@@ -107,8 +113,10 @@ namespace CakeOs.Web.Controllers.Business
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UpdateAsync(int id, ProductCreateDto dto)
         {
-            var product = await _services.UpdateAsync(id, dto);
-            return Ok(product);
+            if (id <= 0)
+                return BadRequest(new { message = "El id debe ser mayor que cero." });
+
+            return Ok(await _services.UpdateAsync(id, dto));
         }
 
         /// <summary>
@@ -122,12 +130,11 @@ namespace CakeOs.Web.Controllers.Business
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> ToggleActiveAsync(int id, [FromQuery] bool isActive)
         {
+            if (id <= 0)
+                return BadRequest(new { message = "El id debe ser mayor que cero." });
+
             var result = await _services.ToggleActiveAsync(id, isActive);
-
-            if (!result.Success)
-                return NotFound();
-
-            return Ok(new { message = "El estado del producto ha sido actualizado." });
+            return Ok(result);
         }
 
         #endregion
@@ -144,6 +151,9 @@ namespace CakeOs.Web.Controllers.Business
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> SoftDeleteAsync(int id)
         {
+            if (id <= 0)
+                return BadRequest(new { message = "El id debe ser mayor que cero." });
+
             var result = await _services.SoftDeleteAsync(id);
             return Ok(result);
         }
