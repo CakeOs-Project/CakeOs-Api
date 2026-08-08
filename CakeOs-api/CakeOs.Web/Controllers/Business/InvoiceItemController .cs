@@ -24,9 +24,15 @@ namespace CakeOs.Web.Controllers.Business
         #region "GET"
 
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetByIdAsync(int id)
         {
             var item = await _services.GetByIdAsync(id);
+
+            if (item is null)
+                return NotFound(new { message = "El ítem de factura no existe." });
+
             return Ok(item);
         }
 
