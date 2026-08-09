@@ -1,9 +1,11 @@
 ﻿using CakeOs.Business.Base;
+using CakeOs.Business.Exceptions;
 using CakeOs.Business.Interfaces.Business;
 using CakeOs.Data.Interfaces.Business;
 using CakeOs.Data.Interfaces.Security;
 using CakeOs.Entity.Context;
 using CakeOs.Entity.Domain.Business;
+using CakeOs.Entity.Domain.Parameter;
 using CakeOs.Entity.Enum.Invoice;
 using CakeOs.Entity.Enum.Payment;
 using CakeOS.Entity.Domain.Business;
@@ -14,7 +16,6 @@ using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
-using CakeOs.Business.Exceptions;
 
 namespace CakeOs.Business.Services.Business
 {
@@ -30,6 +31,7 @@ namespace CakeOs.Business.Services.Business
         private readonly ICurrentUserService _currentUserService;
         private readonly IProductRepository _productRepository;
         private readonly IFilledRepository _filledRepository;
+        private readonly IExtraRepository _extraRepository;
 
         // Necesario para las transacciones
         private readonly ApplicationDbContext _context;
@@ -47,7 +49,8 @@ namespace CakeOs.Business.Services.Business
             ITenantProvider tenantProvider,
             ICurrentUserService currentUserService,
             IProductRepository productRepository,
-            IFilledRepository filledRepository)
+            IFilledRepository filledRepository,
+            IExtraRepository extraRepository)
 
            : base(data, mapper, loggerFactory, tenantProvider)
         {
@@ -62,6 +65,7 @@ namespace CakeOs.Business.Services.Business
             _currentUserService = currentUserService;
             _productRepository = productRepository;
             _filledRepository = filledRepository;
+            _extraRepository = extraRepository;
         }
 
         public async Task<InvoiceListDto> CreateInvoiceAsync(InvoiceCreateDto dto)
@@ -107,24 +111,24 @@ namespace CakeOs.Business.Services.Business
                     }
 
                     string code = await GenerateInvoiceCodeAsync();
-                    var total = dto.Items.Sum(i =>
-                        i.Quantity * i.UnitPrice +
-                        i.Extras.Sum(e => e.Quantity * e.UnitPrice));
 
                     var invoice = new Invoice
                     {
                         Client = client,
                         UserId = userId,
                         Code = code,
-                        Total = total,
-                        OutstandingBalance = total - dto.InitialPayment,
+                        Total = 0,
+                        OutstandingBalance = 0,
                         Status = InvoiceStatus.Pendiente,
                         CreatedAt = DateTime.UtcNow,
                         DeliveryDate = dto.DeliveryDate,
                         IsActive = true,
                         TenantId = tenantId
                     };
+
                     await _invoiceData.AddAsync(invoice);
+
+                    decimal invoiceTotal = 0;
 
                     foreach (var itemDto in dto.Items)
                     {
@@ -148,29 +152,46 @@ namespace CakeOs.Business.Services.Business
                         }
 
                         var invoiceItem = _mapper.Map<InvoiceItem>(itemDto);
+                        invoiceItem.UnitPrice = product.Price;
+                        invoiceItem.SubTotal = product.Price * itemDto.Quantity;
                         invoiceItem.Invoice = invoice;
                         await _invoiceItemData.AddAsync(invoiceItem);
 
+                        invoiceTotal += invoiceItem.SubTotal;
+
                         foreach (var extraDto in itemDto.Extras)
                         {
-                            if (extraDto.ExtraId == 0)
+                            if (extraDto.ExtraId <= 0)
                                 throw new ArgumentException("No se encontro ese id");
 
-                            if (extraDto.Quantity == 0)
+                            if (extraDto.Quantity <= 0)
                                 throw new ArgumentException("La cantidad no puede ser igual o menor a cero");
 
-                            if (extraDto.UnitPrice == 0)
-                                throw new ArgumentException("La precio unitario no puede ser cero");
+                            var extra = await _extraRepository.GetByIdAsync(extraDto.ExtraId);
+                            if (extra is null)
+                                throw new ArgumentException($"No existe un extra con el ID {extraDto.ExtraId}.");
+                            if (!extra.IsActive)
+                                throw new ArgumentException($"El extra '{extra.Name}' no está disponible.");
 
                             var invoiceItemExtra = _mapper.Map<InvoiceItemExtra>(extraDto);
+                            invoiceItemExtra.UnitPrice = extra.Price;
+                            invoiceItemExtra.SubTotal = extra.Price * extraDto.Quantity;
                             invoiceItemExtra.InvoiceItem = invoiceItem;
                             await _invoiceItemExtraData.AddAsync(invoiceItemExtra);
+
+                            invoiceTotal += invoiceItemExtra.SubTotal;
                         }
                     }
 
+                    invoice.Total = invoiceTotal;
+                    invoice.OutstandingBalance = invoiceTotal - (dto.HasInitialPayment ? dto.InitialPayment : 0);
+
                     if (dto.HasInitialPayment)
                     {
-                        if (dto.InitialPayment > 0 && !Enum.IsDefined(typeof(PaymentMethod), dto.PaymentMethod!.Value))
+                        if (dto.InitialPayment <= 0)
+                            throw new ArgumentException("El valor del pago incial no puede ser igual o menos a cero.");
+
+                        if(!Enum.IsDefined(typeof(PaymentMethod), dto.PaymentMethod!.Value))
                             throw new ArgumentException("Debe especificar un método de pago válido cuando se registra un pago inicial.");
 
                         var paymentType = invoice.OutstandingBalance == 0 ? PaymentType.PagoTotal : PaymentType.Abono;
@@ -206,7 +227,7 @@ namespace CakeOs.Business.Services.Business
                     throw;
                 }
             });
-        }
+         }
 
         public async Task<List<InvoiceListDto>> GetInvoicesByRangeAsync(TimeRangeFilter range)
         {

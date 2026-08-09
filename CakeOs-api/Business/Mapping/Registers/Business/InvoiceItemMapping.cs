@@ -17,8 +17,8 @@ namespace CakeOs.Business.Mapping.Registers.Business
             config.NewConfig<InvoiceItemCreateDto, InvoiceItem>()
                 .Map(dest => dest.IsActive, src => true)
                 .Map(dest => dest.Status, src => InvoiceItemStatus.Pendiente)
-                .Map(dest => dest.SubTotal, src => src.Quantity * src.UnitPrice)
                 .Map(dest => dest.FilledId, src => src.HasFilling ? src.FilledId : null)
+                .Ignore(dest => dest.SubTotal)
                 .Ignore(dest => dest.Extras)
                 .Ignore(dest => dest.Filled)
                 .Ignore(dest => dest.Product)
@@ -27,7 +27,7 @@ namespace CakeOs.Business.Mapping.Registers.Business
 
             config.NewConfig<InvoiceItemExtraCreateDto, InvoiceItemExtra>()
                 .Map(dest => dest.IsActive, src => true)
-                .Map(dest => dest.SubTotal, src => src.Quantity * src.UnitPrice)
+                .Ignore(dest => dest.SubTotal)
                 .Ignore(dest => dest.Extra)
                 .Ignore(dest => dest.InvoiceItem);
 
